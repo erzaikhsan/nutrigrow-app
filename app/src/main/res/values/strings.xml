@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">NutriGrow</string>
+
+    <string name="home_nav">Home</string>
+    <string name="profile_nav">Profile</string>
+    <string name="checkup_nav">CheckUp</string>
+    <string name="event_nav">Activity</string>
+    <string name="children_nav">Children</string>
+</resources>
