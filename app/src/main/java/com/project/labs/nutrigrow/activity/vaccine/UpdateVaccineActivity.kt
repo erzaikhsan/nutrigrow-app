@@ -1,7 +1,6 @@
 package com.project.labs.nutrigrow.activity.vaccine
 
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent

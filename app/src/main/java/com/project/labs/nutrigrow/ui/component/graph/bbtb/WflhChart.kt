@@ -1,6 +1,5 @@
 package com.project.labs.nutrigrow.ui.component.graph.bbtb
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

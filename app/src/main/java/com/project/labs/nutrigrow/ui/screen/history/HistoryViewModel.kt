@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.labs.nutrigrow.data.model.AuthModel
 import com.project.labs.nutrigrow.data.model.CheckModel
-import com.project.labs.nutrigrow.data.model.EventModel
 import com.project.labs.nutrigrow.data.model.UserModel
 import com.project.labs.nutrigrow.data.repository.CheckUpRepository
 import com.project.labs.nutrigrow.data.repository.UserRepository

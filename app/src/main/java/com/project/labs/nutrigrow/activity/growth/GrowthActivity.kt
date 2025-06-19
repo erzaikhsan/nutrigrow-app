@@ -1,7 +1,6 @@
 package com.project.labs.nutrigrow.activity.growth
 
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,8 +20,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import com.project.labs.nutrigrow.R
-import com.project.labs.nutrigrow.ui.screen.event.EventScreen
 import com.project.labs.nutrigrow.ui.screen.growth.GrowthScreen
 import com.project.labs.nutrigrow.ui.theme.NutriGrowTheme
 

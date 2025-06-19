@@ -1,7 +1,6 @@
 package com.project.labs.nutrigrow.data.repository
 
 import com.project.labs.nutrigrow.data.local.preference.UserPreference
-import com.project.labs.nutrigrow.data.model.GrowthModel
 import com.project.labs.nutrigrow.data.model.VaccineModel
 import com.project.labs.nutrigrow.data.remote.response.TemplateResponse
 import com.project.labs.nutrigrow.data.remote.retrofit.ApiService

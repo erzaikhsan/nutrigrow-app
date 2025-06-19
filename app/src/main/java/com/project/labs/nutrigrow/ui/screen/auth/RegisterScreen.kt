@@ -139,7 +139,7 @@ fun RegisterScreen(
         onDispose {  }
     }
 
-    Scaffold( ) { paddingValue ->
+    Scaffold { paddingValue ->
         Box(
             modifier = Modifier
                 .padding(paddingValue)
@@ -211,7 +211,7 @@ fun RegisterScreen(
                             .fillMaxWidth()
                             .padding(start = 5.dp)
                     )
-                    Box() {
+                    Box {
                         OutlinedTextField(
                             value = full_name,
                             onValueChange = { full_name = it },
@@ -290,7 +290,7 @@ fun RegisterScreen(
                             .fillMaxWidth()
                             .padding(start = 5.dp)
                     )
-                    Box() {
+                    Box {
                         OutlinedTextField(
                             value = date_of_birth,
                             onValueChange = { date_of_birth = it },

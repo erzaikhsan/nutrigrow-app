@@ -254,7 +254,7 @@ fun ProfileUpdateScreen(
                                     .fillMaxWidth()
                                     .padding(start = 5.dp)
                             )
-                            Box() {
+                            Box {
                                 OutlinedTextField(
                                     value = full_name,
                                     onValueChange = { full_name = it },
@@ -333,7 +333,7 @@ fun ProfileUpdateScreen(
                                     .fillMaxWidth()
                                     .padding(start = 5.dp)
                             )
-                            Box() {
+                            Box {
                                 OutlinedTextField(
                                     value = date_of_birth,
                                     onValueChange = { date_of_birth = it },

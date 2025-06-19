@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.project.labs.nutrigrow.data.model.AuthModel
 import com.project.labs.nutrigrow.data.model.ChildrenModel
 import com.project.labs.nutrigrow.data.model.GrowthModel
-import com.project.labs.nutrigrow.data.model.UserModel
 import com.project.labs.nutrigrow.data.model.VaccineModel
 import com.project.labs.nutrigrow.data.repository.ChildRepository
 import com.project.labs.nutrigrow.data.repository.GrowthRepository

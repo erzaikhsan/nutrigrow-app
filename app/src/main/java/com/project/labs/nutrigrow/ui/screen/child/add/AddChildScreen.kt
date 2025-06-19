@@ -191,7 +191,7 @@ fun AddChildScreen(
                                     .fillMaxWidth()
                                     .padding(start = 5.dp)
                             )
-                            Box() {
+                            Box {
                                 OutlinedTextField(
                                     value = full_name,
                                     onValueChange = { full_name = it },
@@ -220,7 +220,7 @@ fun AddChildScreen(
                                     .fillMaxWidth()
                                     .padding(start = 5.dp)
                             )
-                            Box() {
+                            Box {
                                 OutlinedTextField(
                                     value = father,
                                     onValueChange = { father = it },
@@ -249,7 +249,7 @@ fun AddChildScreen(
                                     .fillMaxWidth()
                                     .padding(start = 5.dp)
                             )
-                            Box() {
+                            Box {
                                 OutlinedTextField(
                                     value = mother,
                                     onValueChange = { mother = it },
@@ -326,7 +326,7 @@ fun AddChildScreen(
                                     .fillMaxWidth()
                                     .padding(start = 5.dp)
                             )
-                            Box() {
+                            Box {
                                 OutlinedTextField(
                                     value = place_of_birth,
                                     onValueChange = { place_of_birth = it },
@@ -355,7 +355,7 @@ fun AddChildScreen(
                                     .fillMaxWidth()
                                     .padding(start = 5.dp)
                             )
-                            Box() {
+                            Box {
                                 OutlinedTextField(
                                     value = date_of_birth,
                                     onValueChange = { date_of_birth = it },
@@ -389,7 +389,7 @@ fun AddChildScreen(
                                     .fillMaxWidth()
                                     .padding(start = 5.dp)
                             )
-                            Box() {
+                            Box {
                                 OutlinedTextField(
                                     value = birth_weight,
                                     onValueChange = { birth_weight = it },
@@ -418,7 +418,7 @@ fun AddChildScreen(
                                     .fillMaxWidth()
                                     .padding(start = 5.dp)
                             )
-                            Box() {
+                            Box {
                                 OutlinedTextField(
                                     value = birth_height,
                                     onValueChange = { birth_height = it },
@@ -447,7 +447,7 @@ fun AddChildScreen(
                                     .fillMaxWidth()
                                     .padding(start = 5.dp)
                             )
-                            Box() {
+                            Box {
                                 OutlinedTextField(
                                     value = birth_head_circum,
                                     onValueChange = { birth_head_circum = it },

@@ -4,7 +4,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.project.labs.nutrigrow.data.model.AuthModel
 import com.project.labs.nutrigrow.data.repository.UserRepository
 import com.project.labs.nutrigrow.ui.state.UiState
 import kotlinx.coroutines.launch
