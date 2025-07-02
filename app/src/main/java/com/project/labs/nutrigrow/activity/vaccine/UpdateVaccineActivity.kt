@@ -49,7 +49,7 @@ class UpdateVaccineActivity : ComponentActivity() {
                                 ),
                                 title = {
                                     Text(
-                                        text = "Ubah Data Imunisasi",
+                                        text = "Data Imunisasi",
                                         style = MaterialTheme.typography.titleMedium,
                                     )
                                 },

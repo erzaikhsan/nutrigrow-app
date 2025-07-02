@@ -113,7 +113,7 @@ fun HomeScreen(
                         }
                         "Parent" -> {
                             viewModel.getChildrenByParent((checkAuth as UiState.Success<AuthModel>).data.id)
-                            viewModel.getEventByDateMonth(date, (checkAuth as UiState.Success<AuthModel>).data.region)
+                            viewModel.getIncomingEvent(date, (checkAuth as UiState.Success<AuthModel>).data.region)
                         }
                         else -> {}
                     }
@@ -1281,7 +1281,7 @@ fun HomeScreen(
                                             when (event) {
                                                 is UiState.Loading -> {
                                                     item { OriginalLoading() }
-                                                    viewModel.getEventByDateMonth(date, user.data.region)
+                                                    viewModel.getIncomingEvent(date, user.data.region)
                                                 }
                                                 is UiState.Success -> {
                                                     item {
@@ -1299,7 +1299,7 @@ fun HomeScreen(
                                                                 .padding(horizontal = 15.dp)
                                                         ){
                                                             Text(
-                                                                text = "Kegiatan Bulan Ini",
+                                                                text = "Kegiatan Posyandu",
                                                                 fontSize = 19.sp,
                                                                 textAlign = TextAlign.Center,
                                                                 style = MaterialTheme.typography.titleMedium,
@@ -1344,7 +1344,7 @@ fun HomeScreen(
                                                                         .padding(vertical = 10.dp)
                                                                 ) {
                                                                     Text(
-                                                                        text = "Tidak Ada Kegiatan\nDi Bulan Ini.",
+                                                                        text = "Tidak Ada Kegiatan\nYang Akan Berlangsung.",
                                                                         fontSize = 17.sp,
                                                                         style = MaterialTheme.typography.titleMedium,
                                                                         fontWeight = FontWeight.Bold,

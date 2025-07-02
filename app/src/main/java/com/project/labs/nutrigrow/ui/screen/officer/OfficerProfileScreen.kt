@@ -128,7 +128,6 @@ fun OfficerProfileScreen(
             is UiState.Success -> {
                 coroutineScope.launch {
                     snackState.showSnackbar("Berhasil Ekspor Data")
-                    redirectToHome()
                 }
                 val file = state.data
                 Toast.makeText(context, "PDF disimpan di: ${file.absolutePath}", Toast.LENGTH_LONG).show()
@@ -158,7 +157,6 @@ fun OfficerProfileScreen(
                 } else {
                     coroutineScope.launch {
                         snackState.showSnackbar("Gagal Ekspor Data\n${state.errorMessage}")
-                        redirectToHome()
                     }
                 }
             }
@@ -510,7 +508,7 @@ fun OfficerProfileScreen(
                                         tint = Color.Black,
                                         modifier = Modifier.size(22.dp)
                                     )
-                                    Spacer(modifier = Modifier.width(15.dp))
+                                    Spacer(modifier = Modifier.width(25.dp))
                                     Text(
                                         text = date.ifBlank { "Pilih Tanggal Penimbangan" },
                                         style = MaterialTheme.typography.titleMedium,
@@ -554,11 +552,11 @@ fun OfficerProfileScreen(
                                     Spacer(modifier = Modifier.width(20.dp))
                                     Column {
                                         Text(
-                                            text = "Penimbangan Balita",
+                                            text = "Laporan Penimbangan",
                                             style = MaterialTheme.typography.titleMedium,
                                         )
                                         Text(
-                                            text = "Laporan data penimbangan balita",
+                                            text = "Laporan penimbangan balita",
                                             style = MaterialTheme.typography.bodySmall,
                                         )
                                     }
@@ -585,6 +583,7 @@ fun OfficerProfileScreen(
                                         .clickable {
                                             viewModel.getRegionChildrenReport(
                                                 officers.data.region,
+                                                currentDate = date,
                                                 context
                                             )
                                         }
@@ -596,11 +595,11 @@ fun OfficerProfileScreen(
                                     Spacer(modifier = Modifier.width(20.dp))
                                     Column {
                                         Text(
-                                            text = "Biodata Balita",
+                                            text = "Data Hasil Penimbangan",
                                             style = MaterialTheme.typography.titleMedium,
                                         )
                                         Text(
-                                            text = "Data lengkap balita Posyandu",
+                                            text = "Data hasil penimbangan terbaru",
                                             style = MaterialTheme.typography.bodySmall,
                                         )
                                     }

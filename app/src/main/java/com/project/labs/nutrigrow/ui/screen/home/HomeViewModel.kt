@@ -123,10 +123,10 @@ class HomeViewModel(
         }
     }
 
-    fun getEventByDateMonth(date: String, region: String) {
+    fun getIncomingEvent(date: String, region: String) {
         _event.value = UiState.Loading
         viewModelScope.launch {
-            eventRepository.getEventByDateMonth(date, region)
+            eventRepository.getIncomingEvent(date, region)
                 .catch {
                     _event.value = UiState.Error(it.message.toString())
                 }

@@ -50,7 +50,7 @@ class UpdateChildActivity : ComponentActivity() {
                                 ),
                                 title = {
                                     Text(
-                                        text = "Perbarui Data Balita",
+                                        text = "Profil Balita",
                                         style = MaterialTheme.typography.titleMedium,
                                     )
                                 },

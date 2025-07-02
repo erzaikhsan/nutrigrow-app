@@ -2,7 +2,6 @@ package com.project.labs.nutrigrow.data.remote.retrofit
 
 import com.project.labs.nutrigrow.data.model.AccountModel
 import com.project.labs.nutrigrow.data.model.AuthModel
-import com.project.labs.nutrigrow.data.model.CheckModel
 import com.project.labs.nutrigrow.data.model.ChildrenModel
 import com.project.labs.nutrigrow.data.model.EventModel
 import com.project.labs.nutrigrow.data.model.GrowthModel
@@ -364,9 +363,9 @@ interface ApiService {
         @Path("region") region: String
     ): Response<TemplateResponse<List<EventModel>>>
 
-    @GET("event/date/month")
+    @GET("event/incoming/event")
     @Headers("Accept: application/json")
-    suspend fun getEventByDateMonth(
+    suspend fun getIncomingEvent(
         @Header("Authorization") token: String,
         @Query("date") date: String,
         @Query("region") region: String,
@@ -459,37 +458,12 @@ interface ApiService {
         @Path("id") id: String
     ): Response<TemplateResponse<VaccineModel>>
 
-    //CheckUp
-    @FormUrlEncoded
-    @POST("check")
-    @Headers("Accept: application/json")
-    suspend fun addCheckUp(
-        @Header("Authorization") token: String,
-        @Field("parents_id") parents_id: String,
-        @Field("gender") gender: String,
-        @Field("age") age: Int,
-        @Field("height") height: Double,
-    ): Response<TemplateResponse<CheckModel>>
-
-    @GET("check/{id}")
-    @Headers("Accept: application/json")
-    suspend fun getCheckUpById(
-        @Header("Authorization") token: String,
-        @Path("id") id: String
-    ): Response<TemplateResponse<CheckModel>>
-
-    @GET("check/parent/{parentId}")
-    @Headers("Accept: application/json")
-    suspend fun getCheckUpByParentId(
-        @Header("Authorization") token: String,
-        @Path("parentId") parentId: String
-    ): Response<TemplateResponse<List<CheckModel>>>
-
     //Report
     @GET("report/children")
     @Streaming
     suspend fun getChildrenReport(
         @Header("Authorization") token: String,
+        @Query("currentDate") currentDate: String,
     ): Response<ResponseBody>
 
     @GET("report/parents")
@@ -502,7 +476,8 @@ interface ApiService {
     @Streaming
     suspend fun getRegionChildrenReport(
         @Header("Authorization") token: String,
-        @Path("region") region: String
+        @Path("region") region: String,
+        @Query("currentDate") currentDate: String,
     ): Response<ResponseBody>
 
     @GET("report/parents/region/{region}")

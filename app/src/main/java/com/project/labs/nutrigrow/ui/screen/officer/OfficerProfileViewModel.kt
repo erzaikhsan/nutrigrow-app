@@ -70,12 +70,16 @@ class OfficerProfileViewModel (
         }
     }
 
-    fun getRegionChildrenReport(region : String, context: Context) {
+    fun getRegionChildrenReport(region : String, currentDate: String, context: Context) {
         _officer.value = UiState.Loading
+        if ( currentDate.isEmpty()) {
+            _pdfDownloadState.value = UiState.Error("Mohon Pilih Tanggal Penimbangan")
+            return
+        }
         viewModelScope.launch {
             viewModelScope.launch {
                 try {
-                    val file = reportRepository.getRegionChildrenReport(region = region,context)
+                    val file = reportRepository.getRegionChildrenReport(region = region, currentDate = reformatDate(currentDate), context)
                     if (file != null) {
                         _pdfDownloadState.value = UiState.Success(file)
                     } else {

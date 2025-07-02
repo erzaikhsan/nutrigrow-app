@@ -114,11 +114,11 @@ class UpdateGrowthViewModel (
                 try {
                     if (!data.success) {
                         if (data.message == "Not found") {
-                            _newGrowth.value = UiState.Error("Data Pertumbuhan Bulan Ini Sudah Ada.")
+                            _newGrowth.value = UiState.Error("Data Penimbangan Bulan Ini Sudah Ada.")
                             return@collect
                         }
                         if (data.message == "Bad request") {
-                            _newGrowth.value = UiState.Error("Masukan Tidak Sah.\nMohon Periksa Masukan Anda.\nPastikan Anda Memasukan Data Anak Dengan Benar.")
+                            _newGrowth.value = UiState.Error("Masukan Tidak Sah.\nMohon Periksa Masukan Anda.\nPastikan Anda Memasukan Data Penimbangan Dengan Benar.")
                             return@collect
                         }
                         _newGrowth.value = UiState.Error(data.message)

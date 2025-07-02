@@ -58,7 +58,7 @@ class AuthViewModel (
                                 return@collect
                             }
                             if (data.message == "Forbidden") {
-                                _auth.value = UiState.Error("Akun Anda Dinonaktifkan.\nSilahkan Hubungi Admin")
+                                _auth.value = UiState.Error("Email atau Kata Sandi Salah.\nSilahkan Coba Lagi")
                                 return@collect
                             }
                             _auth.value = UiState.Error(data.message)
@@ -96,7 +96,7 @@ class AuthViewModel (
                             return@collect
                         }
                         if (data.message == "Bad request") {
-                            _account.value = UiState.Error("Masukan Tidak Sah.\nMohon Periksa Masukan Anda.\nPastikan Anda Menggunakan Email dan Kata Sandi Yang Benar,\nMinimal 8 Karakter.")
+                            _account.value = UiState.Error("Masukan Tidak Sah.\nPastikan Anda Menggunakan Email dan Kata Sandi Yang Benar,\nMinimal 8 Karakter.")
                             return@collect
                         }
                         _account.value = UiState.Error(data.message)
@@ -129,7 +129,11 @@ class AuthViewModel (
                             return@collect
                         }
                         if (data.message == "Bad request") {
-                            _otpCode.value = UiState.Error("Masukan Tidak Sah.\nMohon Periksa Masukan Anda.\nPastikan Anda Menggunakan Email dan Kata Sandi Yang Benar,\nMinimal 8 Karakter.")
+                            _otpCode.value = UiState.Error("Masukan Tidak Sah.\nMohon Periksa Masukan Anda")
+                            return@collect
+                        }
+                        if (data.message == "Unauthorized") {
+                            _otpCode.value = UiState.Error("Kode OTP salah.\nSilahkan Cek Kode OTP di Email Anda")
                             return@collect
                         }
                         _otpCode.value = UiState.Error(data.message)
@@ -167,7 +171,7 @@ class AuthViewModel (
                             return@collect
                         }
                         if (data.message == "Bad request") {
-                            _user.value = UiState.Error("Masukan Tidak Sah.\nMohon Periksa Masukan Anda.\nPastikan Anda Menggunakan Email dan Kata Sandi Yang Benar,\nMinimal 8 Karakter.")
+                            _user.value = UiState.Error("Masukan Tidak Sah.\nMohon Periksa Masukan Anda.")
                             return@collect
                         }
                         _user.value = UiState.Error(data.message)

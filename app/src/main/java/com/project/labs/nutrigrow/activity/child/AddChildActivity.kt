@@ -46,7 +46,7 @@ class AddChildActivity : ComponentActivity() {
                                 ),
                                 title = {
                                     Text(
-                                        text = "Tambahkan Data Balita",
+                                        text = "Tambahkan Balita",
                                         style = MaterialTheme.typography.titleMedium,
                                     )
                                 },

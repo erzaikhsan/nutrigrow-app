@@ -49,7 +49,7 @@ class UpdateGrowthActivity : ComponentActivity() {
                                 ),
                                 title = {
                                     Text(
-                                        text = "Ubah Data Penimbangan",
+                                        text = "Data Penimbangan",
                                         style = MaterialTheme.typography.titleMedium,
                                     )
                                 },

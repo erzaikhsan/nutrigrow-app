@@ -126,13 +126,13 @@ class EventRepository(
         }
     }
 
-    fun getEventByDateMonth(date: String, region: String): Flow<TemplateResponse<List<EventModel>>> {
+    fun getIncomingEvent(date: String, region: String): Flow<TemplateResponse<List<EventModel>>> {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
 
         return flow {
-            val user = apiService.getEventByDateMonth(token = userPreference.token, date = date, region = region)
+            val user = apiService.getIncomingEvent(token = userPreference.token, date = date, region = region)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {

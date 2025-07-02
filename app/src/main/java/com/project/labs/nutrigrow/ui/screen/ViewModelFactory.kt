@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.project.labs.nutrigrow.AppViewModel
 import com.project.labs.nutrigrow.data.di.Injection
-import com.project.labs.nutrigrow.data.repository.CheckUpRepository
 import com.project.labs.nutrigrow.data.repository.ChildRepository
 import com.project.labs.nutrigrow.data.repository.EventRepository
 import com.project.labs.nutrigrow.data.repository.GrowthRepository
@@ -15,7 +14,6 @@ import com.project.labs.nutrigrow.data.repository.VaccineRepository
 import com.project.labs.nutrigrow.ui.screen.article.ArticleViewModel
 import com.project.labs.nutrigrow.ui.screen.article.detail.DetailArticleViewModel
 import com.project.labs.nutrigrow.ui.screen.auth.AuthViewModel
-import com.project.labs.nutrigrow.ui.screen.check.CheckUpViewModel
 import com.project.labs.nutrigrow.ui.screen.child.ChildProfileViewModel
 import com.project.labs.nutrigrow.ui.screen.child.add.AddChildViewModel
 import com.project.labs.nutrigrow.ui.screen.child.list.ChildrenViewModel
@@ -28,7 +26,6 @@ import com.project.labs.nutrigrow.ui.screen.growth.GrowthViewModel
 import com.project.labs.nutrigrow.ui.screen.growth.add.AddGrowthViewModel
 import com.project.labs.nutrigrow.ui.screen.growth.detail.DetailGrowthViewModel
 import com.project.labs.nutrigrow.ui.screen.growth.update.UpdateGrowthViewModel
-import com.project.labs.nutrigrow.ui.screen.history.HistoryViewModel
 import com.project.labs.nutrigrow.ui.screen.home.HomeViewModel
 import com.project.labs.nutrigrow.ui.screen.mpasi.MpasiViewModel
 import com.project.labs.nutrigrow.ui.screen.mpasi.detail.DetailMpasiViewModel
@@ -47,7 +44,6 @@ class ViewModelFactory(
     private val childRepository: ChildRepository,
     private val growthRepository: GrowthRepository,
     private val eventRepository: EventRepository,
-    private val checkUpRepository: CheckUpRepository,
     private val vaccineRepository: VaccineRepository,
     private val reportRepository: ReportRepository,
 ) :
@@ -58,8 +54,6 @@ class ViewModelFactory(
         AuthViewModel::class.java to { AuthViewModel(userRepository) },
         AppViewModel::class.java to { AppViewModel(userRepository) },
         ProfileViewModel::class.java to { ProfileViewModel(userRepository) },
-        CheckUpViewModel::class.java to { CheckUpViewModel(userRepository, checkUpRepository) },
-        HistoryViewModel::class.java to { HistoryViewModel(userRepository, checkUpRepository) },
         ChildProfileViewModel::class.java to { ChildProfileViewModel(userRepository, childRepository, growthRepository, vaccineRepository) },
         ChildrenViewModel::class.java to { ChildrenViewModel(userRepository, childRepository) },
         AddChildViewModel::class.java to { AddChildViewModel(userRepository, childRepository) },
@@ -104,7 +98,6 @@ class ViewModelFactory(
                     Injection.provideChildRepository(context),
                     Injection.provideGrowthRepository(context),
                     Injection.provideEventRepository(context),
-                    Injection.provideCheckUpRepository(context),
                     Injection.provideVaccineRepository(context),
                     Injection.provideReportRepository(context),
                 )

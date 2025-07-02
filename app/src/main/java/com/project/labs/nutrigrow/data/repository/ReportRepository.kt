@@ -13,17 +13,17 @@ class ReportRepository(
     private val apiService: ApiService,
 ) {
 
-    suspend fun getChildrenReport(context: Context): File? {
+    suspend fun getChildrenReport( currentDate: String, context: Context): File? {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
-        val response = apiService.getChildrenReport(token = userPreference.token)
+        val response = apiService.getChildrenReport(token = userPreference.token, currentDate = currentDate)
 
         if (!response.isSuccessful) {
             return null
         }
 
-        val fileName = "daftar_balita_posyandu.pdf"
+        val fileName = "Data Penimbangan Balita.pdf"
         val file = File(context.getExternalFilesDir(null), fileName)
 
         response.body()?.byteStream()?.use { inputStream ->
@@ -45,7 +45,7 @@ class ReportRepository(
             return null
         }
 
-        val fileName = "daftar_orang_tua_balita_posyandu.pdf"
+        val fileName = "Data Orang Tua Balita.pdf"
         val file = File(context.getExternalFilesDir(null), fileName)
 
         response.body()?.byteStream()?.use { inputStream ->
@@ -57,17 +57,17 @@ class ReportRepository(
         return file
     }
 
-    suspend fun getRegionChildrenReport(region : String, context: Context): File? {
+    suspend fun getRegionChildrenReport(region : String, currentDate: String, context: Context): File? {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
-        val response = apiService.getRegionChildrenReport(region = region, token = userPreference.token)
+        val response = apiService.getRegionChildrenReport(region = region, currentDate = currentDate, token = userPreference.token)
 
         if (!response.isSuccessful) {
             return null
         }
 
-        val fileName = "daftar_balita_wilayah_${region}.pdf"
+        val fileName = "Data Penimbangan Balita_${region}.pdf"
         val file = File(context.getExternalFilesDir(null), fileName)
 
         response.body()?.byteStream()?.use { inputStream ->
@@ -89,7 +89,7 @@ class ReportRepository(
             return null
         }
 
-        val fileName = "daftar_orang_tua_balita_wilayah_${region}.pdf"
+        val fileName = "Data Orang Tua Balita_${region}.pdf"
         val file = File(context.getExternalFilesDir(null), fileName)
 
         response.body()?.byteStream()?.use { inputStream ->

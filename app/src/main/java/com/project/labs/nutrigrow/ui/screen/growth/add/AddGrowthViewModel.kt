@@ -81,11 +81,11 @@ class AddGrowthViewModel (
                 try {
                     if (!data.success) {
                         if (data.message == "Already exists") {
-                            _growth.value = UiState.Error("Data Pertumbuhan Bulan Ini Sudah Ada.")
+                            _growth.value = UiState.Error("Data Penimbangan Bulan Ini Sudah Ada.")
                             return@collect
                         }
                         if (data.message == "Bad request") {
-                            _growth.value = UiState.Error("Masukan Tidak Sah.\nMohon Periksa Masukan Anda.\nPastikan Anda Memasukan Data Anak Dengan Benar.")
+                            _growth.value = UiState.Error("Masukan Tidak Sah.\nMohon Periksa Masukan Anda.\nPastikan Anda Memasukan Data Penimbangan Dengan Benar.")
                             return@collect
                         }
                         _growth.value = UiState.Error(data.message)

@@ -4,7 +4,6 @@ import android.content.Context
 import com.project.labs.nutrigrow.data.local.preference.UserPreference
 import com.project.labs.nutrigrow.data.local.preference.dataStore
 import com.project.labs.nutrigrow.data.remote.retrofit.ApiConfig
-import com.project.labs.nutrigrow.data.repository.CheckUpRepository
 import com.project.labs.nutrigrow.data.repository.ChildRepository
 import com.project.labs.nutrigrow.data.repository.EventRepository
 import com.project.labs.nutrigrow.data.repository.GrowthRepository
@@ -35,12 +34,6 @@ object Injection {
         val apiService = ApiConfig.getApiService()
         val userPreference = UserPreference.getInstance(context.dataStore)
         return EventRepository.getInstance(userPreference = userPreference, apiService = apiService)
-    }
-
-    fun provideCheckUpRepository(context: Context): CheckUpRepository {
-        val apiService = ApiConfig.getApiService()
-        val userPreference = UserPreference.getInstance(context.dataStore)
-        return CheckUpRepository.getInstance(userPreference = userPreference, apiService = apiService)
     }
 
     fun provideVaccineRepository(context: Context): VaccineRepository {

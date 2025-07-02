@@ -62,7 +62,7 @@ class AddOfficerViewModel (
                             return@collect
                         }
                         if (data.message == "Bad request") {
-                            _user.value = UiState.Error("Masukan Tidak Sah.\nMohon Periksa Masukan Anda.\nPastikan Anda Menggunakan Email dan Kata Sandi Yang Benar,\nMinimal 8 Karakter.")
+                            _user.value = UiState.Error("Masukan Tidak Sah.\nPastikan Anda Menggunakan Email dan Kata Sandi Yang Benar,\nMinimal 8 Karakter.")
                             return@collect
                         }
                         _user.value = UiState.Error(data.message)

@@ -48,7 +48,7 @@ class AddGrowthActivity : ComponentActivity() {
                                 ),
                                 title = {
                                     Text(
-                                        text = "Tambahkan Data Penimbangan",
+                                        text = "Tambahkan Penimbangan",
                                         style = MaterialTheme.typography.titleMedium,
                                     )
                                 },

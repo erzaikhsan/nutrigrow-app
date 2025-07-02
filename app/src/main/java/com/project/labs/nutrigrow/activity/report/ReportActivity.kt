@@ -46,7 +46,7 @@ class ReportActivity : ComponentActivity() {
                                 ),
                                 title = {
                                     Text(
-                                        text = "Laporan Posyandu",
+                                        text = "Laporan",
                                         style = MaterialTheme.typography.titleMedium,
                                     )
                                 },

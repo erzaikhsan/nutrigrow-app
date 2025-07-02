@@ -26,7 +26,6 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarData
@@ -46,10 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.project.labs.nutrigrow.R
@@ -63,7 +59,6 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportScreen(
     redirectToHome: () -> Unit,
@@ -110,7 +105,6 @@ fun ReportScreen(
             is UiState.Success -> {
                 coroutineScope.launch {
                     snackState.showSnackbar("Berhasil Ekspor Data")
-                    redirectToHome()
                 }
                 val file = state.data
                 Toast.makeText(context, "PDF disimpan di: ${file.absolutePath}", Toast.LENGTH_LONG).show()
@@ -140,7 +134,6 @@ fun ReportScreen(
                 } else {
                     coroutineScope.launch {
                         snackState.showSnackbar("Gagal Ekspor Data\n${state.errorMessage}")
-                        redirectToHome()
                     }
                 }
             }
@@ -170,89 +163,86 @@ fun ReportScreen(
                         item {
                             when (checkAuth) {
                                 is UiState.Success -> {
-                                    if ((checkAuth as UiState.Success<AuthModel>).data.role == "Officer") {
-                                        ElevatedCard(
-                                            shape = RoundedCornerShape(
-                                                topStart = 12.dp,
-                                                topEnd = 12.dp,
-                                                bottomStart = 0.dp,
-                                                bottomEnd = 0.dp
-                                            ),
-                                            colors = CardDefaults.cardColors(containerColor = Color.White),
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .clickable { mDatePickerDialog.show() }
+                                    ElevatedCard(
+                                        shape = RoundedCornerShape(
+                                            topStart = 12.dp,
+                                            topEnd = 12.dp,
+                                            bottomStart = 0.dp,
+                                            bottomEnd = 0.dp
+                                        ),
+                                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable { mDatePickerDialog.show() }
+                                    ) {
+                                        Column(
+                                            modifier = Modifier.padding(
+                                                start = 20.dp,
+                                                end = 20.dp,
+                                                top = 15.dp,
+                                                bottom = 15.dp
+                                            )
                                         ) {
-                                            Column(
-                                                modifier = Modifier.padding(
-                                                    start = 20.dp,
-                                                    end = 20.dp,
-                                                    top = 15.dp,
-                                                    bottom = 15.dp
-                                                )
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                modifier = Modifier.fillMaxWidth()
                                             ) {
-                                                Row(
-                                                    verticalAlignment = Alignment.CenterVertically,
-                                                    modifier = Modifier.fillMaxWidth()
-                                                ) {
-                                                    Icon(
-                                                        painter = painterResource(id = R.drawable.baseline_date_range_24),
-                                                        contentDescription = "Date of Birth",
-                                                        tint = Color.Black,
-                                                        modifier = Modifier.size(22.dp)
-                                                    )
-                                                    Spacer(modifier = Modifier.width(15.dp))
-                                                    Text(
-                                                        text = date.ifBlank { "Pilih Tanggal Penimbangan" },
-                                                        style = MaterialTheme.typography.titleMedium,
-                                                        color = Color.Black
-                                                    )
-                                                }
+                                                Icon(
+                                                    painter = painterResource(id = R.drawable.baseline_date_range_24),
+                                                    contentDescription = "Date of Birth",
+                                                    tint = Color.Black,
+                                                    modifier = Modifier.size(22.dp)
+                                                )
+                                                Spacer(modifier = Modifier.width(25.dp))
+                                                Text(
+                                                    text = date.ifBlank { "Pilih Tanggal Penimbangan" },
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                    color = Color.Black
+                                                )
                                             }
                                         }
-                                        Divider(
-                                            modifier = Modifier
-                                                .fillMaxWidth(),
-                                            color = Color(0xFF00BF63),
-                                            thickness = 3.dp
-                                        )
-                                        Spacer(modifier = Modifier.height(15.dp))
-                                    } else {
-                                        ElevatedCard(
-                                            shape = RoundedCornerShape(
-                                                topStart = 12.dp,
-                                                topEnd = 12.dp,
-                                                bottomStart = 0.dp,
-                                                bottomEnd = 0.dp
-                                            ),
-                                            colors = CardDefaults.cardColors(Color.White),
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                        ){
-                                            Text(
-                                                text = "Data Posyandu Jipang",
-                                                fontSize = 19.sp,
-                                                textAlign = TextAlign.Center,
-                                                style = MaterialTheme.typography.titleMedium,
-                                                fontWeight = FontWeight.Bold,
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(
-                                                        start = 25.dp,
-                                                        end = 25.dp,
-                                                        top = 8.dp,
-                                                        bottom = 8.dp
-                                                    )
-                                            )
-                                        }
-                                        Divider(
-                                            modifier = Modifier
-                                                .fillMaxWidth(),
-                                            color = Color(0xFF00BF63),
-                                            thickness = 3.dp
-                                        )
-                                        Spacer(modifier = Modifier.height(15.dp))
                                     }
+                                    Divider(
+                                        modifier = Modifier
+                                            .fillMaxWidth(),
+                                        color = Color(0xFF00BF63),
+                                        thickness = 3.dp
+                                    )
+                                    Spacer(modifier = Modifier.height(15.dp))
+//                                    ElevatedCard(
+//                                        shape = RoundedCornerShape(
+//                                            topStart = 12.dp,
+//                                            topEnd = 12.dp,
+//                                            bottomStart = 0.dp,
+//                                            bottomEnd = 0.dp
+//                                        ),
+//                                        colors = CardDefaults.cardColors(Color.White),
+//                                        modifier = Modifier
+//                                            .fillMaxWidth()
+//                                    ){
+//                                        Text(
+//                                            text = "Data Posyandu Jipang",
+//                                            fontSize = 19.sp,
+//                                            textAlign = TextAlign.Center,
+//                                            style = MaterialTheme.typography.titleMedium,
+//                                            fontWeight = FontWeight.Bold,
+//                                            modifier = Modifier
+//                                                .fillMaxWidth()
+//                                                .padding(
+//                                                    start = 25.dp,
+//                                                    end = 25.dp,
+//                                                    top = 8.dp,
+//                                                    bottom = 8.dp
+//                                                )
+//                                        )
+//                                    }
+//                                    Divider(
+//                                        modifier = Modifier
+//                                            .fillMaxWidth(),
+//                                        color = Color(0xFF00BF63),
+//                                        thickness = 3.dp
+//                                    )
+//                                    Spacer(modifier = Modifier.height(15.dp))
                                     ElevatedCard(
                                         elevation = CardDefaults.cardElevation(
                                             defaultElevation = 6.dp
@@ -284,11 +274,11 @@ fun ReportScreen(
                                                     Spacer(modifier = Modifier.width(20.dp))
                                                     Column {
                                                         Text(
-                                                            text = "Penimbangan Balita",
+                                                            text = "Laporan Penimbangan",
                                                             style = MaterialTheme.typography.titleMedium,
                                                         )
                                                         Text(
-                                                            text = "Laporan data penimbangan balita",
+                                                            text = "Laporan penimbangan balita",
                                                             style = MaterialTheme.typography.bodySmall,
                                                         )
                                                     }
@@ -314,7 +304,7 @@ fun ReportScreen(
                                                     .background(Color.White)
                                                     .padding(20.dp)
                                                     .clickable {
-                                                        viewModel.getChildrenReport(context)
+                                                        viewModel.getChildrenReport(currentDate = date, context)
                                                     }
                                             ){
                                                 Icon(
@@ -324,11 +314,11 @@ fun ReportScreen(
                                                 Spacer(modifier = Modifier.width(20.dp))
                                                 Column {
                                                     Text(
-                                                        text = "Biodata Balita",
+                                                        text = "Data Hasil Penimbangan",
                                                         style = MaterialTheme.typography.titleMedium,
                                                     )
                                                     Text(
-                                                        text = "Data lengkap balita Posyandu",
+                                                        text = "Data hasil penimbangan terbaru",
                                                         style = MaterialTheme.typography.bodySmall,
                                                     )
                                                 }

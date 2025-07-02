@@ -50,7 +50,7 @@ class UpdateProfileActivity : ComponentActivity() {
                                 ),
                                 title = {
                                     Text(
-                                        text = "Perbarui Profil",
+                                        text = "Profil",
                                         style = MaterialTheme.typography.titleMedium,
                                     )
                                 },

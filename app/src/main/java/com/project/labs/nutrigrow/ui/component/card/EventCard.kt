@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.project.labs.nutrigrow.R
 import java.time.Duration
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -44,35 +45,59 @@ fun EventCard (
         return zonedDateTime.format(outputFormatter)
     }
 
-    fun calculateTimeDifference(date: String, startTime: String): Pair<Long, Long> {
+    fun parseToSameDateWIB(inputDate: String): ZonedDateTime {
         val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS XXX", Locale.ENGLISH)
-        val eventDateTime = ZonedDateTime.parse(date, inputFormatter)
+        val parsedDateTime = ZonedDateTime.parse(inputDate, inputFormatter)
 
-        // Parsing startTime dengan format HH:mm
-        val startHour = startTime.split(":")[0].toInt()
-        val startMinute = startTime.split(":")[1].toInt()
+        val dateOnly = parsedDateTime.toLocalDate()
 
-        // Set jam dan menit untuk eventDateTime
-        val eventStartDateTime = eventDateTime.withHour(startHour).withMinute(startMinute)
-        val now = ZonedDateTime.now()
+        val sameDateWIB = dateOnly.atStartOfDay(ZoneId.of("Asia/Jakarta"))
 
-        val duration = Duration.between(now, eventStartDateTime)
-        val days = duration.toDays()
-        val hours = duration.toHours() % 24
-        return Pair(days, hours)
+        println("=== PARSING SAME DATE ===")
+        println("Input: $inputDate")
+        println("Parsed original: $parsedDateTime")
+        println("Date only: $dateOnly")
+        println("Same date in WIB: $sameDateWIB")
+        println("========================")
+
+        return sameDateWIB
     }
 
     fun isEventFinished(date: String, endTime: String): Boolean {
-        val inputFormatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss.SSS XXX", Locale.ENGLISH)
-        val eventDateTime = ZonedDateTime.parse(date, inputFormatter)
-
-        // Parsing endTime dengan format HH:mm
         val endHour = endTime.split(":")[0].toInt()
         val endMinute = endTime.split(":")[1].toInt()
 
-        // Set jam dan menit untuk eventDateTime
-        val eventEndDateTime = eventDateTime.withHour(endHour).withMinute(endMinute)
-        return ZonedDateTime.now().isAfter(eventEndDateTime)
+        val eventDateWIB = parseToSameDateWIB(date)
+
+        val eventEndDateTime = eventDateWIB.withHour(endHour).withMinute(endMinute)
+
+        val now = ZonedDateTime.now(ZoneId.of("Asia/Jakarta"))
+
+        println("=== DEBUG EVENT TIMES ===")
+        println("Input date: $date")
+        println("Event date (same date WIB): $eventDateWIB")
+        println("Event end time: $eventEndDateTime")
+        println("Current time: $now")
+        println("Is event finished: ${now.isAfter(eventEndDateTime)}")
+        println("========================")
+
+        return now.isAfter(eventEndDateTime)
+    }
+
+    fun calculateTimeDifference(date: String, startTime: String): Pair<Long, Long> {
+        val startHour = startTime.split(":")[0].toInt()
+        val startMinute = startTime.split(":")[1].toInt()
+
+        val eventDateWIB = parseToSameDateWIB(date)
+
+        val eventStartDateTime = eventDateWIB.withHour(startHour).withMinute(startMinute)
+
+        val now = ZonedDateTime.now(ZoneId.of("Asia/Jakarta"))
+        val duration = Duration.between(now, eventStartDateTime)
+        val days = duration.toDays()
+        val hours = duration.toHours() % 24
+
+        return Pair(days, hours)
     }
 
     val (daysLeft, hoursLeft) = calculateTimeDifference(date, start_time)
@@ -176,16 +201,44 @@ fun EventCard (
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        Text(
-                            text = when {
-                                eventFinished -> "Selesai"
-                                daysLeft > 0 -> "$daysLeft Hari Lagi"
-                                hoursLeft > 0 -> "Hari Ini"
-                                else -> "Hari Ini"
-                            },
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 13.sp,
-                        )
+                        when {
+                            eventFinished ->
+                                Text(
+                                    text = "Selesai",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            daysLeft > 0 ->
+                                Text(
+                                    text = "$daysLeft Hari Lagi",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp,
+                                    color = Color(0xFFFF9800)
+                                )
+                            hoursLeft > 12 ->
+                                Text(
+                                    text = "Besok",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp,
+                                    color = Color(0xFF2196F3)
+                                )
+                            hoursLeft > 0 ->
+                                Text(
+                                    text = "Hari Ini",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            else ->
+                                Text(
+                                    text = "Hari Ini",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                        }
+
                     }
                 }
             }

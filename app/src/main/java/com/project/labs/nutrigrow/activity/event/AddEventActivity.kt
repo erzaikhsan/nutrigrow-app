@@ -46,7 +46,7 @@ class AddEventActivity : ComponentActivity() {
                                 ),
                                 title = {
                                     Text(
-                                        text = "Tambahkan Kegiatan",
+                                        text = "Tambah Jadwal Kegiatan",
                                         style = MaterialTheme.typography.titleMedium,
                                     )
                                 },

@@ -48,7 +48,7 @@ class UpdateEventActivity : ComponentActivity() {
                                 ),
                                 title = {
                                     Text(
-                                        text = "Ubah Kegiatan",
+                                        text = "Data Jadwal Kegiatan",
                                         style = MaterialTheme.typography.titleMedium,
                                     )
                                 },

@@ -96,9 +96,7 @@ fun ProfileUpdateScreen(
     var selectedGender by remember { mutableStateOf("") }
     val listGender = listOf("Laki-Laki", "Perempuan")
 
-    var expandRegion by remember { mutableStateOf(false) }
     var selectedRegion by remember { mutableStateOf("") }
-    val listRegion = listOf("RW1","RW2","RW3","RW4","RW5")
 
     val snackState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -417,54 +415,6 @@ fun ProfileUpdateScreen(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                 )
-                            }
-
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Text(
-                                text = "Posyandu",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.W500,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = 5.dp)
-                            )
-                            ExposedDropdownMenuBox(
-                                expanded = expandRegion,
-                                onExpandedChange = { expandRegion = !expandRegion },
-                            ) {
-                                OutlinedTextField(
-                                    value = selectedRegion,
-                                    onValueChange = { selectedRegion = it },
-                                    readOnly = true,
-                                    placeholder = { Text("Masukan Wilayah Posyandu", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                    trailingIcon = {
-                                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandRegion)
-                                    },
-                                    shape = RoundedCornerShape(10.dp),
-                                    colors = TextFieldDefaults.textFieldColors(
-                                        focusedIndicatorColor = Color(0xFF9DA1A6),
-                                        unfocusedIndicatorColor = Color(0xFF9DA1A6),
-                                        disabledIndicatorColor = Color(0xFF9DA1A6),
-                                    ),
-                                    modifier = Modifier
-                                        .menuAnchor()
-                                        .fillMaxWidth()
-                                )
-                                ExposedDropdownMenu(
-                                    expanded = expandRegion,
-                                    onDismissRequest = { expandRegion = false },
-                                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
-                                ) {
-                                    listRegion.forEach { region ->
-                                        DropdownMenuItem(
-                                            text = { Text(region) },
-                                            onClick = {
-                                                selectedRegion = region
-                                                expandRegion = false
-                                            }
-                                        )
-                                    }
-                                }
                             }
 
                             Spacer(modifier = Modifier.height(20.dp))

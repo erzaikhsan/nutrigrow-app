@@ -48,7 +48,7 @@ class AddVaccineActivity : ComponentActivity() {
                                 ),
                                 title = {
                                     Text(
-                                        text = "Tambahkan Data Imunisasi",
+                                        text = "Tambahkan Imunisasi",
                                         style = MaterialTheme.typography.titleMedium,
                                     )
                                 },
