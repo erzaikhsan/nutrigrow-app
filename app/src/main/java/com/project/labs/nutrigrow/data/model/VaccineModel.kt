@@ -11,4 +11,6 @@ data class VaccineModel(
     val date: String,
     @field:SerializedName("vaccine_name")
     val vaccine_name: String,
+    @field:SerializedName("place")
+    val place: String,
 )

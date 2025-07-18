@@ -238,7 +238,7 @@ fun ChildProfileScreen(
                                     )
                                     when (checkAuth) {
                                         is UiState.Success -> {
-                                            if ((checkAuth as UiState.Success<AuthModel>).data.role == "Parent"){
+                                            if ((checkAuth as UiState.Success<AuthModel>).data.role == "Parent" || (checkAuth as UiState.Success<AuthModel>).data.role == "Officer"){
                                                 Icon(
                                                     imageVector = ImageVector.vectorResource(id = R.drawable.baseline_edit_square_24),
                                                     contentDescription = "Edit Child Profile",
@@ -333,6 +333,22 @@ fun ChildProfileScreen(
                                         )
                                         Text(
                                             text = if (child.data.gender == "M") "Laki-laki" else "Perempuan",
+                                            fontSize = 15.sp,
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(5.dp))
+                                    Row(
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                    ) {
+                                        Text(
+                                            text = "Anak Ke :",
+                                            fontSize = 15.sp,
+                                            fontWeight = FontWeight.W500,
+                                        )
+                                        Text(
+                                            text = child.data.order_of_child.toString(),
                                             fontSize = 15.sp,
                                         )
                                     }
@@ -865,8 +881,8 @@ fun ChildProfileScreen(
                                                         Text(
                                                             text = when (growth.data.hfa_status) {
                                                                 "Normal" -> "Balita dengan status gizi Normal perlu mempertahankan asupan nutrisi seimbang untuk mendukung pertumbuhan linier yang optimal. Berikan variasi makanan yang mengandung protein, kalsium, vitamin D, dan mikronutrien lainnya. Pastikan asupan susu atau produk susu yang cukup untuk mendukung pertumbuhan tulang. Berikan sayuran hijau, buah-buahan, dan sumber protein yang beragam. Jaga pola makan teratur dan hindari kebiasaan makan yang dapat mengganggu penyerapan nutrisi. Aktivitas fisik yang cukup juga penting untuk merangsang pertumbuhan tulang. Lakukan pemantauan pertumbuhan secara berkala untuk memastikan pertumbuhan tetap dalam jalur yang baik."
-                                                                "Stunted" -> "Balita dengan status gizi Stunting (Kurus) membutuhkan asupan nutrisi yang optimal untuk memaksimalkan potensi pertumbuhan tinggi badan. Prioritaskan makanan sumber protein hewani yang mengandung asam amino lengkap seperti telur, ikan, ayam, dan susu. Kombinasikan dengan protein nabati dari kacang-kacangan dan biji-bijian. Pastikan asupan mikronutrien penting seperti zinc, zat besi, kalsium, dan vitamin A melalui daging, hati, sayuran hijau, dan buah-buahan berwarna orange. Berikan makanan yang mudah dicerna dan diserap tubuh. Hindari faktor yang dapat menghambat penyerapan nutrisi seperti infeksi berulang. Konsultasi dengan tenaga kesehatan untuk memastikan tidak ada masalah kesehatan yang mendasari."
-                                                                "Severely Stunted" -> "Balita dengan status gizi Severely Stunting (Sangat Kurus) memerlukan intervensi nutrisi yang intensif dan berkelanjutan untuk mengoptimalkan pertumbuhan linier yang tersisa. Berikan makanan tinggi protein berkualitas seperti telur, ikan, daging, dan produk susu untuk mendukung pertumbuhan tulang dan otot. Pastikan asupan kalsium, fosfor, vitamin D, dan zinc yang cukup melalui susu, keju, sayuran hijau, dan kacang-kacangan. Berikan makanan padat energi dalam porsi kecil namun sering. Hindari makanan yang dapat menghambat penyerapan nutrisi. Suplementasi vitamin dan mineral mungkin diperlukan sesuai anjuran dokter. Konsultasi dengan ahli gizi dan dokter anak secara rutin untuk evaluasi dan modifikasi rencana nutrisi sangat penting."
+                                                                "Stunted" -> "Balita dengan status gizi Stunting (Pendek) membutuhkan asupan nutrisi yang optimal untuk memaksimalkan potensi pertumbuhan tinggi badan. Prioritaskan makanan sumber protein hewani yang mengandung asam amino lengkap seperti telur, ikan, ayam, dan susu. Kombinasikan dengan protein nabati dari kacang-kacangan dan biji-bijian. Pastikan asupan mikronutrien penting seperti zinc, zat besi, kalsium, dan vitamin A melalui daging, hati, sayuran hijau, dan buah-buahan berwarna orange. Berikan makanan yang mudah dicerna dan diserap tubuh. Hindari faktor yang dapat menghambat penyerapan nutrisi seperti infeksi berulang. Konsultasi dengan tenaga kesehatan untuk memastikan tidak ada masalah kesehatan yang mendasari."
+                                                                "Severely Stunted" -> "Balita dengan status gizi Severely Stunting (Sangat Pendek) memerlukan intervensi nutrisi yang intensif dan berkelanjutan untuk mengoptimalkan pertumbuhan linier yang tersisa. Berikan makanan tinggi protein berkualitas seperti telur, ikan, daging, dan produk susu untuk mendukung pertumbuhan tulang dan otot. Pastikan asupan kalsium, fosfor, vitamin D, dan zinc yang cukup melalui susu, keju, sayuran hijau, dan kacang-kacangan. Berikan makanan padat energi dalam porsi kecil namun sering. Hindari makanan yang dapat menghambat penyerapan nutrisi. Suplementasi vitamin dan mineral mungkin diperlukan sesuai anjuran dokter. Konsultasi dengan ahli gizi dan dokter anak secara rutin untuk evaluasi dan modifikasi rencana nutrisi sangat penting."
                                                                 else -> "Data tidak lengkap"
                                                             },
                                                             textAlign = TextAlign.Justify,
@@ -1211,9 +1227,11 @@ fun ChildProfileScreen(
                                                                     fontWeight = FontWeight.Bold,
                                                                     textAlign = TextAlign.Center,
                                                                 )
+                                                                Spacer(modifier = Modifier.width(10.dp))
                                                                 Text(
-                                                                    text = "Vaksin ${vaccineItem.vaccine_name}",
+                                                                    text = vaccineItem.vaccine_name,
                                                                     color = Color.White,
+                                                                    textAlign = TextAlign.End,
                                                                     fontSize = 16.sp,
                                                                     fontWeight = FontWeight.W600,
                                                                 )
@@ -1244,6 +1262,23 @@ fun ChildProfileScreen(
                                                                         modifier = Modifier.padding( vertical = 2.dp, horizontal = 8.dp)
                                                                     )
                                                                 }
+                                                                Row(
+                                                                    verticalAlignment = Alignment.CenterVertically,
+                                                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                                                    modifier = Modifier
+                                                                        .fillMaxWidth()
+                                                                ) {
+                                                                    Text(
+                                                                        text = "Faskes :",
+                                                                        fontSize = 15.sp,
+                                                                        fontWeight = FontWeight.W600,
+                                                                    )
+                                                                    Text(
+                                                                        text = vaccineItem.place,
+                                                                        fontSize = 15.sp,
+                                                                        modifier = Modifier.padding( vertical = 2.dp, horizontal = 8.dp)
+                                                                    )
+                                                                }
                                                             }
                                                         }
                                                         Spacer(modifier = Modifier.height(10.dp))
@@ -1269,6 +1304,8 @@ fun ChildProfileScreen(
                 is UiState.Unauthorized -> {
                     redirectToHome()
                 }
+
+                else -> { redirectToHome() }
             }
         }
     }

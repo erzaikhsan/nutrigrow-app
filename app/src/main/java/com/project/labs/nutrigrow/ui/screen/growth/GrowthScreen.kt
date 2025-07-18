@@ -483,6 +483,8 @@ fun GrowthScreen(
                     is UiState.Unauthorized -> {
                         redirectToHome()
                     }
+
+                    else -> {}
                 }
             }
         }

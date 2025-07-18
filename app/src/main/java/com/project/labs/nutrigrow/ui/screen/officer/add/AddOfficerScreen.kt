@@ -134,11 +134,16 @@ fun AddOfficerScreen(
         when (user) {
             is UiState.Loading -> {
                 submit = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    submit = "Tambahkan"
+                }
             }
             is UiState.Error -> {
                 submit = "Tambahkan"
                 coroutineScope.launch {
-                    snackState.showSnackbar("Gagal Menambahkan Kader\n${(user as UiState.Error).errorMessage}")
+                    snackState.showSnackbar((user as UiState.Error).errorMessage)
+                    viewModel.resetUserState()
                 }
             }
             is UiState.Success -> {
@@ -573,9 +578,9 @@ fun AddOfficerScreen(
             hostState = snackState
         ) { snackbarData: SnackbarData ->
             CustomSnackBar(
-                drawableRes = if (snackbarData.visuals.message.startsWith("Gagal Menambahkan")) R.drawable.baseline_error_outline_24 else R.drawable.baseline_check_circle_outline_24,
+                drawableRes = if (snackbarData.visuals.message.startsWith("Berhasil Menambahkan")) R.drawable.baseline_check_circle_outline_24 else R.drawable.baseline_error_outline_24,
                 message = snackbarData.visuals.message,
-                containerColor = if (snackbarData.visuals.message.startsWith("Gagal Menambahkan")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                containerColor = if (snackbarData.visuals.message.startsWith("Berhasil Menambahkan")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             )
         }
     }

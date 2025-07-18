@@ -142,6 +142,10 @@ fun UpdateGrowthScreen(
         when (newGrowth) {
             is UiState.Loading -> {
                 submit = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    submit = "Perbarui"
+                }
             }
 
             is UiState.Success -> {
@@ -154,7 +158,8 @@ fun UpdateGrowthScreen(
 
             is UiState.Error -> {
                 coroutineScope.launch {
-                    snackState.showSnackbar("Gagal Update Data Pertumbuhan\n${(newGrowth as UiState.Error).errorMessage}")
+                    snackState.showSnackbar((newGrowth as UiState.Error).errorMessage)
+                    viewModel.resetNewGrowthState()
                 }
                 submit = "Perbarui"
             }
@@ -162,7 +167,13 @@ fun UpdateGrowthScreen(
         }
 
         when (delete) {
-            is UiState.Loading -> { }
+            is UiState.Loading -> {
+                deleteButton = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    deleteButton = "Hapus"
+                }
+            }
 
             is UiState.Success -> {
                 coroutineScope.launch {
@@ -175,6 +186,7 @@ fun UpdateGrowthScreen(
             is UiState.Error -> {
                 coroutineScope.launch {
                     snackState.showSnackbar("Gagal Menghapus Data Pertumbuhan\n${(delete as UiState.Error).errorMessage}")
+                    viewModel.resetDeleteState()
                 }
                 deleteButton = "Hapus"
             }
@@ -483,9 +495,9 @@ fun UpdateGrowthScreen(
             hostState = snackState
         ) { snackbarData: SnackbarData ->
             CustomSnackBar(
-                drawableRes = if (snackbarData.visuals.message.startsWith("Gagal")) R.drawable.baseline_error_outline_24 else R.drawable.baseline_check_circle_outline_24,
+                drawableRes = if (snackbarData.visuals.message.startsWith("Berhasil Update")) R.drawable.baseline_check_circle_outline_24 else R.drawable.baseline_error_outline_24,
                 message = snackbarData.visuals.message,
-                containerColor = if (snackbarData.visuals.message.startsWith("Gagal")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                containerColor = if (snackbarData.visuals.message.startsWith("Berhasil Update")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             )
         }
 

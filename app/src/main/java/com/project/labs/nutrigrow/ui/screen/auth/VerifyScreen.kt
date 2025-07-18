@@ -88,17 +88,23 @@ fun VerifyScreen(
         when (otp) {
             is UiState.Loading -> {
                 register = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    register = "Verifikasi"
+                }
             }
             is UiState.Error -> {
                 register = "Verifikasi"
                 coroutineScope.launch {
-                    snackState.showSnackbar("Verifikasi Akun Gagal!\n${(otp as UiState.Error).errorMessage}")
+                    snackState.showSnackbar((otp as UiState.Error).errorMessage)
+                    viewModel.resetOtpState()
                 }
             }
             is UiState.Success -> {
                 coroutineScope.launch {
                     snackState.showSnackbar("Verifikasi Akun Berhasil\nSilahkan Lengkapi Data Anda")
                     redirectToRegister()
+                    viewModel.resetOtpState()
                 }
             }
             else -> {}
@@ -207,7 +213,7 @@ fun VerifyScreen(
                             value = otpCode,
                             onValueChange = { otpCode = it },
                             keyboardOptions = KeyboardOptions.Default.copy(
-                                keyboardType = KeyboardType.Email,
+                                keyboardType = KeyboardType.Number,
                                 imeAction = ImeAction.Next
                             ),
                             trailingIcon = { Icon(painterResource(id = R.drawable.baseline_verified_user_24), contentDescription = "Email", modifier = Modifier.size(22.dp)) },
@@ -278,9 +284,9 @@ fun VerifyScreen(
                 hostState = snackState
             ) { snackbarData: SnackbarData ->
                 CustomSnackBar(
-                    drawableRes = if (snackbarData.visuals.message.startsWith("Verifikasi Akun Gagal")) R.drawable.baseline_error_outline_24 else R.drawable.baseline_check_circle_outline_24,
+                    drawableRes = if (snackbarData.visuals.message.startsWith("Verifikasi Akun Berhasil")) R.drawable.baseline_check_circle_outline_24 else R.drawable.baseline_error_outline_24,
                     message = snackbarData.visuals.message,
-                    containerColor = if (snackbarData.visuals.message.startsWith("Verifikasi Akun Gagal")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                    containerColor = if (snackbarData.visuals.message.startsWith("Verifikasi Akun Berhasil")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                 )
             }
         }

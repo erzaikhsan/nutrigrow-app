@@ -134,19 +134,24 @@ fun AddEventScreen(
         ).show()
     }
 
-    val child: UiState<EventModel> by viewModel.event
+    val event: UiState<EventModel> by viewModel.event
 
     var submit by remember { mutableStateOf("Tambahkan") }
 
-    DisposableEffect(key1 = child){
-        when (child) {
+    DisposableEffect(key1 = event){
+        when (event) {
             is UiState.Loading -> {
                 submit = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    submit = "Tambahkan"
+                }
             }
             is UiState.Error -> {
                 submit = "Tambahkan"
                 coroutineScope.launch {
-                    snackState.showSnackbar("Gagal Menambahkan\n${(child as UiState.Error).errorMessage}")
+                    snackState.showSnackbar((event as UiState.Error).errorMessage)
+                    viewModel.resetEventState()
                 }
             }
             is UiState.Success -> {
@@ -459,9 +464,9 @@ fun AddEventScreen(
             hostState = snackState
         ) { snackbarData: SnackbarData ->
             CustomSnackBar(
-                drawableRes = if (snackbarData.visuals.message.startsWith("Gagal Menambahkan")) R.drawable.baseline_error_outline_24 else R.drawable.baseline_check_circle_outline_24,
+                drawableRes = if (snackbarData.visuals.message.startsWith("Berhasil Menambahkan")) R.drawable.baseline_check_circle_outline_24 else R.drawable.baseline_error_outline_24,
                 message = snackbarData.visuals.message,
-                containerColor = if (snackbarData.visuals.message.startsWith("Gagal Menambahkan")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                containerColor = if (snackbarData.visuals.message.startsWith("Berhasil Menambahkan")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             )
         }
     }

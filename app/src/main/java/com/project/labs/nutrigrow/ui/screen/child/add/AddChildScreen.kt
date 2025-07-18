@@ -82,6 +82,7 @@ fun AddChildScreen(
     var full_name by remember { mutableStateOf("") }
     var father by remember { mutableStateOf("") }
     var mother by remember { mutableStateOf("") }
+    var order_of_child by remember { mutableStateOf("") }
     var place_of_birth by remember { mutableStateOf("") }
     var birth_weight by remember { mutableStateOf("") }
     var birth_height by remember { mutableStateOf("") }
@@ -126,11 +127,16 @@ fun AddChildScreen(
         when (child) {
             is UiState.Loading -> {
                 submit = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    submit = "Tambahkan"
+                }
             }
             is UiState.Error -> {
                 submit = "Tambahkan"
                 coroutineScope.launch {
-                    snackState.showSnackbar("Gagal Menambahkan\n${(child as UiState.Error).errorMessage}")
+                    snackState.showSnackbar((child as UiState.Error).errorMessage)
+                    viewModel.resetChildState()
                 }
             }
             is UiState.Success -> {
@@ -259,6 +265,35 @@ fun AddChildScreen(
                                     ),
                                     shape = RoundedCornerShape(10.dp),
                                     placeholder = { Text("Masukan Nama Ibu", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        focusedIndicatorColor = Color(0xFF9DA1A6),
+                                        unfocusedIndicatorColor = Color(0xFF9DA1A6),
+                                        disabledIndicatorColor = Color(0xFF9DA1A6),
+                                    ),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Text(
+                                text = "Anak Ke-",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.W500,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 5.dp)
+                            )
+                            Box {
+                                OutlinedTextField(
+                                    value = order_of_child,
+                                    onValueChange = { order_of_child = it },
+                                    keyboardOptions = KeyboardOptions.Default.copy(
+                                        keyboardType = KeyboardType.Number,
+                                        imeAction = ImeAction.Next
+                                    ),
+                                    shape = RoundedCornerShape(10.dp),
+                                    placeholder = { Text("Masukan Anak Ke", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
                                     colors = TextFieldDefaults.textFieldColors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
@@ -470,7 +505,7 @@ fun AddChildScreen(
                             Spacer(modifier = Modifier.height(20.dp))
                             Button(
                                 onClick = {
-                                    if (submit != "Loading...") viewModel.addChild( full_name = full_name, gender = selectedGender, place_of_birth = place_of_birth, date_of_birth = date_of_birth, father = father, mother = mother, region = user.data.region, birth_weight = birth_weight, birth_height = birth_height, birth_head_circum = birth_head_circum)
+                                    if (submit != "Loading...") viewModel.addChild( full_name = full_name, gender = selectedGender, place_of_birth = place_of_birth, date_of_birth = date_of_birth, father = father, mother = mother, order_of_child = order_of_child, region = user.data.region, birth_weight = birth_weight, birth_height = birth_height, birth_head_circum = birth_head_circum)
                                 },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.primary,
@@ -499,9 +534,9 @@ fun AddChildScreen(
             hostState = snackState
         ) { snackbarData: SnackbarData ->
             CustomSnackBar(
-                drawableRes = if (snackbarData.visuals.message.startsWith("Gagal Menambahkan")) R.drawable.baseline_error_outline_24 else R.drawable.baseline_check_circle_outline_24,
+                drawableRes = if (snackbarData.visuals.message.startsWith("Berhasil Menambahkan")) R.drawable.baseline_check_circle_outline_24 else R.drawable.baseline_error_outline_24,
                 message = snackbarData.visuals.message,
-                containerColor = if (snackbarData.visuals.message.startsWith("Gagal Menambahkan")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                containerColor = if (snackbarData.visuals.message.startsWith("Berhasil Menambahkan")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             )
         }
     }

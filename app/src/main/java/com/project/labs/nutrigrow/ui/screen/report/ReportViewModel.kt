@@ -65,16 +65,38 @@ class ReportViewModel (
         }
     }
 
-    fun getChildrenReport( currentDate: String, context: Context) {
+    fun getChildrenReport( month: Number, year: Number, context: Context) {
         _user.value = UiState.Loading
-        if ( currentDate.isEmpty()) {
-            _pdfDownloadState.value = UiState.Error("Mohon Pilih Tanggal Penimbangan")
+        if ( month == 0 || year == 0) {
+            _pdfDownloadState.value = UiState.Error("Mohon Pilih Bulan Penimbangan")
             return
         }
         viewModelScope.launch {
             viewModelScope.launch {
                 try {
-                    val file = reportRepository.getChildrenReport( currentDate = reformatDate(currentDate), context)
+                    val file = reportRepository.getChildrenReport( month = month, year = year, context)
+                    if (file != null) {
+                        _pdfDownloadState.value = UiState.Success(file)
+                    } else {
+                        _pdfDownloadState.value = UiState.Error("Tidak ada data Balita.")
+                    }
+                } catch (e: Exception) {
+                    _pdfDownloadState.value = UiState.Error("Error: ${e.message}")
+                }
+            }
+        }
+    }
+
+    fun getRegionChildrenReport(region : String, month: Number, year: Number, context: Context) {
+        _user.value = UiState.Loading
+        if ( region.isEmpty() || month == 0 || year == 0) {
+            _pdfDownloadState.value = UiState.Error("Mohon Pilih Bulan Penimbangan")
+            return
+        }
+        viewModelScope.launch {
+            viewModelScope.launch {
+                try {
+                    val file = reportRepository.getRegionChildrenReport(region = region, month = month, year = year, context)
                     if (file != null) {
                         _pdfDownloadState.value = UiState.Success(file)
                     } else {
@@ -105,16 +127,34 @@ class ReportViewModel (
         }
     }
 
-    fun getMonthlyReport(region: String, currentDate: String, context: Context) {
+    fun getRegionParentReport(region : String, context: Context) {
         _user.value = UiState.Loading
-        if ( region.isEmpty() || currentDate.isEmpty()) {
-            _pdfDownloadState.value = UiState.Error("Mohon Pilih Tanggal Penimbangan")
+        viewModelScope.launch {
+            viewModelScope.launch {
+                try {
+                    val file = reportRepository.getRegionParentReport(region = region, context)
+                    if (file != null) {
+                        _pdfDownloadState.value = UiState.Success(file)
+                    } else {
+                        _pdfDownloadState.value = UiState.Error("Tidak ada data Orang Tua Balita.")
+                    }
+                } catch (e: Exception) {
+                    _pdfDownloadState.value = UiState.Error("Error: ${e.message}")
+                }
+            }
+        }
+    }
+
+    fun getMonthlyReport(region: String, month: Number, year: Number, context: Context) {
+        _user.value = UiState.Loading
+        if ( region.isEmpty() || month == 0 || year == 0) {
+            _pdfDownloadState.value = UiState.Error("Mohon Pilih Bulan Penimbangan")
             return
         }
         viewModelScope.launch {
             viewModelScope.launch {
                 try {
-                    val file = reportRepository.getMonthlyReport(region = region, currentDate = reformatDate(currentDate), context = context)
+                    val file = reportRepository.getMonthlyReport(region = region, month = month, year = year, context = context)
                     if (file != null) {
                         _pdfDownloadState.value = UiState.Success(file)
                     } else {
@@ -125,6 +165,10 @@ class ReportViewModel (
                 }
             }
         }
+    }
+
+    fun resetPdfDownloadState() {
+        _pdfDownloadState.value = UiState.Loading
     }
 
     fun reformatDate(inputDate: String): String {

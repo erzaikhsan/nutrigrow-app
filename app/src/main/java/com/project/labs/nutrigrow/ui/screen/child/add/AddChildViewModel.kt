@@ -86,14 +86,24 @@ class AddChildViewModel (
         }
     }
 
-    fun addChild( full_name: String, gender: String, place_of_birth: String, date_of_birth: String, father: String, mother: String, region: String, birth_weight: String, birth_height: String, birth_head_circum: String) {
-        if ( full_name.isEmpty() || gender.isEmpty() || date_of_birth.isEmpty() || region.isEmpty() || birth_weight.isEmpty() || birth_height.isEmpty() || birth_head_circum.isEmpty() || place_of_birth.isEmpty() || father.isEmpty() || mother.isEmpty()) {
+    fun addChild( full_name: String, gender: String, place_of_birth: String, date_of_birth: String, father: String, mother: String, order_of_child: String, region: String, birth_weight: String, birth_height: String, birth_head_circum: String) {
+        if ( full_name.isEmpty() || gender.isEmpty() || date_of_birth.isEmpty() || region.isEmpty() || birth_weight.isEmpty() || birth_height.isEmpty() || birth_head_circum.isEmpty() || place_of_birth.isEmpty() || father.isEmpty() || mother.isEmpty() || order_of_child.isEmpty()) {
             _child.value = UiState.Error("Pastikan Semua Data Anak\nDiisi Dengan Benar")
             return
         }
+
+        val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
+        val dob = LocalDate.parse(date_of_birth, formatter)
+
+        if (dob.isAfter(today)) {
+            _child.value = UiState.Error("Tanggal Lahir tidak boleh melebihi tanggal hari ini")
+            return
+        }
+
         _child.value = UiState.Loading
         viewModelScope.launch {
-            childRepository.addChildren( full_name = full_name, gender = if (gender == "Laki-Laki") "M" else "F", place_of_birth = place_of_birth, date_of_birth = reformatDate(date_of_birth), father = father, mother = mother, region = region, birth_weight = birth_weight.toDouble(), birth_height = birth_height.toDouble(), birth_head_circum = birth_head_circum.toDouble() ).catch {
+            childRepository.addChildren( full_name = full_name, gender = if (gender == "Laki-Laki") "M" else "F", place_of_birth = place_of_birth, date_of_birth = reformatDate(date_of_birth), father = father, mother = mother, order_of_child = order_of_child.toInt(), region = region, birth_weight = birth_weight.toDouble(), birth_height = birth_height.toDouble(), birth_head_circum = birth_head_circum.toDouble() ).catch {
                 _child.value = UiState.Error(it.message.toString())
             }.collect { data ->
                 try {
@@ -115,6 +125,10 @@ class AddChildViewModel (
                 }
             }
         }
+    }
+
+    fun resetChildState() {
+        _child.value = UiState.Loading
     }
 
     fun reformatDate(inputDate: String): String {

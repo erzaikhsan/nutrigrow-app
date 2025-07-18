@@ -68,14 +68,24 @@ class AddVaccineViewModel (
         }
     }
 
-    fun addVaccine(  children_id: String, date: String, vaccine_name: String) {
-        if ( children_id.isEmpty() || date.isEmpty() || vaccine_name.isEmpty()) {
+    fun addVaccine(  children_id: String, date: String, vaccine_name: String, place: String) {
+        if ( children_id.isEmpty() || date.isEmpty() || vaccine_name.isEmpty() || place.isEmpty()) {
             _vaccine.value = UiState.Error("Pastikan Semua Data\nDiisi Dengan Benar")
             return
         }
+
+        val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
+        val dob = LocalDate.parse(date, formatter)
+
+        if (dob.isAfter(today)) {
+            _vaccine.value = UiState.Error("Tanggal Imunisasi tidak boleh melebihi tanggal hari ini")
+            return
+        }
+
         _vaccine.value = UiState.Loading
         viewModelScope.launch {
-            vaccineRepository.addVaccine( children_id, reformatDate(date), vaccine_name).catch {
+            vaccineRepository.addVaccine( children_id, reformatDate(date), vaccine_name, place).catch {
                 _vaccine.value = UiState.Error(it.message.toString())
             }.collect { data ->
                 try {
@@ -97,6 +107,10 @@ class AddVaccineViewModel (
                 }
             }
         }
+    }
+
+    fun resetVaccineState() {
+        _vaccine.value = UiState.Loading
     }
 
     fun reformatDate(inputDate: String): String {

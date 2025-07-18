@@ -60,8 +60,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.project.labs.nutrigrow.R
 import com.project.labs.nutrigrow.activity.child.ChildActivity
-import com.project.labs.nutrigrow.data.model.AccountModel
 import com.project.labs.nutrigrow.data.model.AuthModel
+import com.project.labs.nutrigrow.data.model.UserModel
 import com.project.labs.nutrigrow.ui.component.card.ChildCard
 import com.project.labs.nutrigrow.ui.component.respond.ErrorMessage
 import com.project.labs.nutrigrow.ui.component.respond.LoadingIndicator
@@ -98,7 +98,7 @@ fun ParentProfileScreen(
     }
 
     val checkAuth by viewModel.isAuthenticated
-    val isActive: UiState<AccountModel> by viewModel.isActive
+    val isActive: UiState<UserModel> by viewModel.isActive
 
     LaunchedEffect(key1 = checkAuth) {
         viewModel.checkAuthentication()
@@ -116,7 +116,7 @@ fun ParentProfileScreen(
             is UiState.Success -> {
                 coroutineScope.launch {
                     snackState.showSnackbar("Berhasil ${
-                        if ((isActive as UiState.Success<AccountModel>).data.isActive) {
+                        if ((isActive as UiState.Success<UserModel>).data.is_active) {
                             "Mengaktifkan Akun"
                         } else {
                             "Menonaktifkan Akun"
@@ -258,7 +258,7 @@ fun ParentProfileScreen(
                                     when (checkAuth) {
                                         is UiState.Success -> {
                                             if ((checkAuth as UiState.Success<AuthModel>).data.role == "Admin"){
-                                                if (parents.data.isActive) {
+                                                if (parents.data.is_active) {
                                                     Icon(
                                                         imageVector = ImageVector.vectorResource(id = R.drawable.baseline_group_remove_24),
                                                         contentDescription = "Deactivate",
@@ -307,10 +307,10 @@ fun ParentProfileScreen(
                                             fontWeight = FontWeight.W500,
                                         )
                                         Text(
-                                            text = if (parents.data.isActive) "Aktif" else "Tidak Aktif",
+                                            text = if (parents.data.is_active) "Aktif" else "Tidak Aktif",
                                             fontSize = 15.sp,
                                             fontWeight = FontWeight.W500,
-                                            color = if (parents.data.isActive) Color.Green else Color.Red
+                                            color = if (parents.data.is_active) Color.Green else Color.Red
                                         )
                                     }
                                     Spacer(modifier = Modifier.height(5.dp))
@@ -533,6 +533,8 @@ fun ParentProfileScreen(
                                         is UiState.Unauthorized -> {
                                             redirectToHome()
                                         }
+
+                                        else -> {}
                                     }
                                 }
                             }
@@ -540,7 +542,7 @@ fun ParentProfileScreen(
                         Spacer(modifier = Modifier.height(10.dp))
                     }
                     if (showLogoutDialog) {
-                        if (parents.data.isActive) {
+                        if (parents.data.is_active) {
                             AlertDialog(
                                 containerColor = Color.White,
                                 onDismissRequest = { showLogoutDialog = false },
@@ -597,6 +599,8 @@ fun ParentProfileScreen(
                 is UiState.Unauthorized -> {
                     redirectToHome()
                 }
+
+                else -> {}
             }
         }
         SnackbarHost(

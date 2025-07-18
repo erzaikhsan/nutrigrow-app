@@ -29,6 +29,10 @@ class DetailGrowthViewModel (
     val growth: StateFlow<UiState<List<GrowthModel>>>
         get() = _growth
 
+    private val _currentGrowth: MutableState<UiState<List<GrowthModel>>> = mutableStateOf(UiState.Unauthorized)
+    val currentGrowth: MutableState<UiState<List<GrowthModel>>>
+        get() = _currentGrowth
+
     private val _isAuthenticated: MutableState<UiState<AuthModel>> = mutableStateOf(UiState.Loading)
     val isAuthenticated: MutableState<UiState<AuthModel>>
         get() = _isAuthenticated
@@ -65,9 +69,34 @@ class DetailGrowthViewModel (
     }
 
     fun getGrowthByChildId(id: String) {
-        _growth.value = UiState.Loading
+        _currentGrowth.value = UiState.Loading
         viewModelScope.launch {
             growthRepository.getGrowthByChildId(id)
+                .catch {
+                    _currentGrowth.value = UiState.Error(it.message.toString())
+                }
+                .collect { data ->
+                    try {
+                        if (!data.success) {
+                            if (data.message == "Unauthorized") {
+                                _currentGrowth.value = UiState.Unauthorized
+                                return@collect
+                            }
+                            _currentGrowth.value = UiState.Error(data.message)
+                            return@collect
+                        }
+                        _currentGrowth.value = UiState.Success(data.data)
+                    } catch (e: Exception) {
+                        _currentGrowth.value = UiState.Error(e.message.toString())
+                    }
+                }
+        }
+    }
+
+    fun getGrowthByChildIdInYear(id: String, year: Number) {
+        _growth.value = UiState.Loading
+        viewModelScope.launch {
+            growthRepository.getGrowthByChildIdInYear(id, year)
                 .catch {
                     _growth.value = UiState.Error(it.message.toString())
                 }

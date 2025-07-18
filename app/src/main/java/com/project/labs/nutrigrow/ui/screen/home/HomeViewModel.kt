@@ -43,6 +43,10 @@ class HomeViewModel(
     val officers: StateFlow<UiState<List<UserModel>>>
         get() = _officer
 
+    private val _search: MutableStateFlow<UiState<List<UserModel>>> = MutableStateFlow(UiState.Loading)
+    val search: StateFlow<UiState<List<UserModel>>>
+        get() = _search
+
     private val _isAuthenticated: MutableState<UiState<AuthModel>> = mutableStateOf(UiState.Loading)
     val isAuthenticated: MutableState<UiState<AuthModel>>
         get() = _isAuthenticated
@@ -193,6 +197,31 @@ class HomeViewModel(
                         _officer.value = UiState.Success(data.data)
                     } catch (e: Exception) {
                         _officer.value = UiState.Error(e.message.toString())
+                    }
+                }
+        }
+    }
+
+    fun getParentByNameAndRegion( name: String, region: String) {
+        _search.value = UiState.Loading
+        viewModelScope.launch {
+            userRepository.getParentByNameAndRegion(name, region)
+                .catch {
+                    _search.value = UiState.Error(it.message.toString())
+                }
+                .collect { data ->
+                    try {
+                        if (!data.success) {
+                            if (data.message == "Unauthorized") {
+                                _search.value = UiState.Unauthorized
+                                return@collect
+                            }
+                            _search.value = UiState.Error(data.message)
+                            return@collect
+                        }
+                        _search.value = UiState.Success(data.data)
+                    } catch (e: Exception) {
+                        _search.value = UiState.Error(e.message.toString())
                     }
                 }
         }

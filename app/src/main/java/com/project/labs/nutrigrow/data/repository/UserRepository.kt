@@ -1,10 +1,9 @@
 package com.project.labs.nutrigrow.data.repository
 
 import com.project.labs.nutrigrow.data.local.preference.UserPreference
-import com.project.labs.nutrigrow.data.model.AccountModel
+import com.project.labs.nutrigrow.data.model.UserModel
 import com.project.labs.nutrigrow.data.model.AuthModel
 import com.project.labs.nutrigrow.data.model.SendOtpModel
-import com.project.labs.nutrigrow.data.model.UserModel
 import com.project.labs.nutrigrow.data.model.VerifyModel
 import com.project.labs.nutrigrow.data.remote.response.TemplateResponse
 import com.project.labs.nutrigrow.data.remote.retrofit.ApiService
@@ -89,7 +88,7 @@ class UserRepository(
             userPreference.getOTP().first()
         }
 
-        val register = apiService.verifyOtp( email = userPreference.email, password = userPreference.password, otp = otpCode)
+        val register = apiService.verifyOtp( email = userPreference.email, otp = otpCode)
         if (!register.isSuccessful) {
             val message = register.processError()
 
@@ -121,7 +120,7 @@ class UserRepository(
             userPreference.getOTP().first()
         }
 
-        val register = apiService.registerParent( email = userPreference.email, full_name = full_name, gender = gender, date_of_birth = date_of_birth, phone_number = phone_number, address = address, region = region)
+        val register = apiService.registerParent( email = userPreference.email, password = userPreference.password, full_name = full_name, gender = gender, date_of_birth = date_of_birth, phone_number = phone_number, address = address, region = region)
         if (!register.isSuccessful) {
             val message = register.processError()
 
@@ -129,7 +128,7 @@ class UserRepository(
                 TemplateResponse(
                     success = false,
                     message = message,
-                    data = UserModel("", "", "", "", "", "", "")
+                    data = UserModel("", "", "", "", "", "", "", false, "")
                 )
             )
             return@flow
@@ -143,7 +142,7 @@ class UserRepository(
             TemplateResponse(
                 success = false,
                 message = e.message.toString(),
-                data = UserModel("", "", "", "", "", "", "")
+                data = UserModel("", "", "", "", "", "", "", false, "")
             )
         )
     }
@@ -157,7 +156,7 @@ class UserRepository(
                 TemplateResponse(
                     success = false,
                     message = message,
-                    data = UserModel("", "", "", "", "", "", "")
+                    data = UserModel("", "", "", "", "", "", "", false, "")
                 )
             )
             return@flow
@@ -171,12 +170,12 @@ class UserRepository(
             TemplateResponse(
                 success = false,
                 message = e.message.toString(),
-                data = UserModel("", "", "", "", "", "", "")
+                data = UserModel("", "", "", "", "", "", "", false, "")
             )
         )
     }
 
-    fun deactivateAccount(id: String): Flow<TemplateResponse<AccountModel>> {
+    fun deactivateAccount(id: String): Flow<TemplateResponse<UserModel>> {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
@@ -193,7 +192,7 @@ class UserRepository(
                     TemplateResponse(
                         success = false,
                         message = message,
-                        data = AccountModel("", "", "", "", "", "", "", false)
+                        data = UserModel("", "", "", "", "", "", "", false, "")
                     )
                 )
                 return@flow
@@ -207,13 +206,13 @@ class UserRepository(
                 TemplateResponse(
                     success = false,
                     message = e.message.toString(),
-                    data = AccountModel("", "", "", "", "", "", "", false)
+                    data = UserModel("", "", "", "", "", "", "", false, "")
                 )
             )
         }
     }
 
-    fun activateAccount(id: String): Flow<TemplateResponse<AccountModel>> {
+    fun activateAccount(id: String): Flow<TemplateResponse<UserModel>> {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
@@ -230,7 +229,7 @@ class UserRepository(
                     TemplateResponse(
                         success = false,
                         message = message,
-                        data = AccountModel("", "", "", "", "", "", "", false)
+                        data = UserModel("", "", "", "", "", "", "", false, "")
                     )
                 )
                 return@flow
@@ -244,14 +243,14 @@ class UserRepository(
                 TemplateResponse(
                     success = false,
                     message = e.message.toString(),
-                    data = AccountModel("", "", "", "", "", "", "", false)
+                    data = UserModel("", "", "", "", "", "", "", false, "")
                 )
             )
         }
     }
 
     //Parent
-    fun getParentAccount(id: String): Flow<TemplateResponse<AccountModel>> {
+    fun getParentAccount(id: String): Flow<TemplateResponse<UserModel>> {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
@@ -268,7 +267,7 @@ class UserRepository(
                     TemplateResponse(
                         success = false,
                         message = message,
-                        data = AccountModel("", "", "", "", "", "", "", false)
+                        data = UserModel("", "", "", "", "", "", "", false, "")
                     )
                 )
                 return@flow
@@ -282,7 +281,7 @@ class UserRepository(
                 TemplateResponse(
                     success = false,
                     message = e.message.toString(),
-                    data = AccountModel("", "", "", "", "", "", "", false)
+                    data = UserModel("", "", "", "", "", "", "", false, "")
                 )
             )
         }
@@ -305,7 +304,7 @@ class UserRepository(
                     TemplateResponse(
                         success = false,
                         message = message,
-                        data = UserModel("", "", "", "", "", "", "")
+                        data = UserModel("", "", "", "", "", "", "", false, "")
                     )
                 )
                 return@flow
@@ -319,7 +318,7 @@ class UserRepository(
                 TemplateResponse(
                     success = false,
                     message = e.message.toString(),
-                    data = UserModel("", "", "", "", "", "", "")
+                    data = UserModel("", "", "", "", "", "", "", false, "")
                 )
             )
         }
@@ -342,7 +341,7 @@ class UserRepository(
                     TemplateResponse(
                         success = false,
                         message = message,
-                        data = UserModel("", "", "", "", "", "", "")
+                        data = UserModel("", "", "", "", "", "", "", false, "")
                     )
                 )
                 return@flow
@@ -356,7 +355,7 @@ class UserRepository(
                 TemplateResponse(
                     success = false,
                     message = e.message.toString(),
-                    data = UserModel("", "", "", "", "", "", "")
+                    data = UserModel("", "", "", "", "", "", "", false, "")
                 )
             )
         }
@@ -473,6 +472,43 @@ class UserRepository(
         }
     }
 
+    fun getParentByNameAndRegion(name: String, region: String): Flow<TemplateResponse<List<UserModel>>> {
+        val userPreference = runBlocking {
+            userPreference.getAuth().first()
+        }
+
+        return flow {
+            val user = apiService.getParentByNameAndRegion(token = userPreference.token, name = name, region = region)
+            if (!user.isSuccessful) {
+                val message = user.processError()
+                if (message == "Unauthorized") {
+                    logOut()
+                }
+
+                emit(
+                    TemplateResponse(
+                        success = false,
+                        message = message,
+                        data = emptyList()
+                    )
+                )
+                return@flow
+            }
+
+            user.body()?.apply {
+                emit(this)
+            }
+        }.catch { e ->
+            emit(
+                TemplateResponse(
+                    success = false,
+                    message = e.message.toString(),
+                    data = emptyList()
+                )
+            )
+        }
+    }
+
     fun updateParent( full_name: String, gender: String, date_of_birth: String, phone_number: String, address: String, region: String) = flow {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
@@ -486,7 +522,7 @@ class UserRepository(
                 TemplateResponse(
                     success = false,
                     message = message,
-                    data = UserModel("", "", "", "", "", "", "")
+                    data = UserModel("", "", "", "", "", "", "", false, "")
                 )
             )
             return@flow
@@ -500,7 +536,7 @@ class UserRepository(
             TemplateResponse(
                 success = false,
                 message = e.message.toString(),
-                data = UserModel("", "", "", "", "", "", "")
+                data = UserModel("", "", "", "", "", "", "", false, "")
             )
         )
     }
@@ -523,7 +559,7 @@ class UserRepository(
                     TemplateResponse(
                         success = false,
                         message = message,
-                        data = UserModel("", "", "", "", "", "", "")
+                        data = UserModel("", "", "", "", "", "", "", false, "")
                     )
                 )
                 return@flow
@@ -537,13 +573,13 @@ class UserRepository(
                 TemplateResponse(
                     success = false,
                     message = e.message.toString(),
-                    data = UserModel("", "", "", "", "", "", "")
+                    data = UserModel("", "", "", "", "", "", "", false, "")
                 )
             )
         }
     }
 
-    fun getOfficerAccount(id: String): Flow<TemplateResponse<AccountModel>> {
+    fun getOfficerAccount(id: String): Flow<TemplateResponse<UserModel>> {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
@@ -560,7 +596,7 @@ class UserRepository(
                     TemplateResponse(
                         success = false,
                         message = message,
-                        data = AccountModel("", "", "", "", "", "", "", false)
+                        data = UserModel("", "", "", "", "", "", "", false, "")
                     )
                 )
                 return@flow
@@ -574,7 +610,7 @@ class UserRepository(
                 TemplateResponse(
                     success = false,
                     message = e.message.toString(),
-                    data = AccountModel("", "", "", "", "", "", "", false)
+                    data = UserModel("", "", "", "", "", "", "", false, "")
                 )
             )
         }
@@ -597,7 +633,7 @@ class UserRepository(
                     TemplateResponse(
                         success = false,
                         message = message,
-                        data = UserModel("", "", "", "", "", "", "")
+                        data = UserModel("", "", "", "", "", "", "", false, "")
                     )
                 )
                 return@flow
@@ -611,7 +647,7 @@ class UserRepository(
                 TemplateResponse(
                     success = false,
                     message = e.message.toString(),
-                    data = UserModel("", "", "", "", "", "", "")
+                    data = UserModel("", "", "", "", "", "", "", false, "")
                 )
             )
         }
@@ -704,7 +740,7 @@ class UserRepository(
                 TemplateResponse(
                     success = false,
                     message = message,
-                    data = UserModel("", "", "", "", "", "", "")
+                    data = UserModel("", "", "", "", "", "", "", false, "")
                 )
             )
             return@flow
@@ -718,7 +754,7 @@ class UserRepository(
             TemplateResponse(
                 success = false,
                 message = e.message.toString(),
-                data = UserModel("", "", "", "", "", "", "")
+                data = UserModel("", "", "", "", "", "", "", false, "")
             )
         )
     }

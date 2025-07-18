@@ -141,6 +141,10 @@ fun ProfileUpdateScreen(
         when (newUser) {
             is UiState.Loading -> {
                 submit = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    submit = "Perbarui"
+                }
             }
 
             is UiState.Success -> {
@@ -153,7 +157,8 @@ fun ProfileUpdateScreen(
 
             is UiState.Error -> {
                 coroutineScope.launch {
-                    snackState.showSnackbar("Gagal Melakukan Pembaruan Profile")
+                    snackState.showSnackbar((newUser as UiState.Error).errorMessage)
+                    viewModel.resetNewUser()
                 }
                 submit = "Perbarui"
             }
@@ -450,9 +455,9 @@ fun ProfileUpdateScreen(
             hostState = snackState
         ) { snackbarData: SnackbarData ->
             CustomSnackBar(
-                drawableRes = if (snackbarData.visuals.message.startsWith("Gagal")) R.drawable.baseline_error_outline_24 else R.drawable.baseline_check_circle_outline_24,
+                drawableRes = if (snackbarData.visuals.message.startsWith("Berhasil")) R.drawable.baseline_check_circle_outline_24 else R.drawable.baseline_error_outline_24,
                 message = snackbarData.visuals.message,
-                containerColor = if (snackbarData.visuals.message.startsWith("Gagal")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                containerColor = if (snackbarData.visuals.message.startsWith("Berhasil")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             )
         }
     }

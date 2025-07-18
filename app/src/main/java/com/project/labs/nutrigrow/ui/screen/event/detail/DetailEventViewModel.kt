@@ -86,4 +86,8 @@ class DetailEventViewModel(
                 }
         }
     }
+
+    fun resetDeleteState() {
+        _delete.value = UiState.Loading
+    }
 }

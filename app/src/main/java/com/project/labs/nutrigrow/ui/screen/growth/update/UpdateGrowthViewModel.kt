@@ -106,6 +106,16 @@ class UpdateGrowthViewModel (
             _newGrowth.value = UiState.Error("Pastikan Semua Data\nDiisi Dengan Benar")
             return
         }
+
+        val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
+        val dob = LocalDate.parse(date, formatter)
+
+        if (dob.isAfter(today)) {
+            _newGrowth.value = UiState.Error("Tanggal Penimbangan tidak boleh melebihi tanggal hari ini")
+            return
+        }
+
         _newGrowth.value = UiState.Loading
         viewModelScope.launch {
             growthRepository.updateGrowth( id,  children_id, reformatDate(date), weight.toDouble(), height.toDouble(), head_circum.toDouble(), arm_circum.toDouble(), note.ifEmpty { "Tidak ada catatan" }).catch {
@@ -155,6 +165,14 @@ class UpdateGrowthViewModel (
                     }
                 }
         }
+    }
+
+    fun resetNewGrowthState() {
+        _newGrowth.value = UiState.Loading
+    }
+
+    fun resetDeleteState() {
+        _delete.value = UiState.Loading
     }
 
     fun reformatDate(inputDate: String): String {

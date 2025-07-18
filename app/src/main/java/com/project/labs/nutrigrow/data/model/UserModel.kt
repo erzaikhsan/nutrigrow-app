@@ -3,7 +3,7 @@ package com.project.labs.nutrigrow.data.model
 import com.google.gson.annotations.SerializedName
 
 data class UserModel(
-    @field:SerializedName("user_id")
+    @field:SerializedName("id")
     val user_id: String,
     @field:SerializedName("full_name")
     val full_name: String,
@@ -17,4 +17,8 @@ data class UserModel(
     val address: String,
     @field:SerializedName("region")
     val region: String,
+    @field:SerializedName("is_active")
+    val is_active: Boolean,
+    @field:SerializedName("active_period")
+    val active_period: String,
 )

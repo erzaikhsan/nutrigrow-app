@@ -356,6 +356,8 @@ fun ParentScreen(
                     is UiState.Unauthorized -> {
                         redirectToWelcome("Sesi Telah Berakhir\nSilahkan Masuk Kembali")
                     }
+
+                    else -> {}
                 }
             }
         }

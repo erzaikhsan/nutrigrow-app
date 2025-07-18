@@ -181,6 +181,8 @@ fun DetailMpasiScreen(
                 is UiState.Unauthorized -> {
                     redirectToHome()
                 }
+
+                else -> {}
             }
         }
     }

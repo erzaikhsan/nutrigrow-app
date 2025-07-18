@@ -96,17 +96,23 @@ fun CreateAccountScreen(
         when (account) {
             is UiState.Loading -> {
                 register = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    register = "Daftar"
+                }
             }
             is UiState.Error -> {
                 register = "Daftar"
                 coroutineScope.launch {
-                    snackState.showSnackbar("Daftar Akun Gagal!\n${(account as UiState.Error).errorMessage}")
+                    snackState.showSnackbar((account as UiState.Error).errorMessage)
+                    viewModel.resetAccountState()
                 }
             }
             is UiState.Success -> {
                 coroutineScope.launch {
                     snackState.showSnackbar("Daftar Akun Berhasil\nSilahkan Cek Email Anda Untuk Verifikasi Akun")
                     redirectToVerify()
+                    viewModel.resetAccountState()
                 }
             }
             else -> {}
@@ -363,9 +369,9 @@ fun CreateAccountScreen(
                 hostState = snackState
             ) { snackbarData: SnackbarData ->
                 CustomSnackBar(
-                    drawableRes = if (snackbarData.visuals.message.startsWith("Daftar Akun Gagal")) R.drawable.baseline_error_outline_24 else R.drawable.baseline_check_circle_outline_24,
+                    drawableRes = if (snackbarData.visuals.message.startsWith("Daftar Akun Berhasil")) R.drawable.baseline_check_circle_outline_24 else R.drawable.baseline_error_outline_24,
                     message = snackbarData.visuals.message,
-                    containerColor = if (snackbarData.visuals.message.startsWith("Daftar Akun Gagal")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                    containerColor = if (snackbarData.visuals.message.startsWith("Daftar Akun Berhasil")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                 )
             }
         }

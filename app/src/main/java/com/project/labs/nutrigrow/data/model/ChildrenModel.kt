@@ -19,6 +19,8 @@ data class ChildrenModel(
     val father: String,
     @field:SerializedName("mother")
     val mother: String,
+    @field:SerializedName("order_of_child")
+    val order_of_child: Number,
     @field:SerializedName("region")
     val region: String,
     @field:SerializedName("birth_weight")

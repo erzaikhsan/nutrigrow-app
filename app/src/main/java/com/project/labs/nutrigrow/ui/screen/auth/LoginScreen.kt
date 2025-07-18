@@ -92,11 +92,16 @@ fun LoginScreen(
         when (auth) {
             is UiState.Loading -> {
                 logIn = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    logIn = "Masuk"
+                }
             }
             is UiState.Error -> {
                 logIn = "Masuk"
                 coroutineScope.launch {
-                    snackState.showSnackbar("Gagal Masuk!\n${(auth as UiState.Error).errorMessage}")
+                    snackState.showSnackbar((auth as UiState.Error).errorMessage)
+                    viewModel.resetLoginState()
                 }
             }
             is UiState.Success -> {
@@ -296,9 +301,9 @@ fun LoginScreen(
                 hostState = snackState
             ) { snackbarData: SnackbarData ->
                 CustomSnackBar(
-                    drawableRes = if (snackbarData.visuals.message.startsWith("Gagal Masuk!")) R.drawable.baseline_error_outline_24 else R.drawable.baseline_check_circle_outline_24,
+                    drawableRes = if (snackbarData.visuals.message.startsWith("Berhasil")) R.drawable.baseline_check_circle_outline_24 else R.drawable.baseline_error_outline_24,
                     message = snackbarData.visuals.message,
-                    containerColor = if (snackbarData.visuals.message.startsWith("Gagal Masuk!")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                    containerColor = if (snackbarData.visuals.message.startsWith("Berhasil")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                 )
             }
         }

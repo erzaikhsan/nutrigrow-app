@@ -5,8 +5,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.project.labs.nutrigrow.data.model.AccountModel
 import com.project.labs.nutrigrow.data.model.AuthModel
+import com.project.labs.nutrigrow.data.model.UserModel
 import com.project.labs.nutrigrow.data.repository.ReportRepository
 import com.project.labs.nutrigrow.data.repository.UserRepository
 import com.project.labs.nutrigrow.ui.state.UiState
@@ -24,12 +24,12 @@ class OfficerProfileViewModel (
     private val userRepository: UserRepository,
     private val reportRepository: ReportRepository,
 ): ViewModel() {
-    private val _officer: MutableStateFlow<UiState<AccountModel>> = MutableStateFlow(UiState.Loading)
-    val officer: StateFlow<UiState<AccountModel>>
+    private val _officer: MutableStateFlow<UiState<UserModel>> = MutableStateFlow(UiState.Loading)
+    val officer: StateFlow<UiState<UserModel>>
         get() = _officer
 
-    private val _isActive: MutableState<UiState<AccountModel>> = mutableStateOf(UiState.Loading)
-    val isActive: MutableState<UiState<AccountModel>>
+    private val _isActive: MutableState<UiState<UserModel>> = mutableStateOf(UiState.Loading)
+    val isActive: MutableState<UiState<UserModel>>
         get() = _isActive
 
     private val _pdfDownloadState = MutableStateFlow<UiState<File>>(UiState.Loading)
@@ -70,16 +70,16 @@ class OfficerProfileViewModel (
         }
     }
 
-    fun getRegionChildrenReport(region : String, currentDate: String, context: Context) {
+    fun getRegionChildrenReport(region : String, month: Number, year: Number, context: Context) {
         _officer.value = UiState.Loading
-        if ( currentDate.isEmpty()) {
+        if ( region.isEmpty() || month == 0 || year == 0) {
             _pdfDownloadState.value = UiState.Error("Mohon Pilih Tanggal Penimbangan")
             return
         }
         viewModelScope.launch {
             viewModelScope.launch {
                 try {
-                    val file = reportRepository.getRegionChildrenReport(region = region, currentDate = reformatDate(currentDate), context)
+                    val file = reportRepository.getRegionChildrenReport(region = region, month = month, year = year, context)
                     if (file != null) {
                         _pdfDownloadState.value = UiState.Success(file)
                     } else {
@@ -110,16 +110,16 @@ class OfficerProfileViewModel (
         }
     }
 
-    fun getMonthlyReport(region: String, currentDate: String, context: Context) {
+    fun getMonthlyReport(region: String, month: Number, year: Number, context: Context) {
         _officer.value = UiState.Loading
-        if ( region.isEmpty() || currentDate.isEmpty()) {
-            _pdfDownloadState.value = UiState.Error("Mohon Pilih Tanggal Penimbangan")
+        if ( region.isEmpty() || month == 0 || year == 0) {
+            _pdfDownloadState.value = UiState.Error("Mohon Pilih Bulan Penimbangan")
             return
         }
         viewModelScope.launch {
             viewModelScope.launch {
                 try {
-                    val file = reportRepository.getMonthlyReport(region = region, currentDate = reformatDate(currentDate), context = context)
+                    val file = reportRepository.getMonthlyReport(region = region, month = month, year = year, context = context)
                     if (file != null) {
                         _pdfDownloadState.value = UiState.Success(file)
                     } else {
@@ -180,6 +180,10 @@ class OfficerProfileViewModel (
                     }
                 }
         }
+    }
+
+    fun resetPdfDownloadState() {
+        _pdfDownloadState.value = UiState.Loading
     }
 
     fun reformatDate(inputDate: String): String {

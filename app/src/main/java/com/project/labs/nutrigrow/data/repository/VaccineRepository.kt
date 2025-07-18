@@ -33,7 +33,7 @@ class VaccineRepository(
                     TemplateResponse(
                         success = false,
                         message = message,
-                        data = VaccineModel("", "", "", "")
+                        data = VaccineModel("", "", "", "", "")
                     )
                 )
                 return@flow
@@ -47,7 +47,7 @@ class VaccineRepository(
                 TemplateResponse(
                     success = false,
                     message = e.message.toString(),
-                    data =  VaccineModel("", "", "", "")
+                    data =  VaccineModel("", "", "", "", "")
                 )
             )
         }
@@ -90,12 +90,12 @@ class VaccineRepository(
         }
     }
 
-    fun addVaccine( children_id: String, date: String, vaccine_name: String) = flow {
+    fun addVaccine( children_id: String, date: String, vaccine_name: String, place: String) = flow {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
 
-        val register = apiService.addVaccine( token = userPreference.token, children_id, date, vaccine_name)
+        val register = apiService.addVaccine( token = userPreference.token, children_id, date, vaccine_name, place)
         if (!register.isSuccessful) {
             val message = register.processError()
 
@@ -103,7 +103,7 @@ class VaccineRepository(
                 TemplateResponse(
                     success = false,
                     message = message,
-                    data =  VaccineModel("", "", "", "")
+                    data =  VaccineModel("", "", "", "", "")
                 )
             )
             return@flow
@@ -117,17 +117,17 @@ class VaccineRepository(
             TemplateResponse(
                 success = false,
                 message = e.message.toString(),
-                data =  VaccineModel("", "", "", "")
+                data =  VaccineModel("", "", "", "", "")
             )
         )
     }
 
-    fun updateVaccine(id: String, children_id: String, date: String, vaccine_name: String) = flow {
+    fun updateVaccine(id: String, children_id: String, date: String, vaccine_name: String, place: String) = flow {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
 
-        val register = apiService.updateVaccine( token = userPreference.token, id = id, children_id, date, vaccine_name)
+        val register = apiService.updateVaccine( token = userPreference.token, id = id, children_id, date, vaccine_name, place)
         if (!register.isSuccessful) {
             val message = register.processError()
 
@@ -135,7 +135,7 @@ class VaccineRepository(
                 TemplateResponse(
                     success = false,
                     message = message,
-                    data = VaccineModel("", "", "", "")
+                    data = VaccineModel("", "", "", "", "")
                 )
             )
             return@flow
@@ -149,7 +149,7 @@ class VaccineRepository(
             TemplateResponse(
                 success = false,
                 message = e.message.toString(),
-                data = VaccineModel("", "", "", "")
+                data = VaccineModel("", "", "", "", "")
             )
         )
     }
@@ -171,7 +171,7 @@ class VaccineRepository(
                     TemplateResponse(
                         success = false,
                         message = message,
-                        data = VaccineModel("", "", "", "")
+                        data = VaccineModel("", "", "", "", "")
                     )
                 )
                 return@flow
@@ -185,7 +185,7 @@ class VaccineRepository(
                 TemplateResponse(
                     success = false,
                     message = e.message.toString(),
-                    data = VaccineModel("", "", "", "")
+                    data = VaccineModel("", "", "", "", "")
                 )
             )
         }

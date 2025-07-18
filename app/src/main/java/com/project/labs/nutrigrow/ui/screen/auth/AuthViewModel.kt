@@ -152,6 +152,16 @@ class AuthViewModel (
             _user.value = UiState.Error("Semua Data Harus Diisi")
             return
         }
+
+        val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
+        val dob = LocalDate.parse(date_of_birth, formatter)
+
+        if (dob.isAfter(today)) {
+            _user.value = UiState.Error("Tanggal Lahir tidak boleh melebihi tanggal hari ini")
+            return
+        }
+
         _user.value = UiState.Loading
         viewModelScope.launch {
             userRepository.registerParent(
@@ -183,6 +193,22 @@ class AuthViewModel (
                 }
             }
         }
+    }
+
+    fun resetLoginState() {
+        _auth.value = UiState.Loading
+    }
+
+    fun resetAccountState() {
+        _account.value = UiState.Loading
+    }
+
+    fun resetOtpState() {
+        _otpCode.value = UiState.Loading
+    }
+
+    fun resetUserState() {
+        _user.value = UiState.Loading
     }
 
     fun reformatDate(inputDate: String): String {

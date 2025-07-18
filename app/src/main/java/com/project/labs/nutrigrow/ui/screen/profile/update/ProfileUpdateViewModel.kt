@@ -88,6 +88,16 @@ class ProfileUpdateViewModel (
             _newUser.value = UiState.Error("Pastikan Semua Data Anda\nDiisi Dengan Benar")
             return
         }
+
+        val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
+        val dob = LocalDate.parse(date_of_birth, formatter)
+
+        if (dob.isAfter(today)) {
+            _newUser.value = UiState.Error("Tanggal Lahir tidak boleh melebihi tanggal hari ini")
+            return
+        }
+
         _newUser.value = UiState.Loading
         viewModelScope.launch {
             if (role == "Parent"){
@@ -136,6 +146,10 @@ class ProfileUpdateViewModel (
                 }
             }
         }
+    }
+
+    fun resetNewUser() {
+        _newUser.value = UiState.Loading
     }
 
     fun reformatDate(inputDate: String): String {

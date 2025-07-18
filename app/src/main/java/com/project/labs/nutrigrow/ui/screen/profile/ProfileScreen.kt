@@ -104,7 +104,7 @@ fun ProfileScreen(
 
     fun testReminderNow() {
         val request = OneTimeWorkRequestBuilder<ReminderWorker>()
-            .setInitialDelay(10, TimeUnit.SECONDS)
+            .setInitialDelay(5, TimeUnit.SECONDS)
             .build()
         WorkManager.getInstance(context).enqueue(request)
     }
@@ -435,6 +435,8 @@ fun ProfileScreen(
                 is UiState.Unauthorized -> {
                     redirectToWelcome("Sesi Telah Berakhir\nSilahkan Masuk Kembali")
                 }
+
+                else -> {}
             }
         }
 

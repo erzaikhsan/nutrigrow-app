@@ -41,6 +41,14 @@ class AddOfficerViewModel (
             _user.value = UiState.Error("Kata Sandi dan Konfirmasi Kata Sandi\nHarus Sama")
             return
         }
+        val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
+        val dob = LocalDate.parse(date_of_birth, formatter)
+
+        if (dob.isAfter(today)) {
+            _user.value = UiState.Error("Tanggal Lahir tidak boleh melebihi tanggal hari ini")
+            return
+        }
         _user.value = UiState.Loading
         viewModelScope.launch {
             userRepository.registerOfficer(
@@ -74,6 +82,10 @@ class AddOfficerViewModel (
                 }
             }
         }
+    }
+
+    fun resetUserState() {
+        _user.value = UiState.Loading
     }
 
     fun reformatDate(inputDate: String): String {

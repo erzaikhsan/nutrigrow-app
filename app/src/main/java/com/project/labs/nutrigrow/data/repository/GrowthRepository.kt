@@ -163,6 +163,43 @@ class GrowthRepository(
         }
     }
 
+    fun getGrowthByChildIdInYear(id: String, year: Number): Flow<TemplateResponse<List<GrowthModel>>> {
+        val userPreference = runBlocking {
+            userPreference.getAuth().first()
+        }
+
+        return flow {
+            val user = apiService.getGrowthByChildIdInYear(token = userPreference.token, id = id, year = year)
+            if (!user.isSuccessful) {
+                val message = user.processError()
+                if (message == "Unauthorized") {
+                    logOut()
+                }
+
+                emit(
+                    TemplateResponse(
+                        success = false,
+                        message = message,
+                        data = emptyList()
+                    )
+                )
+                return@flow
+            }
+
+            user.body()?.apply {
+                emit(this)
+            }
+        }.catch { e ->
+            emit(
+                TemplateResponse(
+                    success = false,
+                    message = e.message.toString(),
+                    data = emptyList()
+                )
+            )
+        }
+    }
+
     fun getGrowthByDateAndChildId(id: String, date: String): Flow<TemplateResponse<List<GrowthModel>>> {
         val userPreference = runBlocking {
             userPreference.getAuth().first()

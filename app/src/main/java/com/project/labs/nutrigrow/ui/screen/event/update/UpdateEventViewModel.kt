@@ -96,6 +96,10 @@ class UpdateEventViewModel (
         }
     }
 
+    fun resetNewEvent() {
+        _newEvent.value = UiState.Loading
+    }
+
     fun reformatDate(inputDate: String): String {
         val inputFormatter = DateTimeFormatter.ofPattern("d/M/yyyy", Locale.ENGLISH)
         val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS XXX", Locale.ENGLISH)

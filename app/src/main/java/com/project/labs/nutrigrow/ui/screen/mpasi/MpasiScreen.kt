@@ -254,6 +254,8 @@ fun MpasiScreen(
                             is UiState.Unauthorized -> {
                                 redirectToHome()
                             }
+
+                            else -> {}
                         }
                     }
                 }
@@ -301,6 +303,8 @@ fun MpasiScreen(
                             is UiState.Unauthorized -> {
                                 redirectToHome()
                             }
+
+                            else -> {}
                         }
                     }
                 }
@@ -348,6 +352,8 @@ fun MpasiScreen(
                             is UiState.Unauthorized -> {
                                 redirectToHome()
                             }
+
+                            else -> {}
                         }
                     }
                 }
@@ -395,6 +401,8 @@ fun MpasiScreen(
                             is UiState.Unauthorized -> {
                                 redirectToHome()
                             }
+
+                            else -> {}
                         }
                     }
                 }

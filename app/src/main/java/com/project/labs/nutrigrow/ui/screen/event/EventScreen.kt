@@ -161,6 +161,8 @@ fun EventScreen(
                 is UiState.Unauthorized -> {
                     redirectToHome("Sesi Telah Berakhir\nSilahkan Masuk Kembali")
                 }
+
+                else -> {}
             }
         }
         when (checkAuth) {

@@ -69,7 +69,7 @@ class ChildRepository(
                     TemplateResponse(
                         success = false,
                         message = message,
-                        data = ChildrenModel("", "", "", "", "","", "","","", 0.0, "", 0.0, "", "",0.0)
+                        data = ChildrenModel("", "", "", "", "","", "","", 0,"", 0.0, "", 0.0, "", "",0.0)
                     )
                 )
                 return@flow
@@ -83,7 +83,7 @@ class ChildRepository(
                 TemplateResponse(
                     success = false,
                     message = e.message.toString(),
-                    data = ChildrenModel("", "", "", "", "","", "","","", 0.0, "", 0.0, "", "",0.0)
+                    data = ChildrenModel("", "", "", "", "","", "","", 0,"", 0.0, "", 0.0, "", "",0.0)
                 )
             )
         }
@@ -237,12 +237,12 @@ class ChildRepository(
         }
     }
 
-    fun addChildren( full_name: String, gender: String, place_of_birth: String, date_of_birth: String, father: String, mother: String, region: String, birth_weight: Number, birth_height: Number, birth_head_circum: Number) = flow {
+    fun addChildren( full_name: String, gender: String, place_of_birth: String, date_of_birth: String, father: String, mother: String, order_of_child: Number, region: String, birth_weight: Number, birth_height: Number, birth_head_circum: Number) = flow {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
 
-        val register = apiService.addChildren( token = userPreference.token, parents_id = userPreference.id, full_name = full_name, gender = gender, place_of_birth = place_of_birth, date_of_birth = date_of_birth, father = father, mother = mother, region = region, birth_weight = birth_weight, birth_height = birth_height, birth_head_circum = birth_head_circum)
+        val register = apiService.addChildren( token = userPreference.token, parents_id = userPreference.id, full_name = full_name, gender = gender, place_of_birth = place_of_birth, date_of_birth = date_of_birth, father = father, mother = mother, order_of_child = order_of_child, region = region, birth_weight = birth_weight, birth_height = birth_height, birth_head_circum = birth_head_circum)
         if (!register.isSuccessful) {
             val message = register.processError()
 
@@ -250,7 +250,7 @@ class ChildRepository(
                 TemplateResponse(
                     success = false,
                     message = message,
-                    data = ChildrenModel("", "", "", "", "","", "", "", "", 0.0, "", 0.0, "", "", 0.0)
+                    data = ChildrenModel("", "", "", "", "","", "", "", 0, "", 0.0, "", 0.0, "", "", 0.0)
                 )
             )
             return@flow
@@ -264,17 +264,17 @@ class ChildRepository(
             TemplateResponse(
                 success = false,
                 message = e.message.toString(),
-                data = ChildrenModel("", "", "", "", "","", "","","", 0.0, "", 0.0, "", "",0.0)
+                data = ChildrenModel("", "", "", "", "","", "","", 0,"", 0.0, "", 0.0, "", "",0.0)
             )
         )
     }
 
-    fun updateChildren( id: String, full_name: String, gender: String, place_of_birth: String, date_of_birth: String, father: String, mother: String, region: String, birth_weight: Number, birth_height: Number,  birth_head_circum: Number) = flow {
+    fun updateChildren( id: String, full_name: String, gender: String, place_of_birth: String, date_of_birth: String, father: String, mother: String, order_of_child: Number, region: String, birth_weight: Number, birth_height: Number,  birth_head_circum: Number) = flow {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
 
-        val register = apiService.updateChildren( token = userPreference.token, id = id, parents_id = userPreference.id, full_name = full_name, gender = gender, place_of_birth = place_of_birth, date_of_birth = date_of_birth, father = father, mother = mother, region = region, birth_weight = birth_weight, birth_height = birth_height, birth_head_circum = birth_head_circum)
+        val register = apiService.updateChildren( token = userPreference.token, id = id, parents_id = userPreference.id, full_name = full_name, gender = gender, place_of_birth = place_of_birth, date_of_birth = date_of_birth, father = father, mother = mother, order_of_child = order_of_child, region = region, birth_weight = birth_weight, birth_height = birth_height, birth_head_circum = birth_head_circum)
         if (!register.isSuccessful) {
             val message = register.processError()
 
@@ -282,7 +282,7 @@ class ChildRepository(
                 TemplateResponse(
                     success = false,
                     message = message,
-                    data = ChildrenModel("", "", "", "", "","", "","","", 0.0, "", 0.0, "", "",0.0)
+                    data = ChildrenModel("", "", "", "", "","", "","", 0,"", 0.0, "", 0.0, "", "",0.0)
                 )
             )
             return@flow
@@ -296,7 +296,7 @@ class ChildRepository(
             TemplateResponse(
                 success = false,
                 message = e.message.toString(),
-                data = ChildrenModel("", "", "", "", "", "", "","","", 0.0, "", 0.0, "", "",0.0)
+                data = ChildrenModel("", "", "", "", "", "", "","", 0,"", 0.0, "", 0.0, "", "",0.0)
             )
         )
     }

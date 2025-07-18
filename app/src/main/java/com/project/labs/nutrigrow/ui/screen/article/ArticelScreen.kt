@@ -94,6 +94,8 @@ fun ArticelScreen(
                     is UiState.Unauthorized -> {
                         redirectToHome()
                     }
+
+                    else -> {}
                 }
             }
         }

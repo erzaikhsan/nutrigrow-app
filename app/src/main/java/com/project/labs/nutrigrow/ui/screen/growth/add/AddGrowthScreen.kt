@@ -121,6 +121,10 @@ fun AddGrowthScreen(
         when (growth) {
             is UiState.Loading -> {
                 submit = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    submit = "Tambahkan"
+                }
             }
 
             is UiState.Success -> {
@@ -128,12 +132,12 @@ fun AddGrowthScreen(
                     snackState.showSnackbar("Berhasil Menambahkan Data Pertumbuhan")
                     redirectToHome()
                 }
-
             }
 
             is UiState.Error -> {
                 coroutineScope.launch {
-                    snackState.showSnackbar("Gagal Menambahkan Data Pertumbuhan\n${(growth as UiState.Error).errorMessage}")
+                    snackState.showSnackbar((growth as UiState.Error).errorMessage)
+                    viewModel.resetGrowthState()
                 }
                 submit = "Tambahkan"
             }
@@ -390,9 +394,9 @@ fun AddGrowthScreen(
             hostState = snackState
         ) { snackbarData: SnackbarData ->
             CustomSnackBar(
-                drawableRes = if (snackbarData.visuals.message.startsWith("Gagal")) R.drawable.baseline_error_outline_24 else R.drawable.baseline_check_circle_outline_24,
+                drawableRes = if (snackbarData.visuals.message.startsWith("Berhasil Menambahkan")) R.drawable.baseline_check_circle_outline_24 else R.drawable.baseline_error_outline_24,
                 message = snackbarData.visuals.message,
-                containerColor = if (snackbarData.visuals.message.startsWith("Gagal")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                containerColor = if (snackbarData.visuals.message.startsWith("Berhasil Menambahkan")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             )
         }
     }

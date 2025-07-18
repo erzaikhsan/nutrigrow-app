@@ -91,6 +91,7 @@ fun UpdateChildScreen(
     var full_name by remember { mutableStateOf("") }
     var father by remember { mutableStateOf("") }
     var mother by remember { mutableStateOf("") }
+    var order_of_child by remember { mutableStateOf("") }
     var region by remember { mutableStateOf("") }
     var place_of_birth by remember { mutableStateOf("") }
     var birth_weight by remember { mutableStateOf("") }
@@ -143,6 +144,10 @@ fun UpdateChildScreen(
         when (newChild) {
             is UiState.Loading -> {
                 submit = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    submit = "Perbarui"
+                }
             }
 
             is UiState.Success -> {
@@ -150,12 +155,12 @@ fun UpdateChildScreen(
                     snackState.showSnackbar("Berhasil Update Data Balita\n${(newChild as UiState.Success).data.full_name}")
                     redirectToHome()
                 }
-
             }
 
             is UiState.Error -> {
                 coroutineScope.launch {
-                    snackState.showSnackbar("Gagal Melakukan Update Data\n${(newChild as UiState.Error).errorMessage}")
+                    snackState.showSnackbar((newChild as UiState.Error).errorMessage)
+                    viewModel.resetNewChild()
                 }
                 submit = "Perbarui"
             }
@@ -185,6 +190,7 @@ fun UpdateChildScreen(
                         if (date_of_birth == "") date_of_birth = reformatDate(respond.data.date_of_birth)
                         if (father == "") father = respond.data.father
                         if (mother == "") mother = respond.data.mother
+                        if (order_of_child == "") order_of_child = respond.data.order_of_child.toString()
                         if (birth_weight == "") birth_weight = respond.data.birth_weight.toString()
                         if (birth_height == "") birth_height = respond.data.birth_height.toString()
                         if (birth_head_circum == "") birth_head_circum = respond.data.birth_head_circum.toString()
@@ -290,6 +296,35 @@ fun UpdateChildScreen(
                                     ),
                                     shape = RoundedCornerShape(10.dp),
                                     placeholder = { Text("Masukan Nama Ibu", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        focusedIndicatorColor = Color(0xFF9DA1A6),
+                                        unfocusedIndicatorColor = Color(0xFF9DA1A6),
+                                        disabledIndicatorColor = Color(0xFF9DA1A6),
+                                    ),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Text(
+                                text = "Anak Ke-",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.W500,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 5.dp)
+                            )
+                            Box {
+                                OutlinedTextField(
+                                    value = order_of_child,
+                                    onValueChange = { order_of_child = it },
+                                    keyboardOptions = KeyboardOptions.Default.copy(
+                                        keyboardType = KeyboardType.Number,
+                                        imeAction = ImeAction.Next
+                                    ),
+                                    shape = RoundedCornerShape(10.dp),
+                                    placeholder = { Text("Masukan Anak Ke", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
                                     colors = TextFieldDefaults.textFieldColors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
@@ -501,7 +536,7 @@ fun UpdateChildScreen(
                             Spacer(modifier = Modifier.height(20.dp))
                             Button(
                                 onClick = {
-                                    if (submit != "Loading...") viewModel.updateChildren(id = id, full_name = full_name, gender = selectedGender, place_of_birth = place_of_birth, date_of_birth = date_of_birth, father = father, mother = mother, region = region, birth_weight = birth_weight, birth_height = birth_height, birth_head_circum = birth_head_circum)
+                                    if (submit != "Loading...") viewModel.updateChildren(id = id, full_name = full_name, gender = selectedGender, place_of_birth = place_of_birth, date_of_birth = date_of_birth, father = father, mother = mother, order_of_child = order_of_child, region = region, birth_weight = birth_weight, birth_height = birth_height, birth_head_circum = birth_head_circum)
                                 },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.primary,
@@ -531,9 +566,9 @@ fun UpdateChildScreen(
             hostState = snackState
         ) { snackbarData: SnackbarData ->
             CustomSnackBar(
-                drawableRes = if (snackbarData.visuals.message.startsWith("Gagal Melakukan Update Data")) R.drawable.baseline_error_outline_24 else R.drawable.baseline_check_circle_outline_24,
+                drawableRes = if (snackbarData.visuals.message.startsWith("Berhasil Update")) R.drawable.baseline_check_circle_outline_24 else R.drawable.baseline_error_outline_24,
                 message = snackbarData.visuals.message,
-                containerColor = if (snackbarData.visuals.message.startsWith("Gagal Melakukan Update Data")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                containerColor = if (snackbarData.visuals.message.startsWith("Berhasil Update")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             )
         }
     }

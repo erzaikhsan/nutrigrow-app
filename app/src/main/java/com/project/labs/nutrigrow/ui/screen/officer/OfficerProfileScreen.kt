@@ -1,8 +1,6 @@
 package com.project.labs.nutrigrow.ui.screen.officer
 
-import android.app.DatePickerDialog
 import android.content.Intent
-import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,14 +28,20 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -64,8 +68,8 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.project.labs.nutrigrow.R
-import com.project.labs.nutrigrow.data.model.AccountModel
 import com.project.labs.nutrigrow.data.model.AuthModel
+import com.project.labs.nutrigrow.data.model.UserModel
 import com.project.labs.nutrigrow.ui.component.respond.ErrorMessage
 import com.project.labs.nutrigrow.ui.component.respond.LoadingIndicator
 import com.project.labs.nutrigrow.ui.component.snackbar.CustomSnackBar
@@ -75,9 +79,9 @@ import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OfficerProfileScreen(
     id: String,
@@ -91,30 +95,20 @@ fun OfficerProfileScreen(
 
     var showLogoutDialog by remember { mutableStateOf(false) }
 
-    var date by remember { mutableStateOf("") }
-
-    val mYear: Int
-    val mMonth: Int
-    val mDay: Int
-
-    val mCalendar = Calendar.getInstance()
-
-    mYear = mCalendar.get(Calendar.YEAR)
-    mMonth = mCalendar.get(Calendar.MONTH)
-    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
-
-    mCalendar.time = Date()
-
-    val mDatePickerDialog = DatePickerDialog(
-        context,
-        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            date = "$mDayOfMonth/${mMonth+1}/$mYear"
-        }, mYear, mMonth, mDay
+    val monthNames = listOf(
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
     )
+    var selectedMonthIndex by remember { mutableStateOf(Calendar.getInstance().get(Calendar.MONTH)) }
+    var expandedMonth by remember { mutableStateOf(false) }
+
+    val yearOptions = (2015..2025).toList().reversed()
+    var selectedYear by remember { mutableStateOf(Calendar.getInstance().get(Calendar.YEAR)) }
+    var expandedYear by remember { mutableStateOf(false) }
 
     val checkAuth by viewModel.isAuthenticated
     val pdfDownloadState by viewModel.pdfDownloadState.collectAsState()
-    val isActive: UiState<AccountModel> by viewModel.isActive
+    val isActive: UiState<UserModel> by viewModel.isActive
 
     val snackState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -147,18 +141,14 @@ fun OfficerProfileScreen(
                 } catch (e: Exception) {
                     Toast.makeText(context, "Tidak ada aplikasi PDF", Toast.LENGTH_SHORT).show()
                 }
+                viewModel.resetPdfDownloadState()
             }
 
             is UiState.Error -> {
-                if (state.errorMessage == "Mohon Pilih Tanggal Penimbangan") {
-                    coroutineScope.launch {
-                        snackState.showSnackbar("Gagal Ekspor Data\n${state.errorMessage}")
-                    }
-                } else {
-                    coroutineScope.launch {
-                        snackState.showSnackbar("Gagal Ekspor Data\n${state.errorMessage}")
-                    }
+                coroutineScope.launch {
+                    snackState.showSnackbar(state.errorMessage)
                 }
+                viewModel.resetPdfDownloadState()
             }
 
             else -> {}
@@ -170,7 +160,7 @@ fun OfficerProfileScreen(
             is UiState.Success -> {
                 coroutineScope.launch {
                     snackState.showSnackbar("Berhasil ${
-                        if ((isActive as UiState.Success<AccountModel>).data.isActive) {
+                        if ((isActive as UiState.Success<UserModel>).data.is_active) {
                             "Mengaktifkan Akun"
                         } else {
                             "Menonaktifkan Akun"
@@ -319,7 +309,7 @@ fun OfficerProfileScreen(
                                     when (checkAuth) {
                                         is UiState.Success -> {
                                             if ((checkAuth as UiState.Success<AuthModel>).data.role == "Admin"){
-                                                if (officers.data.isActive) {
+                                                if (officers.data.is_active) {
                                                     Icon(
                                                         imageVector = ImageVector.vectorResource(id = R.drawable.baseline_group_remove_24),
                                                         contentDescription = "Deactivate",
@@ -368,10 +358,10 @@ fun OfficerProfileScreen(
                                             fontWeight = FontWeight.W500,
                                         )
                                         Text(
-                                            text = if (officers.data.isActive) "Aktif" else "Tidak Aktif",
+                                            text = if (officers.data.is_active) "Aktif" else "Tidak Aktif",
                                             fontSize = 15.sp,
                                             fontWeight = FontWeight.W500,
-                                            color = if (officers.data.isActive) Color.Green else Color.Red
+                                            color = if (officers.data.is_active) Color.Green else Color.Red
                                         )
                                     }
                                     Spacer(modifier = Modifier.height(5.dp))
@@ -477,46 +467,91 @@ fun OfficerProfileScreen(
                             }
                         }
                         Spacer(modifier = Modifier.height(10.dp))
-                        ElevatedCard(
-                            shape = RoundedCornerShape(
-                                topStart = 12.dp,
-                                topEnd = 12.dp,
-                                bottomStart = 0.dp,
-                                bottomEnd = 0.dp
-                            ),
-                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 10.dp)
-                                .clickable { mDatePickerDialog.show() }
+                                .padding(horizontal = 10.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Column(
-                                modifier = Modifier.padding(
-                                    start = 20.dp,
-                                    end = 20.dp,
-                                    top = 15.dp,
-                                    bottom = 15.dp
-                                )
+                            ExposedDropdownMenuBox(
+                                expanded = expandedMonth,
+                                onExpandedChange = { expandedMonth = !expandedMonth },
+                                modifier = Modifier.weight(1f)
                             ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.fillMaxWidth()
+                                OutlinedTextField(
+                                    value = monthNames[selectedMonthIndex],
+                                    onValueChange = {},
+                                    readOnly = true,
+                                    placeholder = { Text("Pilih Bulan Penimbangan", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                                    trailingIcon = {
+                                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMonth)
+                                    },
+                                    shape = RoundedCornerShape(10.dp),
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        focusedIndicatorColor = Color(0xFF9DA1A6),
+                                        unfocusedIndicatorColor = Color(0xFF9DA1A6),
+                                        disabledIndicatorColor = Color(0xFF9DA1A6),
+                                    ),
+                                    modifier = Modifier
+                                        .menuAnchor()
+                                        .fillMaxWidth()
+                                )
+                                ExposedDropdownMenu(
+                                    expanded = expandedMonth,
+                                    onDismissRequest = { expandedMonth = false }
                                 ) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.baseline_date_range_24),
-                                        contentDescription = "Date of Birth",
-                                        tint = Color.Black,
-                                        modifier = Modifier.size(22.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(25.dp))
-                                    Text(
-                                        text = date.ifBlank { "Pilih Tanggal Penimbangan" },
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = Color.Black
-                                    )
+                                    monthNames.forEachIndexed { index, month ->
+                                        DropdownMenuItem(
+                                            text = { Text(month) },
+                                            onClick = {
+                                                selectedMonthIndex = index
+                                                expandedMonth = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+
+                            ExposedDropdownMenuBox(
+                                expanded = expandedYear,
+                                onExpandedChange = { expandedYear = !expandedYear },
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                OutlinedTextField(
+                                    value = selectedYear.toString(),
+                                    onValueChange = {},
+                                    readOnly = true,
+                                    placeholder = { Text("Pilih Tahun Penimbangan", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                                    trailingIcon = {
+                                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMonth)
+                                    },
+                                    shape = RoundedCornerShape(10.dp),
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        focusedIndicatorColor = Color(0xFF9DA1A6),
+                                        unfocusedIndicatorColor = Color(0xFF9DA1A6),
+                                        disabledIndicatorColor = Color(0xFF9DA1A6),
+                                    ),
+                                    modifier = Modifier
+                                        .menuAnchor()
+                                        .fillMaxWidth()
+                                )
+                                ExposedDropdownMenu(
+                                    expanded = expandedYear,
+                                    onDismissRequest = { expandedYear = false }
+                                ) {
+                                    yearOptions.forEach { year ->
+                                        DropdownMenuItem(
+                                            text = { Text(year.toString()) },
+                                            onClick = {
+                                                selectedYear = year
+                                                expandedYear = false
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
+                        Spacer(modifier = Modifier.height(7.dp))
                         Divider(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -541,7 +576,8 @@ fun OfficerProfileScreen(
                                             viewModel.getMonthlyReport(
                                                 context = context,
                                                 region = officers.data.region,
-                                                currentDate = date
+                                                month = selectedMonthIndex + 1,
+                                                year = selectedYear
                                             )
                                         }
                                 ){
@@ -583,7 +619,8 @@ fun OfficerProfileScreen(
                                         .clickable {
                                             viewModel.getRegionChildrenReport(
                                                 officers.data.region,
-                                                currentDate = date,
+                                                month = selectedMonthIndex + 1,
+                                                year = selectedYear,
                                                 context
                                             )
                                         }
@@ -657,7 +694,7 @@ fun OfficerProfileScreen(
                         Spacer(modifier = Modifier.height(10.dp))
                     }
                     if (showLogoutDialog) {
-                        if (officers.data.isActive) {
+                        if (officers.data.is_active) {
                             AlertDialog(
                                 containerColor = Color.White,
                                 onDismissRequest = { showLogoutDialog = false },
@@ -714,6 +751,8 @@ fun OfficerProfileScreen(
                 is UiState.Unauthorized -> {
                     redirectToHome()
                 }
+
+                else -> {}
             }
         }
 
@@ -722,7 +761,7 @@ fun OfficerProfileScreen(
             hostState = snackState
         ) { snackbarData: SnackbarData ->
             CustomSnackBar(
-                drawableRes = if (snackbarData.visuals.message.startsWith("Gagal")) R.drawable.baseline_error_outline_24 else R.drawable.baseline_check_circle_outline_24,
+                drawableRes = if (snackbarData.visuals.message.startsWith("Berhasil")) R.drawable.baseline_check_circle_outline_24 else R.drawable.baseline_error_outline_24,
                 message = snackbarData.visuals.message,
                 containerColor = when (snackbarData.visuals.message) {
                     "Berhasil Ekspor Data" -> MaterialTheme.colorScheme.primary

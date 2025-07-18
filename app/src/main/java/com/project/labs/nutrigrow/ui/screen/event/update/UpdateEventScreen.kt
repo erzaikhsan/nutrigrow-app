@@ -159,6 +159,10 @@ fun UpdateEventScreen(
         when (newEvent) {
             is UiState.Loading -> {
                 submit = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    submit = "Update"
+                }
             }
 
             is UiState.Success -> {
@@ -166,12 +170,12 @@ fun UpdateEventScreen(
                     snackState.showSnackbar("Berhasil Update Data Kegiatan")
                     redirectToHome()
                 }
-
             }
 
             is UiState.Error -> {
                 coroutineScope.launch {
-                    snackState.showSnackbar("Gagal Update Data Kegiatan\n${(newEvent as UiState.Error).errorMessage}")
+                    snackState.showSnackbar((newEvent as UiState.Error).errorMessage)
+                    viewModel.resetNewEvent()
                 }
                 submit = "Update"
             }
@@ -488,9 +492,9 @@ fun UpdateEventScreen(
             hostState = snackState
         ) { snackbarData: SnackbarData ->
             CustomSnackBar(
-                drawableRes = if (snackbarData.visuals.message.startsWith("Gagal")) R.drawable.baseline_error_outline_24 else R.drawable.baseline_check_circle_outline_24,
+                drawableRes = if (snackbarData.visuals.message.startsWith("Berhasil Update")) R.drawable.baseline_check_circle_outline_24 else R.drawable.baseline_error_outline_24,
                 message = snackbarData.visuals.message,
-                containerColor = if (snackbarData.visuals.message.startsWith("Gagal")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                containerColor = if (snackbarData.visuals.message.startsWith("Berhasil Update")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             )
         }
     }

@@ -182,6 +182,8 @@ fun DetailArticleScreen(
                 is UiState.Unauthorized -> {
                     redirectToHome()
                 }
+
+                else -> {}
             }
         }
     }

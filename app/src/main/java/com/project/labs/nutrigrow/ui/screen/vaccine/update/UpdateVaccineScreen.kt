@@ -96,6 +96,7 @@ fun UpdateVaccineScreen(
         viewModel.getVaccineById(id)
     }
 
+    var place by remember { mutableStateOf("") }
     var vaccine_name by remember { mutableStateOf("") }
     var expandVaccine by remember { mutableStateOf(false) }
     var selectedVaccine by remember { mutableStateOf("") }
@@ -143,6 +144,10 @@ fun UpdateVaccineScreen(
         when (newVaccine) {
             is UiState.Loading -> {
                 submit = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    submit = "Perbarui"
+                }
             }
 
             is UiState.Success -> {
@@ -155,7 +160,8 @@ fun UpdateVaccineScreen(
 
             is UiState.Error -> {
                 coroutineScope.launch {
-                    snackState.showSnackbar("Gagal Update Data Imunisasi\n${(newVaccine as UiState.Error).errorMessage}")
+                    snackState.showSnackbar((newVaccine as UiState.Error).errorMessage)
+                    viewModel.resetNewVaccineState()
                 }
                 submit = "Perbarui"
             }
@@ -163,7 +169,13 @@ fun UpdateVaccineScreen(
         }
 
         when (delete) {
-            is UiState.Loading -> { }
+            is UiState.Loading -> {
+                deleteButton = "Loading..."
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(500)
+                    deleteButton = "Hapus"
+                }
+            }
 
             is UiState.Success -> {
                 coroutineScope.launch {
@@ -176,6 +188,7 @@ fun UpdateVaccineScreen(
             is UiState.Error -> {
                 coroutineScope.launch {
                     snackState.showSnackbar("Gagal Menghapus Data Imunisasi\n${(delete as UiState.Error).errorMessage}")
+                    viewModel.resetDeleteState()
                 }
                 deleteButton = "Hapus"
             }
@@ -199,6 +212,7 @@ fun UpdateVaccineScreen(
                 is UiState.Success -> {
                     DisposableEffect(key1 = checkAuth){
                         if (date == "") date = reformatDate(vaccineRespond.data.date)
+                        if (place == "") place = vaccineRespond.data.place
                         if (selectedVaccine == "" && vaccineRespond.data.vaccine_name in listVaccine){
                             selectedVaccine = vaccineRespond.data.vaccine_name
                         } else {
@@ -280,6 +294,34 @@ fun UpdateVaccineScreen(
 
                                         Spacer(modifier = Modifier.height(10.dp))
                                         Text(
+                                            text = "Fasilitas Kesehatan",
+                                            fontSize = 15.sp,
+                                            fontWeight = FontWeight.W500,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(start = 5.dp)
+                                        )
+                                        OutlinedTextField(
+                                            value = place,
+                                            onValueChange = { place = it },
+                                            keyboardOptions = KeyboardOptions.Default.copy(
+                                                keyboardType = KeyboardType.Text,
+                                                imeAction = ImeAction.Next
+                                            ),
+                                            shape = RoundedCornerShape(10.dp),
+                                            placeholder = { Text("Masukan Fasilitas Kesehatan", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                                            colors = TextFieldDefaults.textFieldColors(
+                                                focusedIndicatorColor = Color(0xFF9DA1A6),
+                                                unfocusedIndicatorColor = Color(0xFF9DA1A6),
+                                                disabledIndicatorColor = Color(0xFF9DA1A6),
+                                            ),
+                                            minLines = 1,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                        )
+
+                                        Spacer(modifier = Modifier.height(10.dp))
+                                        Text(
                                             text = "Nama Vaksin",
                                             fontSize = 15.sp,
                                             fontWeight = FontWeight.W500,
@@ -350,7 +392,7 @@ fun UpdateVaccineScreen(
                                         Spacer(modifier = Modifier.height(35.dp))
                                         Button(
                                             onClick = {
-                                                if (submit != "Loading...") viewModel.updateVaccine(id, childId, date, if (selectedVaccine == "Lainnya") vaccine_name else selectedVaccine)
+                                                if (submit != "Loading...") viewModel.updateVaccine(id, childId, date, if (selectedVaccine == "Lainnya") vaccine_name else selectedVaccine, place)
                                             },
                                             colors = ButtonDefaults.buttonColors(
                                                 containerColor = MaterialTheme.colorScheme.primary,
@@ -405,9 +447,9 @@ fun UpdateVaccineScreen(
             hostState = snackState
         ) { snackbarData: SnackbarData ->
             CustomSnackBar(
-                drawableRes = if (snackbarData.visuals.message.startsWith("Gagal")) R.drawable.baseline_error_outline_24 else R.drawable.baseline_check_circle_outline_24,
+                drawableRes = if (snackbarData.visuals.message.startsWith("Berhasil Update")) R.drawable.baseline_check_circle_outline_24 else R.drawable.baseline_error_outline_24,
                 message = snackbarData.visuals.message,
-                containerColor = if (snackbarData.visuals.message.startsWith("Gagal")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                containerColor = if (snackbarData.visuals.message.startsWith("Berhasil Update")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             )
         }
 

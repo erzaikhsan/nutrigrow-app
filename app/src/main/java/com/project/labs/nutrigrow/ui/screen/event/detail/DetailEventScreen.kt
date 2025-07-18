@@ -116,6 +116,7 @@ fun DetailEventScreen(
             is UiState.Error -> {
                 coroutineScope.launch {
                     snackState.showSnackbar("Gagal Menghapus Data Kegiatan\n${(delete as UiState.Error).errorMessage}")
+                    viewModel.resetDeleteState()
                 }
             }
             else -> {}
@@ -275,6 +276,8 @@ fun DetailEventScreen(
                 is UiState.Unauthorized -> {
                     redirectToHome()
                 }
+
+                else -> {}
             }
         }
 

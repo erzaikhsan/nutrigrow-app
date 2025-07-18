@@ -1,6 +1,5 @@
 package com.project.labs.nutrigrow.data.remote.retrofit
 
-import com.project.labs.nutrigrow.data.model.AccountModel
 import com.project.labs.nutrigrow.data.model.AuthModel
 import com.project.labs.nutrigrow.data.model.ChildrenModel
 import com.project.labs.nutrigrow.data.model.EventModel
@@ -35,11 +34,10 @@ interface ApiService {
     ): Response<TemplateResponse<SendOtpModel>>
 
     @FormUrlEncoded
-    @POST("auth/register/account")
+    @POST("auth/register/verify")
     @Headers("Accept: application/json")
     suspend fun verifyOtp(
         @Field("email") email: String,
-        @Field("password") password: String,
         @Field("otp") otp: String,
     ): Response<TemplateResponse<VerifyModel>>
 
@@ -48,6 +46,7 @@ interface ApiService {
     @Headers("Accept: application/json")
     suspend fun registerParent(
         @Field("email") email: String,
+        @Field("password") password: String,
         @Field("full_name") full_name: String,
         @Field("gender") gender: String,
         @Field("date_of_birth") date_of_birth: String,
@@ -83,14 +82,14 @@ interface ApiService {
     suspend fun deactivateAccount(
         @Header("Authorization") token: String,
         @Path("id") id: String
-    ): Response<TemplateResponse<AccountModel>>
+    ): Response<TemplateResponse<UserModel>>
 
     @DELETE("auth/activate/account/{id}")
     @Headers("Accept: application/json")
     suspend fun activateAccount(
         @Header("Authorization") token: String,
         @Path("id") id: String
-    ): Response<TemplateResponse<AccountModel>>
+    ): Response<TemplateResponse<UserModel>>
 
     //Parent
     @GET("parent/account/{id}")
@@ -98,7 +97,7 @@ interface ApiService {
     suspend fun getParentAccount(
         @Header("Authorization") token: String,
         @Path("id") id: String
-    ): Response<TemplateResponse<AccountModel>>
+    ): Response<TemplateResponse<UserModel>>
 
     @GET("parent/{id}")
     @Headers("Accept: application/json")
@@ -127,6 +126,14 @@ interface ApiService {
         @Query("name") name: String
     ): Response<TemplateResponse<List<UserModel>>>
 
+    @GET("parent/name/{region}")
+    @Headers("Accept: application/json")
+    suspend fun getParentByNameAndRegion(
+        @Header("Authorization") token: String,
+        @Path("region") region: String,
+        @Query("name") name: String
+    ): Response<TemplateResponse<List<UserModel>>>
+
     @FormUrlEncoded
     @PUT("parent")
     @Headers("Accept: application/json")
@@ -146,7 +153,7 @@ interface ApiService {
     suspend fun getOfficerAccount(
         @Header("Authorization") token: String,
         @Path("id") id: String
-    ): Response<TemplateResponse<AccountModel>>
+    ): Response<TemplateResponse<UserModel>>
 
     @GET("officer/{id}")
     @Headers("Accept: application/json")
@@ -236,6 +243,7 @@ interface ApiService {
         @Field("date_of_birth") date_of_birth: String,
         @Field("father") father: String,
         @Field("mother") mother: String,
+        @Field("order_of_child") order_of_child: Number,
         @Field("region") region: String,
         @Field("birth_weight") birth_weight: Number,
         @Field("birth_height") birth_height: Number,
@@ -255,6 +263,7 @@ interface ApiService {
         @Field("date_of_birth") date_of_birth: String,
         @Field("father") father: String,
         @Field("mother") mother: String,
+        @Field("order_of_child") order_of_child: Number,
         @Field("region") region: String,
         @Field("birth_weight") birth_weight: Number,
         @Field("birth_height") birth_height: Number,
@@ -287,6 +296,14 @@ interface ApiService {
     suspend fun getGrowthByChildId(
         @Header("Authorization") token: String,
         @Path("id") id: String
+    ): Response<TemplateResponse<List<GrowthModel>>>
+
+    @GET("growth/year/{id}")
+    @Headers("Accept: application/json")
+    suspend fun getGrowthByChildIdInYear(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Query("year") year: Number,
     ): Response<TemplateResponse<List<GrowthModel>>>
 
     @FormUrlEncoded
@@ -424,6 +441,7 @@ interface ApiService {
         @Field("children_id") children_id: String,
         @Field("date") date: String,
         @Field("vaccine_name") vaccine_name: String,
+        @Field("place") place: String,
     ): Response<TemplateResponse<VaccineModel>>
 
     @GET("vaccine/{id}")
@@ -449,6 +467,7 @@ interface ApiService {
         @Field("children_id") children_id: String,
         @Field("date") date: String,
         @Field("vaccine_name") vaccine_name: String,
+        @Field("place") place: String,
     ): Response<TemplateResponse<VaccineModel>>
 
     @DELETE("vaccine/{id}")
@@ -463,7 +482,8 @@ interface ApiService {
     @Streaming
     suspend fun getChildrenReport(
         @Header("Authorization") token: String,
-        @Query("currentDate") currentDate: String,
+        @Query("month") month: Number,
+        @Query("year") year: Number,
     ): Response<ResponseBody>
 
     @GET("report/parents")
@@ -477,7 +497,8 @@ interface ApiService {
     suspend fun getRegionChildrenReport(
         @Header("Authorization") token: String,
         @Path("region") region: String,
-        @Query("currentDate") currentDate: String,
+        @Query("month") month: Number,
+        @Query("year") year: Number,
     ): Response<ResponseBody>
 
     @GET("report/parents/region/{region}")
@@ -492,6 +513,7 @@ interface ApiService {
     suspend fun getMonthlyReport(
         @Header("Authorization") token: String,
         @Path("region") region: String,
-        @Query("currentDate") currentDate: String,
+        @Query("month") month: Number,
+        @Query("year") year: Number,
     ): Response<ResponseBody>
 }

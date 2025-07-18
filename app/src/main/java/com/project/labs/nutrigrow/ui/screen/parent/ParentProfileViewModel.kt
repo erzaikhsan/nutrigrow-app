@@ -4,7 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.project.labs.nutrigrow.data.model.AccountModel
+import com.project.labs.nutrigrow.data.model.UserModel
 import com.project.labs.nutrigrow.data.model.AuthModel
 import com.project.labs.nutrigrow.data.model.ChildrenModel
 import com.project.labs.nutrigrow.data.repository.ChildRepository
@@ -23,12 +23,12 @@ class ParentProfileViewModel (
     val children: StateFlow<UiState<List<ChildrenModel>>>
         get() = _children
 
-    private val _parent: MutableStateFlow<UiState<AccountModel>> = MutableStateFlow(UiState.Loading)
-    val parent: StateFlow<UiState<AccountModel>>
+    private val _parent: MutableStateFlow<UiState<UserModel>> = MutableStateFlow(UiState.Loading)
+    val parent: StateFlow<UiState<UserModel>>
         get() = _parent
 
-    private val _isActive: MutableState<UiState<AccountModel>> = mutableStateOf(UiState.Loading)
-    val isActive: MutableState<UiState<AccountModel>>
+    private val _isActive: MutableState<UiState<UserModel>> = mutableStateOf(UiState.Loading)
+    val isActive: MutableState<UiState<UserModel>>
         get() = _isActive
 
     private val _isAuthenticated: MutableState<UiState<AuthModel>> = mutableStateOf(UiState.Loading)

@@ -13,11 +13,11 @@ class ReportRepository(
     private val apiService: ApiService,
 ) {
 
-    suspend fun getChildrenReport( currentDate: String, context: Context): File? {
+    suspend fun getChildrenReport( month: Number, year: Number, context: Context): File? {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
-        val response = apiService.getChildrenReport(token = userPreference.token, currentDate = currentDate)
+        val response = apiService.getChildrenReport(token = userPreference.token, month = month, year = year)
 
         if (!response.isSuccessful) {
             return null
@@ -57,11 +57,11 @@ class ReportRepository(
         return file
     }
 
-    suspend fun getRegionChildrenReport(region : String, currentDate: String, context: Context): File? {
+    suspend fun getRegionChildrenReport(region : String, month: Number, year: Number, context: Context): File? {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
-        val response = apiService.getRegionChildrenReport(region = region, currentDate = currentDate, token = userPreference.token)
+        val response = apiService.getRegionChildrenReport(region = region, month = month, year = year, token = userPreference.token)
 
         if (!response.isSuccessful) {
             return null
@@ -101,11 +101,11 @@ class ReportRepository(
         return file
     }
 
-    suspend fun getMonthlyReport(region: String, currentDate: String, context: Context): File? {
+    suspend fun getMonthlyReport(region: String, month: Number, year: Number, context: Context): File? {
         val userPreference = runBlocking {
             userPreference.getAuth().first()
         }
-        val response = apiService.getMonthlyReport(region = region, token = userPreference.token, currentDate = currentDate)
+        val response = apiService.getMonthlyReport(region = region, token = userPreference.token, month = month, year = year)
 
         if (!response.isSuccessful) {
             return null
