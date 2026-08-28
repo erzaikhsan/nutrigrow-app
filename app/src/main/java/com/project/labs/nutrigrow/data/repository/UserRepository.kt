@@ -148,7 +148,9 @@ class UserRepository(
     }
 
     fun registerOfficer( email: String, password: String, full_name: String, gender: String, date_of_birth: String, phone_number: String, address: String, region: String) = flow {
-        val register = apiService.registerOfficer( email = email, password = password, full_name = full_name, gender = gender, date_of_birth = date_of_birth, phone_number = phone_number, address = address, region = region)
+        val auth = userPreference.getAuth().first()
+
+        val register = apiService.registerOfficer( token = auth.token, email = email, password = password, full_name = full_name, gender = gender, date_of_birth = date_of_birth, phone_number = phone_number, address = address, region = region)
         if (!register.isSuccessful) {
             val message = register.processError()
 

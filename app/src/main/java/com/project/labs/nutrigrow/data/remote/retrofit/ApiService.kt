@@ -59,6 +59,7 @@ interface ApiService {
     @POST("auth/register/officer")
     @Headers("Accept: application/json")
     suspend fun registerOfficer(
+        @Header("Authorization") token: String,
         @Field("email") email: String,
         @Field("password") password: String,
         @Field("full_name") full_name: String,
