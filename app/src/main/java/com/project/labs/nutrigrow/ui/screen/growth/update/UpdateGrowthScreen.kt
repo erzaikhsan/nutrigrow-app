@@ -61,6 +61,11 @@ import com.project.labs.nutrigrow.ui.component.respond.LoadingIndicator
 import com.project.labs.nutrigrow.ui.component.snackbar.CustomSnackBar
 import com.project.labs.nutrigrow.ui.screen.ViewModelFactory
 import com.project.labs.nutrigrow.ui.state.UiState
+import com.project.labs.nutrigrow.utils.FIELD_ARM
+import com.project.labs.nutrigrow.utils.FIELD_DATE
+import com.project.labs.nutrigrow.utils.FIELD_HEAD
+import com.project.labs.nutrigrow.utils.FIELD_HEIGHT
+import com.project.labs.nutrigrow.utils.FIELD_WEIGHT
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -87,8 +92,9 @@ fun UpdateGrowthScreen(
     val checkAuth by viewModel.isAuthenticated
     val newGrowth: UiState<GrowthModel> by viewModel.newGrowth
     val delete: UiState<GrowthModel> by viewModel.delete
+    val fieldErrors by viewModel.fieldErrors
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = childId) {
         viewModel.checkAuthentication()
         viewModel.getChildProfile(childId)
         viewModel.getGrowthById(id)
@@ -123,6 +129,7 @@ fun UpdateGrowthScreen(
         context,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
             date = "$mDayOfMonth/${mMonth+1}/$mYear"
+            viewModel.clearFieldError(FIELD_DATE)
         }, mYear, mMonth, mDay
     )
 
@@ -267,16 +274,18 @@ fun UpdateGrowthScreen(
                                         )
                                         OutlinedTextField(
                                             value = date,
-                                            onValueChange = { date = it },
+                                            onValueChange = { },
+                                            isError = fieldErrors.containsKey(FIELD_DATE),
+                                            supportingText = fieldErrors[FIELD_DATE]?.let { { Text(it) } },
                                             keyboardOptions = KeyboardOptions.Default.copy(
                                                 keyboardType = KeyboardType.Text,
                                                 imeAction = ImeAction.Next
                                             ),
                                             enabled = false,
-                                            trailingIcon = { Icon(painterResource(id = R.drawable.baseline_date_range_24), contentDescription = "Date of Birth", modifier = Modifier.size(22.dp)) },
+                                            trailingIcon = { Icon(painterResource(id = R.drawable.baseline_date_range_24), contentDescription = "Tanggal lahir", modifier = Modifier.size(22.dp)) },
                                             shape = RoundedCornerShape(10.dp),
                                             placeholder = { Text("Masukan Tanggal Penimbangan", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                            colors = TextFieldDefaults.textFieldColors(
+                                            colors = TextFieldDefaults.colors(
                                                 disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 focusedIndicatorColor = Color(0xFF9DA1A6),
@@ -299,15 +308,17 @@ fun UpdateGrowthScreen(
                                         )
                                         OutlinedTextField(
                                             value = weight,
-                                            onValueChange = { weight = it },
+                                            onValueChange = { weight = it; viewModel.clearFieldError(FIELD_WEIGHT) },
+                                            isError = fieldErrors.containsKey(FIELD_WEIGHT),
+                                            supportingText = fieldErrors[FIELD_WEIGHT]?.let { { Text(it) } },
                                             keyboardOptions = KeyboardOptions.Default.copy(
-                                                keyboardType = KeyboardType.Number,
+                                                keyboardType = KeyboardType.Decimal,
                                                 imeAction = ImeAction.Next
                                             ),
                                             enabled = growthRespond.data.age != 0,
                                             shape = RoundedCornerShape(10.dp),
                                             placeholder = { Text("Masukan Berat Badan", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                            colors = TextFieldDefaults.textFieldColors(
+                                            colors = TextFieldDefaults.colors(
                                                 focusedIndicatorColor = Color(0xFF9DA1A6),
                                                 unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                                 disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -327,15 +338,17 @@ fun UpdateGrowthScreen(
                                         )
                                         OutlinedTextField(
                                             value = height,
-                                            onValueChange = { height = it },
+                                            onValueChange = { height = it; viewModel.clearFieldError(FIELD_HEIGHT) },
+                                            isError = fieldErrors.containsKey(FIELD_HEIGHT),
+                                            supportingText = fieldErrors[FIELD_HEIGHT]?.let { { Text(it) } },
                                             keyboardOptions = KeyboardOptions.Default.copy(
-                                                keyboardType = KeyboardType.Number,
+                                                keyboardType = KeyboardType.Decimal,
                                                 imeAction = ImeAction.Next
                                             ),
                                             enabled = growthRespond.data.age != 0,
                                             shape = RoundedCornerShape(10.dp),
                                             placeholder = { Text("Masukan Tinggi Badan", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                            colors = TextFieldDefaults.textFieldColors(
+                                            colors = TextFieldDefaults.colors(
                                                 focusedIndicatorColor = Color(0xFF9DA1A6),
                                                 unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                                 disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -355,15 +368,17 @@ fun UpdateGrowthScreen(
                                         )
                                         OutlinedTextField(
                                             value = head_circum,
-                                            onValueChange = { head_circum = it },
+                                            onValueChange = { head_circum = it; viewModel.clearFieldError(FIELD_HEAD) },
+                                            isError = fieldErrors.containsKey(FIELD_HEAD),
+                                            supportingText = fieldErrors[FIELD_HEAD]?.let { { Text(it) } },
                                             keyboardOptions = KeyboardOptions.Default.copy(
-                                                keyboardType = KeyboardType.Number,
+                                                keyboardType = KeyboardType.Decimal,
                                                 imeAction = ImeAction.Next
                                             ),
                                             enabled = growthRespond.data.age != 0,
                                             shape = RoundedCornerShape(10.dp),
                                             placeholder = { Text("Masukan Lingkar Kepala", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                            colors = TextFieldDefaults.textFieldColors(
+                                            colors = TextFieldDefaults.colors(
                                                 focusedIndicatorColor = Color(0xFF9DA1A6),
                                                 unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                                 disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -383,15 +398,17 @@ fun UpdateGrowthScreen(
                                         )
                                         OutlinedTextField(
                                             value = arm_circum,
-                                            onValueChange = { arm_circum = it },
+                                            onValueChange = { arm_circum = it; viewModel.clearFieldError(FIELD_ARM) },
+                                            isError = fieldErrors.containsKey(FIELD_ARM),
+                                            supportingText = fieldErrors[FIELD_ARM]?.let { { Text(it) } },
                                             keyboardOptions = KeyboardOptions.Default.copy(
-                                                keyboardType = KeyboardType.Number,
+                                                keyboardType = KeyboardType.Decimal,
                                                 imeAction = ImeAction.Next
                                             ),
                                             enabled = growthRespond.data.age != 0,
                                             shape = RoundedCornerShape(10.dp),
                                             placeholder = { Text("Masukan Lingkar Lengan", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                            colors = TextFieldDefaults.textFieldColors(
+                                            colors = TextFieldDefaults.colors(
                                                 focusedIndicatorColor = Color(0xFF9DA1A6),
                                                 unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                                 disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -423,7 +440,7 @@ fun UpdateGrowthScreen(
                                                 enabled = growthRespond.data.age != 0,
                                                 shape = RoundedCornerShape(10.dp),
                                                 placeholder = { Text("Masukan Catatan Penimbangan", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                                colors = TextFieldDefaults.textFieldColors(
+                                                colors = TextFieldDefaults.colors(
                                                     focusedIndicatorColor = Color(0xFF9DA1A6),
                                                     unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                                     disabledIndicatorColor = Color(0xFF9DA1A6),

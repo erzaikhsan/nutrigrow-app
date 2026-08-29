@@ -24,7 +24,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,17 +54,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.project.labs.nutrigrow.ui.theme.SurfaceCard
+import com.project.labs.nutrigrow.ui.theme.TextPrimary
 import coil.compose.AsyncImage
 import com.project.labs.nutrigrow.R
 import com.project.labs.nutrigrow.activity.growth.AddGrowthActivity
 import com.project.labs.nutrigrow.activity.growth.UpdateGrowthActivity
 import com.project.labs.nutrigrow.data.model.AuthModel
 import com.project.labs.nutrigrow.data.model.GrowthModel
-import com.project.labs.nutrigrow.ui.component.graph.bbtb.WflhChart
-import com.project.labs.nutrigrow.ui.component.graph.bbu.WfaChart02
-import com.project.labs.nutrigrow.ui.component.graph.bbu.WfaChart25
-import com.project.labs.nutrigrow.ui.component.graph.tbu.GrowthChart02
-import com.project.labs.nutrigrow.ui.component.graph.tbu.GrowthChart25
+import com.project.labs.nutrigrow.ui.component.card.AssessmentCard
+import com.project.labs.nutrigrow.ui.component.graph.GrowthChartSection
+import com.project.labs.nutrigrow.ui.component.pagination.PaginationBar
+import com.project.labs.nutrigrow.ui.component.pagination.rememberPagination
 import com.project.labs.nutrigrow.ui.component.respond.ErrorMessage
 import com.project.labs.nutrigrow.ui.component.respond.LoadingIndicator
 import com.project.labs.nutrigrow.ui.screen.ViewModelFactory
@@ -92,7 +93,7 @@ fun DetailGrowthScreen(
     val checkAuth by viewModel.isAuthenticated
     var selectedTab by remember { mutableStateOf("Grafik") }
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.checkAuthentication()
     }
 
@@ -160,7 +161,9 @@ fun DetailGrowthScreen(
             when (child) {
                 is UiState.Loading -> {
                     LoadingIndicator()
-                    viewModel.getChildProfile(id)
+                    LaunchedEffect(Unit) {
+                        viewModel.getChildProfile(id)
+                    }
                 }
                 is UiState.Success -> {
                     val dob = LocalDate.parse(child.data.date_of_birth.substring(0, 10), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
@@ -203,7 +206,7 @@ fun DetailGrowthScreen(
                             ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.nutrigrow_nobg),
-                                    contentDescription = "NutriGrow Logo",
+                                    contentDescription = "Logo NutriGrow",
                                     modifier = Modifier
                                         .size(55.dp)
                                 )
@@ -228,7 +231,7 @@ fun DetailGrowthScreen(
                                 }
                                 AsyncImage(
                                     model = if (child.data.gender == "M") R.drawable.boy else R.drawable.girl,
-                                    contentDescription = "Profile Image",
+                                    contentDescription = "Foto profil",
                                     modifier = Modifier
                                         .padding(4.dp)
                                         .size(50.dp)
@@ -262,7 +265,7 @@ fun DetailGrowthScreen(
                                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                                 },
                                 shape = RoundedCornerShape(10.dp),
-                                colors = TextFieldDefaults.textFieldColors(
+                                colors = TextFieldDefaults.colors(
                                     focusedIndicatorColor = Color(0xFF9DA1A6),
                                     unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                     disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -410,7 +413,7 @@ fun DetailGrowthScreen(
                                             )
                                         }
                                         Spacer(modifier = Modifier.height(5.dp))
-                                        Divider(
+                                        HorizontalDivider(
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .padding(start = 20.dp, end = 20.dp)
@@ -425,94 +428,17 @@ fun DetailGrowthScreen(
                                                     when (currentGrowth) {
                                                         is UiState.Loading -> {
                                                             LoadingIndicator()
-                                                            viewModel.getGrowthByChildId(id)
+                                                            LaunchedEffect(Unit) {
+                                                                viewModel.getGrowthByChildId(id)
+                                                            }
                                                         }
                                                         is UiState.Success -> {
-                                                            //Tinggi Badan Per Umur
-                                                            Text(
-                                                                text = "Berdasarkan Panjang Badan atau Tinggi Badan Menurut Umur (PB/U atau TB/U)",
-                                                                textAlign = TextAlign.Center,
-                                                                fontSize = 15.sp,
-                                                                fontWeight = FontWeight.W500,
-                                                                modifier = Modifier
-                                                                    .fillMaxWidth()
-                                                                    .padding(start = 20.dp, end = 20.dp)
+                            val growthData = (currentGrowth as UiState.Success<List<GrowthModel>>).data
+                                                            GrowthChartSection(
+                                                                growthData = growthData,
+                                                                gender = child.data.gender,
+                                                                ageInYears = period.years,
                                                             )
-                                                            Spacer(modifier = Modifier.height(5.dp))
-                                                            val growthData = (currentGrowth as UiState.Success<List<GrowthModel>>).data
-                                                            val tbuData = growthData.map { growthEntry ->
-                                                                Pair(growthEntry.age, growthEntry.height.toInt())
-                                                            }
-
-                                                            val filteredTBU02 = tbuData.filter { it.first in 0..23 }
-                                                            val filteredTBU25 = tbuData.filter { it.first in 24..59 }
-
-                                                            if (period.years < 2){
-                                                                GrowthChart02(data = filteredTBU02, child.data.gender)
-                                                            } else {
-                                                                GrowthChart02(data = filteredTBU02, child.data.gender)
-                                                                GrowthChart25(data = filteredTBU25, child.data.gender)
-                                                            }
-
-                                                            //Berat Badan Per Umur
-                                                            Divider(
-                                                                modifier = Modifier
-                                                                    .fillMaxWidth()
-                                                                    .padding(start = 20.dp, end = 20.dp)
-                                                                    .background(Color.White),
-                                                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                                                                thickness = 1.dp
-                                                            )
-                                                            Spacer(modifier = Modifier.height(10.dp))
-                                                            Text(
-                                                                text = "Berdasarkan Berat Badan Menurut Umur (BB/U)",
-                                                                textAlign = TextAlign.Center,
-                                                                fontSize = 15.sp,
-                                                                fontWeight = FontWeight.W500,
-                                                                modifier = Modifier
-                                                                    .fillMaxWidth()
-                                                                    .padding(start = 20.dp, end = 20.dp)
-                                                            )
-                                                            Spacer(modifier = Modifier.height(5.dp))
-                                                            val bbuData = growthData.map { growthEntry ->
-                                                                Pair(growthEntry.age, growthEntry.weight.toFloat())
-                                                            }
-
-                                                            val filteredBBU02 = bbuData.filter { it.first in 0..23 }
-                                                            val filteredBBU25 = bbuData.filter { it.first in 24..59 }
-
-                                                            if (period.years < 2){
-                                                                WfaChart02(data = filteredBBU02, child.data.gender)
-                                                            } else {
-                                                                WfaChart02(data = filteredBBU02, child.data.gender)
-                                                                WfaChart25(data = filteredBBU25, child.data.gender)
-                                                            }
-
-                                                            //Berat Badan Per Tinggi Badan
-                                                            Divider(
-                                                                modifier = Modifier
-                                                                    .fillMaxWidth()
-                                                                    .padding(start = 20.dp, end = 20.dp)
-                                                                    .background(Color.White),
-                                                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                                                                thickness = 1.dp
-                                                            )
-                                                            Spacer(modifier = Modifier.height(10.dp))
-                                                            Text(
-                                                                text = "Berdasarkan Berat Badan Menurut Tinggi Badan (BB/TB)",
-                                                                textAlign = TextAlign.Center,
-                                                                fontSize = 15.sp,
-                                                                fontWeight = FontWeight.W500,
-                                                                modifier = Modifier
-                                                                    .fillMaxWidth()
-                                                                    .padding(start = 20.dp, end = 20.dp)
-                                                            )
-                                                            Spacer(modifier = Modifier.height(5.dp))
-                                                            val bbtb = growthData.map { growthEntry ->
-                                                                Pair(growthEntry.height.toInt(), growthEntry.weight.toFloat())
-                                                            }
-
-                                                            WflhChart(data = bbtb, gender = child.data.gender )
                                                         }
 
                                                         is UiState.Error -> {
@@ -523,92 +449,13 @@ fun DetailGrowthScreen(
                                                     }
                                                 }
                                                 is UiState.Success -> {
+                    val growthData = grew.data
 
-                                                    //Tinggi Badan Per Umur
-                                                    Text(
-                                                        text = "Berdasarkan Panjang Badan atau Tinggi Badan Menurut Umur (PB/U atau TB/U)",
-                                                        textAlign = TextAlign.Center,
-                                                        fontSize = 15.sp,
-                                                        fontWeight = FontWeight.W500,
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .padding(start = 20.dp, end = 20.dp)
+                                                    GrowthChartSection(
+                                                        growthData = growthData,
+                                                        gender = child.data.gender,
+                                                        ageInYears = period.years,
                                                     )
-                                                    Spacer(modifier = Modifier.height(5.dp))
-                                                    val growthData = grew.data
-                                                    val tbuData = growthData.map { growthEntry ->
-                                                        Pair(growthEntry.age, growthEntry.height.toInt())
-                                                    }
-
-                                                    val filteredTBU02 = tbuData.filter { it.first in 0..23 }
-                                                    val filteredTBU25 = tbuData.filter { it.first in 24..59 }
-
-                                                    if (period.years < 2){
-                                                        GrowthChart02(data = filteredTBU02, child.data.gender)
-                                                    } else {
-                                                        GrowthChart02(data = filteredTBU02, child.data.gender)
-                                                        GrowthChart25(data = filteredTBU25, child.data.gender)
-                                                    }
-
-                                                    //Berat Badan Per Umur
-                                                    Divider(
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .padding(start = 20.dp, end = 20.dp)
-                                                            .background(Color.White),
-                                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                                                        thickness = 1.dp
-                                                    )
-                                                    Spacer(modifier = Modifier.height(10.dp))
-                                                    Text(
-                                                        text = "Berdasarkan Berat Badan Menurut Umur (BB/U)",
-                                                        textAlign = TextAlign.Center,
-                                                        fontSize = 15.sp,
-                                                        fontWeight = FontWeight.W500,
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .padding(start = 20.dp, end = 20.dp)
-                                                    )
-                                                    Spacer(modifier = Modifier.height(5.dp))
-                                                    val bbuData = growthData.map { growthEntry ->
-                                                        Pair(growthEntry.age, growthEntry.weight.toFloat())
-                                                    }
-
-                                                    val filteredBBU02 = bbuData.filter { it.first in 0..23 }
-                                                    val filteredBBU25 = bbuData.filter { it.first in 24..59 }
-
-                                                    if (period.years < 2){
-                                                        WfaChart02(data = filteredBBU02, child.data.gender)
-                                                    } else {
-                                                        WfaChart02(data = filteredBBU02, child.data.gender)
-                                                        WfaChart25(data = filteredBBU25, child.data.gender)
-                                                    }
-
-                                                    //Berat Badan Per Tinggi Badan
-                                                    Divider(
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .padding(start = 20.dp, end = 20.dp)
-                                                            .background(Color.White),
-                                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                                                        thickness = 1.dp
-                                                    )
-                                                    Spacer(modifier = Modifier.height(10.dp))
-                                                    Text(
-                                                        text = "Berdasarkan Berat Badan Menurut Tinggi Badan (BB/TB)",
-                                                        textAlign = TextAlign.Center,
-                                                        fontSize = 15.sp,
-                                                        fontWeight = FontWeight.W500,
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .padding(start = 20.dp, end = 20.dp)
-                                                    )
-                                                    Spacer(modifier = Modifier.height(5.dp))
-                                                    val bbtb = growthData.map { growthEntry ->
-                                                        Pair(growthEntry.height.toInt(), growthEntry.weight.toFloat())
-                                                    }
-
-                                                    WflhChart(data = bbtb, gender = child.data.gender )
                                                 }
                                                 is UiState.Error -> {
                                                     ErrorMessage(message = grew.errorMessage)
@@ -666,7 +513,7 @@ fun DetailGrowthScreen(
                                             )
                                         }
                                         Spacer(modifier = Modifier.height(10.dp))
-                                        Divider(
+                                        HorizontalDivider(
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .background(Color.White),
@@ -679,16 +526,19 @@ fun DetailGrowthScreen(
                                                     when (currentGrowth) {
                                                         is UiState.Loading -> {
                                                             LoadingIndicator()
-                                                            viewModel.getGrowthByChildId(id)
+                                                            LaunchedEffect(Unit) {
+                                                                viewModel.getGrowthByChildId(id)
+                                                            }
                                                         }
                                                         is UiState.Success -> {
                                                             if ((currentGrowth as UiState.Success<List<GrowthModel>>).data.isNotEmpty()) {
+                                                                val pagination = rememberPagination(items = (currentGrowth as UiState.Success<List<GrowthModel>>).data)
                                                                 Column(
                                                                     modifier = Modifier
                                                                         .fillMaxWidth()
                                                                         .padding(top = 10.dp)
                                                                 ) {
-                                                                    (currentGrowth as UiState.Success<List<GrowthModel>>).data.forEach { growthItem ->
+                                                                    pagination.visibleItems.forEach { growthItem ->
                                                                         ElevatedCard(
                                                                             colors = CardDefaults.cardColors(Color(0xFFE0FFD2)),
                                                                             modifier = Modifier
@@ -871,6 +721,7 @@ fun DetailGrowthScreen(
                                                                         }
                                                                         Spacer(modifier = Modifier.height(10.dp))
                                                                     }
+                                                                    PaginationBar(pagination = pagination, itemLabel = "penimbangan")
                                                                 }
                                                             } else {
                                                                 ElevatedCard(
@@ -933,12 +784,13 @@ fun DetailGrowthScreen(
                                                 }
                                                 is UiState.Success -> {
                                                     if (growths.data.isNotEmpty()) {
+                                                        val pagination = rememberPagination(items = growths.data)
                                                         Column(
                                                             modifier = Modifier
                                                                 .fillMaxWidth()
                                                                 .padding(top = 10.dp)
                                                         ) {
-                                                            growths.data.forEach { growthItem ->
+                                                            pagination.visibleItems.forEach { growthItem ->
                                                                 ElevatedCard(
                                                                     colors = CardDefaults.cardColors(Color(0xFFE0FFD2)),
                                                                     modifier = Modifier
@@ -1121,6 +973,7 @@ fun DetailGrowthScreen(
                                                                 }
                                                                 Spacer(modifier = Modifier.height(10.dp))
                                                             }
+                                                            PaginationBar(pagination = pagination, itemLabel = "penimbangan")
                                                         }
                                                     } else {
                                                         ElevatedCard(
@@ -1202,6 +1055,8 @@ fun DetailGrowthScreen(
                 if ((checkAuth as UiState.Success<AuthModel>).data.role == "Officer"){
                     FloatingActionButton(
                         shape = CircleShape,
+                        containerColor = SurfaceCard,
+                        contentColor = TextPrimary,
                         onClick = {
                             activityLauncher.launch(
                                 Intent(context, AddGrowthActivity::class.java).apply {

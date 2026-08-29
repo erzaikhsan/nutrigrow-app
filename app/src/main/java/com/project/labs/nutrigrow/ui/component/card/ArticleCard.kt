@@ -2,6 +2,7 @@ package com.project.labs.nutrigrow.ui.component.card
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,7 +25,7 @@ import java.util.Locale
 
 @Composable
 fun ArticleCard (
-    image: String,
+    @DrawableRes image: Int,
     title: String,
     description: String,
     onClick: () -> Unit,
@@ -49,7 +50,7 @@ fun ArticleCard (
         ) {
             AsyncImage(
                 model = image,
-                contentDescription = "Article Image",
+                contentDescription = "Gambar artikel",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()

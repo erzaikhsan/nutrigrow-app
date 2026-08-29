@@ -9,6 +9,25 @@ import com.project.labs.nutrigrow.data.model.ChildrenModel
 import com.project.labs.nutrigrow.data.repository.ChildRepository
 import com.project.labs.nutrigrow.data.repository.UserRepository
 import com.project.labs.nutrigrow.ui.state.UiState
+import com.project.labs.nutrigrow.utils.BIRTH_HEAD_RANGE
+import com.project.labs.nutrigrow.utils.BIRTH_HEIGHT_RANGE
+import com.project.labs.nutrigrow.utils.BIRTH_WEIGHT_RANGE
+import com.project.labs.nutrigrow.utils.FIELD_BIRTH_HEAD
+import com.project.labs.nutrigrow.utils.FIELD_BIRTH_HEIGHT
+import com.project.labs.nutrigrow.utils.FIELD_BIRTH_WEIGHT
+import com.project.labs.nutrigrow.utils.FIELD_DOB
+import com.project.labs.nutrigrow.utils.FIELD_FATHER
+import com.project.labs.nutrigrow.utils.FIELD_GENDER
+import com.project.labs.nutrigrow.utils.FIELD_MOTHER
+import com.project.labs.nutrigrow.utils.FIELD_NAME
+import com.project.labs.nutrigrow.utils.FIELD_ORDER
+import com.project.labs.nutrigrow.utils.FIELD_PLACE
+import com.project.labs.nutrigrow.utils.FIELD_REGION
+import com.project.labs.nutrigrow.utils.parseMeasurement
+import com.project.labs.nutrigrow.utils.requireText
+import com.project.labs.nutrigrow.utils.validateMeasurement
+import com.project.labs.nutrigrow.utils.validateOrderOfChild
+import com.project.labs.nutrigrow.ui.state.toUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -44,45 +63,64 @@ class UpdateChildViewModel (
         _child.value = UiState.Loading
         viewModelScope.launch {
             childRepository.getChildProfile(id)
-                .catch {
-                    _child.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _child.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _child.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _child.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _child.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _child.value = it }
+        }
+    }
+
+    private val _fieldErrors: MutableState<Map<String, String>> = mutableStateOf(emptyMap())
+    val fieldErrors: MutableState<Map<String, String>>
+        get() = _fieldErrors
+
+    fun clearFieldError(field: String) {
+        if (_fieldErrors.value.containsKey(field)) {
+            _fieldErrors.value = _fieldErrors.value - field
         }
     }
 
     fun updateChildren(id: String, full_name: String, gender: String, place_of_birth: String, date_of_birth: String, father : String, mother : String, order_of_child: String, region: String, birth_weight: String, birth_height: String, birth_head_circum: String) {
-        if ( full_name.isEmpty() || gender.isEmpty() || date_of_birth.isEmpty() || region.isEmpty() || birth_weight.isEmpty() || birth_height.isEmpty() || birth_head_circum.isEmpty() || place_of_birth.isEmpty() || father.isEmpty() || mother.isEmpty() || order_of_child.isEmpty()) {
-            _newChild.value = UiState.Error("Pastikan Semua Data Anak\nDiisi Dengan Benar")
+        val errors = mutableMapOf<String, String>()
+
+        requireText(full_name, "Nama lengkap")?.let { errors[FIELD_NAME] = it }
+        requireText(gender, "Jenis kelamin")?.let { errors[FIELD_GENDER] = it }
+        requireText(place_of_birth, "Tempat lahir")?.let { errors[FIELD_PLACE] = it }
+        requireText(father, "Nama ayah")?.let { errors[FIELD_FATHER] = it }
+        requireText(mother, "Nama ibu")?.let { errors[FIELD_MOTHER] = it }
+        requireText(region, "Wilayah")?.let { errors[FIELD_REGION] = it }
+        validateOrderOfChild(order_of_child)?.let { errors[FIELD_ORDER] = it }
+
+        val bornOn = runCatching {
+            LocalDate.parse(date_of_birth, DateTimeFormatter.ofPattern("d/M/yyyy"))
+        }.getOrNull()
+
+        when {
+            date_of_birth.isBlank() -> errors[FIELD_DOB] = "Tanggal lahir belum dipilih."
+            bornOn == null -> errors[FIELD_DOB] = "Tanggal lahir tidak terbaca."
+            bornOn.isAfter(LocalDate.now()) -> errors[FIELD_DOB] = "Tanggal lahir tidak boleh melewati hari ini."
+        }
+
+        validateMeasurement(birth_weight, BIRTH_WEIGHT_RANGE)?.let { errors[FIELD_BIRTH_WEIGHT] = it }
+        validateMeasurement(birth_height, BIRTH_HEIGHT_RANGE)?.let { errors[FIELD_BIRTH_HEIGHT] = it }
+        validateMeasurement(birth_head_circum, BIRTH_HEAD_RANGE)?.let { errors[FIELD_BIRTH_HEAD] = it }
+
+        _fieldErrors.value = errors
+
+        if (errors.isNotEmpty()) {
+            _newChild.value = UiState.Error(
+                if (errors.size == 1) "Ada 1 isian yang perlu diperbaiki."
+                else "Ada ${errors.size} isian yang perlu diperbaiki."
+            )
             return
         }
 
-        val today = LocalDate.now()
-        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
-        val dob = LocalDate.parse(date_of_birth, formatter)
-
-        if (dob.isAfter(today)) {
-            _newChild.value = UiState.Error("Tanggal Lahir tidak boleh melebihi tanggal hari ini")
-            return
-        }
+        val orderValue = order_of_child.trim().toInt()
+        val birthWeightValue = parseMeasurement(birth_weight) ?: return
+        val birthHeightValue = parseMeasurement(birth_height) ?: return
+        val birthHeadValue = parseMeasurement(birth_head_circum) ?: return
 
         _newChild.value = UiState.Loading
         viewModelScope.launch {
-            childRepository.updateChildren( id = id, full_name = full_name, gender = if (gender == "Laki-Laki") "M" else "F", date_of_birth = reformatDate(date_of_birth), father = father, mother = mother, order_of_child = order_of_child.toInt(), region =  region, place_of_birth = place_of_birth, birth_weight = birth_weight.toDouble(), birth_height = birth_height.toDouble(), birth_head_circum = birth_head_circum.toDouble()).catch {
+            childRepository.updateChildren( id = id, full_name = full_name, gender = if (gender == "Laki-Laki") "M" else "F", date_of_birth = reformatDate(date_of_birth), father = father, mother = mother, order_of_child = orderValue, region =  region, place_of_birth = place_of_birth, birth_weight = birthWeightValue, birth_height = birthHeightValue, birth_head_circum = birthHeadValue).catch {
                 _newChild.value = UiState.Error(it.message.toString())
             }.collect { data ->
                 try {

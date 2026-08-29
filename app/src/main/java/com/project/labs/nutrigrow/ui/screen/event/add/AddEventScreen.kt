@@ -80,7 +80,7 @@ fun AddEventScreen(
 
     val checkAuth by viewModel.isAuthenticated
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.checkAuthentication()
     }
 
@@ -183,7 +183,9 @@ fun AddEventScreen(
                         LoadingIndicator()
                         when (checkAuth) {
                             is UiState.Success -> {
-                                viewModel.getUserProfile((checkAuth as UiState.Success<AuthModel>).data.role)
+                                LaunchedEffect(Unit) {
+                                    viewModel.getUserProfile((checkAuth as UiState.Success<AuthModel>).data.role)
+                                }
                             }
                             else -> {}
                         }
@@ -220,7 +222,7 @@ fun AddEventScreen(
                                 ),
                                 shape = RoundedCornerShape(10.dp),
                                 placeholder = { Text("Masukan Judul Kegiatan", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                colors = TextFieldDefaults.textFieldColors(
+                                colors = TextFieldDefaults.colors(
                                     focusedIndicatorColor = Color(0xFF9DA1A6),
                                     unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                     disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -246,10 +248,10 @@ fun AddEventScreen(
                                     imeAction = ImeAction.Next
                                 ),
                                 enabled = false,
-                                trailingIcon = { Icon(painterResource(id = R.drawable.baseline_date_range_24), contentDescription = "Date", modifier = Modifier.size(22.dp)) },
+                                trailingIcon = { Icon(painterResource(id = R.drawable.baseline_date_range_24), contentDescription = "Tanggal", modifier = Modifier.size(22.dp)) },
                                 shape = RoundedCornerShape(10.dp),
                                 placeholder = { Text("Masukan Tanggal Kegiatan", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                colors = TextFieldDefaults.textFieldColors(
+                                colors = TextFieldDefaults.colors(
                                     disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                     disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                     focusedIndicatorColor = Color(0xFF9DA1A6),
@@ -282,7 +284,7 @@ fun AddEventScreen(
                                         enabled = false,
                                         shape = RoundedCornerShape(10.dp),
                                         placeholder = { Text("Waktu Mulai") },
-                                        colors = TextFieldDefaults.textFieldColors(
+                                        colors = TextFieldDefaults.colors(
                                             disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                             disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                             focusedIndicatorColor = Color(0xFF9DA1A6),
@@ -306,7 +308,7 @@ fun AddEventScreen(
                                         enabled = false,
                                         shape = RoundedCornerShape(10.dp),
                                         placeholder = { Text("Waktu Selesai") },
-                                        colors = TextFieldDefaults.textFieldColors(
+                                        colors = TextFieldDefaults.colors(
                                             disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                             disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                             focusedIndicatorColor = Color(0xFF9DA1A6),
@@ -342,7 +344,7 @@ fun AddEventScreen(
                                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandRegion)
                                     },
                                     shape = RoundedCornerShape(10.dp),
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -385,9 +387,9 @@ fun AddEventScreen(
                                     imeAction = ImeAction.Next
                                 ),
                                 shape = RoundedCornerShape(10.dp),
-                                trailingIcon = { Icon(painterResource(id = R.drawable.baseline_location_pin_24), contentDescription = "Place", modifier = Modifier.size(22.dp)) },
+                                trailingIcon = { Icon(painterResource(id = R.drawable.baseline_location_pin_24), contentDescription = "Tempat", modifier = Modifier.size(22.dp)) },
                                 placeholder = { Text("Masukan Tempat Kegiatan", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                colors = TextFieldDefaults.textFieldColors(
+                                colors = TextFieldDefaults.colors(
                                     focusedIndicatorColor = Color(0xFF9DA1A6),
                                     unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                     disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -414,7 +416,7 @@ fun AddEventScreen(
                                 ),
                                 shape = RoundedCornerShape(10.dp),
                                 placeholder = { Text("Masukan Deskripsi Kegiatan", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                colors = TextFieldDefaults.textFieldColors(
+                                colors = TextFieldDefaults.colors(
                                     focusedIndicatorColor = Color(0xFF9DA1A6),
                                     unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                     disabledIndicatorColor = Color(0xFF9DA1A6),

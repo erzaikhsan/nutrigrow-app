@@ -10,9 +10,9 @@ import com.project.labs.nutrigrow.data.model.UserModel
 import com.project.labs.nutrigrow.data.repository.ReportRepository
 import com.project.labs.nutrigrow.data.repository.UserRepository
 import com.project.labs.nutrigrow.ui.state.UiState
+import com.project.labs.nutrigrow.ui.state.toUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.io.File
 import java.time.LocalDate
@@ -49,24 +49,8 @@ class OfficerProfileViewModel (
         _officer.value = UiState.Loading
         viewModelScope.launch {
             userRepository.getOfficerAccount(id)
-                .catch {
-                    _officer.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _officer.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _officer.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _officer.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _officer.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _officer.value = it }
         }
     }
 
@@ -132,28 +116,25 @@ class OfficerProfileViewModel (
         }
     }
 
+    private val _deleted: MutableState<UiState<String>> = mutableStateOf(UiState.Unauthorized)
+    val deleted: MutableState<UiState<String>>
+        get() = _deleted
+
+    fun deleteOfficer(id: String) {
+        _deleted.value = UiState.Loading
+        viewModelScope.launch {
+            userRepository.deleteOfficer(id)
+                .toUiState()
+                .collect { _deleted.value = it }
+        }
+    }
+
     fun deactivateAccount(id: String) {
         _officer.value = UiState.Loading
         viewModelScope.launch {
             userRepository.deactivateAccount(id)
-                .catch {
-                    _isActive.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _isActive.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _isActive.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _isActive.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _isActive.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _isActive.value = it }
         }
     }
 
@@ -161,24 +142,8 @@ class OfficerProfileViewModel (
         _officer.value = UiState.Loading
         viewModelScope.launch {
             userRepository.activateAccount(id)
-                .catch {
-                    _isActive.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _isActive.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _isActive.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _isActive.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _isActive.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _isActive.value = it }
         }
     }
 

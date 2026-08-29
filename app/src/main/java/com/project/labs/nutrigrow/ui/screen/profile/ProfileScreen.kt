@@ -19,19 +19,22 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -58,8 +61,10 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import coil.compose.AsyncImage
 import com.project.labs.nutrigrow.R
+import com.project.labs.nutrigrow.activity.about.AboutActivity
 import com.project.labs.nutrigrow.activity.profile.UpdateProfileActivity
 import com.project.labs.nutrigrow.activity.report.ReportActivity
+import com.project.labs.nutrigrow.activity.validation.ValidationActivity
 import com.project.labs.nutrigrow.data.model.AuthModel
 import com.project.labs.nutrigrow.ui.component.respond.ErrorMessage
 import com.project.labs.nutrigrow.ui.component.respond.LoadingIndicator
@@ -79,14 +84,15 @@ fun ProfileScreen(
 ) {
     val context = LocalContext.current
     val snackState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
 
     var showLogoutDialog by remember { mutableStateOf(false) }
 
     val checkAuth by viewModel.isAuthenticated
+    val reminderEnabled by viewModel.reminderEnabled
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.checkAuthentication()
+        viewModel.loadReminderSetting()
     }
 
     val activityLauncher = rememberLauncherForActivityResult(
@@ -102,13 +108,6 @@ fun ProfileScreen(
         }
     }
 
-    fun testReminderNow() {
-        val request = OneTimeWorkRequestBuilder<ReminderWorker>()
-            .setInitialDelay(5, TimeUnit.SECONDS)
-            .build()
-        WorkManager.getInstance(context).enqueue(request)
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -120,7 +119,9 @@ fun ProfileScreen(
                     LoadingIndicator(modifier = Modifier)
                     when (checkAuth) {
                         is UiState.Success -> {
-                            viewModel.getUserProfile((checkAuth as UiState.Success<AuthModel>).data.role)
+                            LaunchedEffect(Unit) {
+                                viewModel.getUserProfile((checkAuth as UiState.Success<AuthModel>).data.role)
+                            }
                         }
                         else -> {}
                     }
@@ -154,7 +155,7 @@ fun ProfileScreen(
                                         ) {
                                             AsyncImage(
                                                 model = if (user.data.gender == "M") R.drawable.man else R.drawable.woman,
-                                                contentDescription = "Profile Image",
+                                                contentDescription = "Foto profil",
                                                 contentScale = ContentScale.Crop,
                                                 modifier = Modifier
                                                     .padding(4.dp)
@@ -268,7 +269,7 @@ fun ProfileScreen(
                                                     ){
                                                         Icon(
                                                             imageVector = Icons.Default.Person,
-                                                            contentDescription = "My Account",
+                                                            contentDescription = "Akun saya",
                                                         )
                                                         Spacer(modifier = Modifier.width(20.dp))
                                                         Column {
@@ -287,7 +288,7 @@ fun ProfileScreen(
                                                             contentDescription = "",
                                                         )
                                                     }
-                                                    Divider(
+                                                    HorizontalDivider(
                                                         modifier = Modifier
                                                             .fillMaxWidth()
                                                             .background(Color.White)
@@ -302,35 +303,29 @@ fun ProfileScreen(
                                                             .fillMaxWidth()
                                                             .background(Color.White)
                                                             .padding(20.dp)
-                                                            .clickable {
-                                                                testReminderNow()
-                                                                coroutineScope.launch {
-                                                                    snackState.showSnackbar("Notifikasi dijadwalkan dalam 10 detik")
-                                                                }
-                                                            }
                                                     ){
                                                         Icon(
                                                             imageVector = Icons.Default.Notifications,
-                                                            contentDescription = "Notification",
+                                                            contentDescription = "Notifikasi",
                                                         )
                                                         Spacer(modifier = Modifier.width(20.dp))
-                                                        Column {
+                                                        Column(modifier = Modifier.weight(1f)) {
                                                             Text(
-                                                                text = "Push Notifikasi",
+                                                                text = "Pengingat Kegiatan",
                                                                 style = MaterialTheme.typography.titleMedium,
                                                             )
                                                             Text(
-                                                                text = "Aktifkan push notifikasi untuk mendapatkan informasi terbaru",
+                                                                text = "Notifikasi setiap pagi bila hari itu ada kegiatan Posyandu",
                                                                 style = MaterialTheme.typography.bodySmall,
                                                             )
                                                         }
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                            imageVector = Icons.Default.KeyboardArrowRight,
-                                                            contentDescription = "",
+                                                        Spacer(modifier = Modifier.width(10.dp))
+                                                        Switch(
+                                                            checked = reminderEnabled,
+                                                            onCheckedChange = { viewModel.setReminderEnabled(it) },
                                                         )
                                                     }
-                                                    Divider(
+                                                    HorizontalDivider(
                                                         modifier = Modifier
                                                             .fillMaxWidth()
                                                             .background(Color.White)
@@ -356,8 +351,8 @@ fun ProfileScreen(
                                                             }
                                                     ){
                                                         Icon(
-                                                            imageVector = Icons.Default.Info,
-                                                            contentDescription = "Report",
+                                                            imageVector = Icons.AutoMirrored.Filled.List,
+                                                            contentDescription = "Laporan",
                                                         )
                                                         Spacer(modifier = Modifier.width(20.dp))
                                                         Column {
@@ -376,7 +371,53 @@ fun ProfileScreen(
                                                             contentDescription = "",
                                                         )
                                                     }
-                                                    Divider(
+                                                    HorizontalDivider(
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .background(Color.White)
+                                                            .padding(horizontal = 15.dp),
+                                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+                                                        thickness = 1.dp
+                                                    )
+                                                }
+                                                if ((checkAuth as UiState.Success<AuthModel>).data.role == "Admin") {
+                                                    Row (
+                                                        verticalAlignment = Alignment.CenterVertically,
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .background(Color.White)
+                                                            .padding(20.dp)
+                                                            .clickable {
+                                                                activityLauncher.launch(
+                                                                    Intent(
+                                                                        context,
+                                                                        ValidationActivity::class.java
+                                                                    )
+                                                                )
+                                                            }
+                                                    ){
+                                                        Icon(
+                                                            imageVector = Icons.Default.CheckCircle,
+                                                            contentDescription = "Uji validasi",
+                                                        )
+                                                        Spacer(modifier = Modifier.width(20.dp))
+                                                        Column(modifier = Modifier.weight(1f)) {
+                                                            Text(
+                                                                text = "Uji Validasi Z-Score",
+                                                                style = MaterialTheme.typography.titleMedium,
+                                                            )
+                                                            Text(
+                                                                text = "Cocokkan hasil hitung aplikasi dengan tabel WHO",
+                                                                style = MaterialTheme.typography.bodySmall,
+                                                            )
+                                                        }
+                                                        Spacer(modifier = Modifier.width(10.dp))
+                                                        Icon(
+                                                            imageVector = Icons.Default.KeyboardArrowRight,
+                                                            contentDescription = "",
+                                                        )
+                                                    }
+                                                    HorizontalDivider(
                                                         modifier = Modifier
                                                             .fillMaxWidth()
                                                             .background(Color.White)
@@ -396,12 +437,62 @@ fun ProfileScreen(
                                                 .background(Color.White)
                                                 .padding(20.dp)
                                                 .clickable {
+                                                    activityLauncher.launch(
+                                                        Intent(
+                                                            context,
+                                                            AboutActivity::class.java
+                                                        ).apply {
+                                                            putExtra(
+                                                                "role",
+                                                                (checkAuth as? UiState.Success<AuthModel>)?.data?.role ?: ""
+                                                            )
+                                                        }
+                                                    )
+                                                }
+                                        ){
+                                            Icon(
+                                                imageVector = Icons.Default.Info,
+                                                contentDescription = "Tentang aplikasi",
+                                            )
+                                            Spacer(modifier = Modifier.width(20.dp))
+                                            Column(modifier = Modifier.weight(1f)) {
+                                                Text(
+                                                    text = "About NutriGrow",
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                )
+                                                Text(
+                                                    text = "Penjelasan fitur, rumus, dan sumber yang dipakai",
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                )
+                                            }
+                                            Spacer(modifier = Modifier.width(10.dp))
+                                            Icon(
+                                                imageVector = Icons.Default.KeyboardArrowRight,
+                                                contentDescription = "",
+                                            )
+                                        }
+                                        HorizontalDivider(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .background(Color.White)
+                                                .padding(horizontal = 15.dp),
+                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+                                            thickness = 1.dp
+                                        )
+
+                                        Row (
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .background(Color.White)
+                                                .padding(20.dp)
+                                                .clickable {
                                                     showLogoutDialog = true
                                                 }
                                         ){
                                             Icon(
                                                 imageVector = ImageVector.vectorResource(id = R.drawable.baseline_logout),
-                                                contentDescription = "Log Out",
+                                                contentDescription = "Keluar",
                                                 tint = Color.Red
                                             )
                                             Spacer(modifier = Modifier.width(20.dp))

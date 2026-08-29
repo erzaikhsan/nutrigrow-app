@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import com.project.labs.nutrigrow.ui.component.pagination.PaginationBar
+import com.project.labs.nutrigrow.ui.component.pagination.rememberPagination
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -40,7 +43,7 @@ fun ArticelScreen(
 
     val checkAuth by viewModel.isAuthenticated
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.checkAuthentication()
     }
 
@@ -56,10 +59,15 @@ fun ArticelScreen(
                 when (articleRespond) {
                     is UiState.Loading -> {
                         LoadingIndicator()
-                        viewModel.getArticle()
+                        LaunchedEffect(Unit) {
+                            viewModel.getArticle()
+                        }
                     }
                     is UiState.Success -> {
+                        val listState = rememberLazyListState()
+                        val pagination = rememberPagination(items = articleRespond.data, listState = listState)
                         LazyColumn(
+                            state = listState,
                             verticalArrangement = Arrangement.spacedBy(10.dp),
                             modifier = Modifier
                                 .fillMaxSize()
@@ -69,20 +77,21 @@ fun ArticelScreen(
                             item {
                                 Spacer(modifier = Modifier.height(1.dp))
                             }
-                            items(articleRespond.data.size) { articleItem ->
+                            items(pagination.visibleItems.size) { articleItem ->
                                 ArticleCard(
-                                    image = articleRespond.data[articleItem].image,
-                                    title = articleRespond.data[articleItem].title,
-                                    description = articleRespond.data[articleItem].description,
+                                    image = pagination.visibleItems[articleItem].image,
+                                    title = pagination.visibleItems[articleItem].title,
+                                    description = pagination.visibleItems[articleItem].description,
                                     onClick = {
                                         activity.startActivity(
                                             Intent(context, DetailArticleActivity::class.java).apply {
-                                                putExtra("id", articleItem)
+                                                putExtra("id", pagination.absoluteIndex(articleItem))
                                             }
                                         )
                                     }
                                 )
                             }
+                            item { PaginationBar(pagination = pagination, itemLabel = "artikel") }
                             item { Spacer(modifier = Modifier.height(10.dp)) }
                         }
                     }

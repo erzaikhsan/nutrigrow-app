@@ -8,9 +8,9 @@ import com.project.labs.nutrigrow.data.model.AuthModel
 import com.project.labs.nutrigrow.data.model.UserModel
 import com.project.labs.nutrigrow.data.repository.UserRepository
 import com.project.labs.nutrigrow.ui.state.UiState
+import com.project.labs.nutrigrow.ui.state.toUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 
@@ -44,23 +44,8 @@ class ParentViewModel(
         _user.value = UiState.Loading
         viewModelScope.launch {
             userRepository.getOfficerProfile()
-                .catch {
-                    _user.value = UiState.Error(it.message.toString())
-                }.collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _user.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _user.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _user.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _user.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _user.value = it }
         }
     }
 
@@ -68,24 +53,8 @@ class ParentViewModel(
         _parents.value = UiState.Loading
         viewModelScope.launch {
             userRepository.getAllParent()
-                .catch {
-                    _parents.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _parents.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _parents.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _parents.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _parents.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _parents.value = it }
         }
     }
 
@@ -93,24 +62,8 @@ class ParentViewModel(
         _search.value = UiState.Loading
         viewModelScope.launch {
             userRepository.getParentByName(name)
-                .catch {
-                    _search.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _search.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _search.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _search.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _search.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _search.value = it }
         }
     }
 }

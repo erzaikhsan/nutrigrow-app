@@ -143,7 +143,6 @@ fun EventCard (
                         text = title.uppercase(Locale.getDefault()),
                         maxLines = 2,
                         lineHeight = 20.sp,
-                        fontSize = 15.sp,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
@@ -155,13 +154,13 @@ fun EventCard (
                         Text(
                             text = "Tanggal :",
                             maxLines = 1,
-                            fontSize = 13.sp,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                         Text(
                             text = formatDate(date),
                             maxLines = 1,
-                            fontSize = 13.sp,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                     }
@@ -171,13 +170,13 @@ fun EventCard (
                     ) {
                         Text(
                             text = "Tempat :",
-                            fontSize = 13.sp,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                         Text(
                             text = place,
                             maxLines = 1,
-                            fontSize = 13.sp,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                     }
@@ -187,13 +186,13 @@ fun EventCard (
                     ) {
                         Text(
                             text = "Waktu :",
-                            fontSize = 13.sp,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                         Text(
                             text = "$start_time - $end_time WIB",
                             maxLines = 1,
-                            fontSize = 13.sp,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                     }
@@ -206,35 +205,35 @@ fun EventCard (
                                 Text(
                                     text = "Selesai",
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 13.sp,
+                                    style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.error
                                 )
                             daysLeft > 0 ->
                                 Text(
                                     text = "$daysLeft Hari Lagi",
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 13.sp,
+                                    style = MaterialTheme.typography.bodyMedium,
                                     color = Color(0xFFFF9800)
                                 )
                             hoursLeft > 12 ->
                                 Text(
                                     text = "Besok",
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 13.sp,
+                                    style = MaterialTheme.typography.bodyMedium,
                                     color = Color(0xFF2196F3)
                                 )
                             hoursLeft > 0 ->
                                 Text(
                                     text = "Hari Ini",
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 13.sp,
+                                    style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.primary
                                 )
                             else ->
                                 Text(
                                     text = "Hari Ini",
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 13.sp,
+                                    style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.primary
                                 )
                         }

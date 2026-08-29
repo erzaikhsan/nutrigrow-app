@@ -24,7 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -89,6 +89,18 @@ fun ParentProfileScreen(
 
     var showLogoutDialog by remember { mutableStateOf(false) }
 
+    var showDeleteOfferDialog by remember { mutableStateOf(false) }
+    var showDeleteConfirmDialog by remember { mutableStateOf(false) }
+
+    val deletedState by viewModel.deleted
+
+    LaunchedEffect(deletedState) {
+        if (deletedState is UiState.Success) {
+            (context as? Activity)?.finish()
+        }
+    }
+
+
     val activityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -100,7 +112,7 @@ fun ParentProfileScreen(
     val checkAuth by viewModel.isAuthenticated
     val isActive: UiState<UserModel> by viewModel.isActive
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.checkAuthentication()
     }
 
@@ -146,7 +158,9 @@ fun ParentProfileScreen(
             when (parents) {
                 is UiState.Loading -> {
                     LoadingIndicator()
-                    viewModel.getParentAccount(id)
+                    LaunchedEffect(Unit) {
+                        viewModel.getParentAccount(id)
+                    }
                 }
                 is UiState.Success -> {
                     Column(
@@ -183,7 +197,7 @@ fun ParentProfileScreen(
                             ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.nutrigrow_negative_nobg),
-                                    contentDescription = "NutriGrow Logo",
+                                    contentDescription = "Logo NutriGrow",
                                     modifier = Modifier
                                         .size(55.dp)
                                 )
@@ -208,7 +222,7 @@ fun ParentProfileScreen(
                                 }
                                 AsyncImage(
                                     model = if (parents.data.gender == "M") R.drawable.man else R.drawable.woman,
-                                    contentDescription = "Profile Image",
+                                    contentDescription = "Foto profil",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
                                         .padding(4.dp)
@@ -261,7 +275,7 @@ fun ParentProfileScreen(
                                                 if (parents.data.is_active) {
                                                     Icon(
                                                         imageVector = ImageVector.vectorResource(id = R.drawable.baseline_group_remove_24),
-                                                        contentDescription = "Deactivate",
+                                                        contentDescription = "Nonaktifkan",
                                                         tint = Color.Red,
                                                         modifier = Modifier
                                                             .size(23.dp)
@@ -270,13 +284,21 @@ fun ParentProfileScreen(
                                                 } else {
                                                     Icon(
                                                         imageVector = ImageVector.vectorResource(id = R.drawable.baseline_how_to_reg_24),
-                                                        contentDescription = "Active",
+                                                        contentDescription = "Aktif",
                                                         tint = Color.Green,
                                                         modifier = Modifier
                                                             .size(23.dp)
                                                             .clickable { showLogoutDialog = true },
                                                     )
                                                 }
+                                                Icon(
+                                                    imageVector = ImageVector.vectorResource(id = R.drawable.baseline_delete_forever_24),
+                                                    contentDescription = "Hapus Akun",
+                                                    tint = Color.Red,
+                                                    modifier = Modifier
+                                                        .size(23.dp)
+                                                        .clickable { showDeleteOfferDialog = true },
+                                                )
 
                                             }
                                         }
@@ -288,7 +310,7 @@ fun ParentProfileScreen(
                                         .fillMaxWidth()
                                         .padding(top = 10.dp, bottom = 10.dp)
                                 ) {
-                                    Divider(
+                                    HorizontalDivider(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .background(Color.White),
@@ -452,7 +474,7 @@ fun ParentProfileScreen(
                                     )
                                 }
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Divider(
+                                HorizontalDivider(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .background(Color.White),
@@ -464,7 +486,9 @@ fun ParentProfileScreen(
                                     when (child) {
                                         is UiState.Loading -> {
                                             OriginalLoading()
-                                            viewModel.getChildrenByParent(id)
+                                            LaunchedEffect(Unit) {
+                                                viewModel.getChildrenByParent(id)
+                                            }
                                         }
                                         is UiState.Success -> {
                                             Spacer(modifier = Modifier.height(3.dp))
@@ -540,6 +564,57 @@ fun ParentProfileScreen(
                             }
                         }
                         Spacer(modifier = Modifier.height(10.dp))
+                    }
+                    if (showDeleteOfferDialog) {
+                        AlertDialog(
+                            containerColor = Color.White,
+                            onDismissRequest = { showDeleteOfferDialog = false },
+                            title = { Text(text = "Hapus Akun Orang Tua") },
+                            text = { Text("Menghapus akun bersifat permanen dan tidak dapat dibatalkan. Bila hanya ingin menghentikan aksesnya untuk sementara, nonaktifkan saja akunnya.") },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        showDeleteOfferDialog = false
+                                        viewModel.deactivateAccount(id)
+                                    }
+                                ) {
+                                    Text("Nonaktifkan Saja")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        showDeleteOfferDialog = false
+                                        showDeleteConfirmDialog = true
+                                    }
+                                ) {
+                                    Text("Hapus Permanen", color = Color.Red)
+                                }
+                            }
+                        )
+                    }
+                    if (showDeleteConfirmDialog) {
+                        AlertDialog(
+                            containerColor = Color.White,
+                            onDismissRequest = { showDeleteConfirmDialog = false },
+                            title = { Text(text = "Konfirmasi Hapus Permanen") },
+                            text = { Text("Akun akan dinonaktifkan sekaligus dihapus dari sistem. Tindakan ini tidak dapat dibatalkan.") },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        showDeleteConfirmDialog = false
+                                        viewModel.deleteParent(id)
+                                    }
+                                ) {
+                                    Text("Ya, Hapus", color = Color.Red)
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showDeleteConfirmDialog = false }) {
+                                    Text("Batal")
+                                }
+                            }
+                        )
                     }
                     if (showLogoutDialog) {
                         if (parents.data.is_active) {

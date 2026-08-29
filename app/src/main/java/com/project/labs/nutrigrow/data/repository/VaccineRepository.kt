@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.runBlocking
 
 class VaccineRepository(
     private val userPreference: UserPreference,
@@ -17,12 +16,10 @@ class VaccineRepository(
 ) {
 
     fun getVaccineById(id: String): Flow<TemplateResponse<VaccineModel>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.getVaccineById(token = userPreference.token, id = id)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.getVaccineById(token = auth.token, id = id)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {
@@ -54,12 +51,10 @@ class VaccineRepository(
     }
 
     fun getVaccineByChildId(id: String): Flow<TemplateResponse<List<VaccineModel>>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.getVaccineByChildId(token = userPreference.token, childId = id)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.getVaccineByChildId(token = auth.token, childId = id)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {
@@ -91,11 +86,8 @@ class VaccineRepository(
     }
 
     fun addVaccine( children_id: String, date: String, vaccine_name: String, place: String) = flow {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
-        val register = apiService.addVaccine( token = userPreference.token, children_id, date, vaccine_name, place)
+        val auth = userPreference.getAuth().first()
+        val register = apiService.addVaccine( token = auth.token, children_id, date, vaccine_name, place)
         if (!register.isSuccessful) {
             val message = register.processError()
 
@@ -123,11 +115,8 @@ class VaccineRepository(
     }
 
     fun updateVaccine(id: String, children_id: String, date: String, vaccine_name: String, place: String) = flow {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
-        val register = apiService.updateVaccine( token = userPreference.token, id = id, children_id, date, vaccine_name, place)
+        val auth = userPreference.getAuth().first()
+        val register = apiService.updateVaccine( token = auth.token, id = id, children_id, date, vaccine_name, place)
         if (!register.isSuccessful) {
             val message = register.processError()
 
@@ -155,12 +144,10 @@ class VaccineRepository(
     }
 
     fun deleteVaccine(id: String): Flow<TemplateResponse<VaccineModel>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.deleteVaccine(token = userPreference.token, id = id)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.deleteVaccine(token = auth.token, id = id)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {

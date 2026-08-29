@@ -15,20 +15,9 @@ class AppViewModel (
     val isAuthenticated: MutableState<UiState<Boolean>>
         get() = _isAuthenticated
 
-    private val _role: MutableState<UiState<String>> = mutableStateOf(UiState.Loading)
-    val role: MutableState<UiState<String>>
-        get() = _role
-
     fun checkAuthentication() {
         viewModelScope.launch {
             _isAuthenticated.value = UiState.Success(userRepository.getVerified().token.isNotEmpty())
         }
     }
-
-    fun getRole() {
-        viewModelScope.launch {
-            _role.value = UiState.Success(userRepository.getVerified().role)
-        }
-    }
-
 }

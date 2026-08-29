@@ -20,7 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -77,7 +77,7 @@ fun AddOfficerScreen(
 ) {
     val checkAuth by viewModel.isAuthenticated
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.checkAuthentication()
     }
 
@@ -203,7 +203,7 @@ fun AddOfficerScreen(
                             )
                     )
                 }
-                Divider(
+                HorizontalDivider(
                     modifier = Modifier
                         .fillMaxWidth(),
                     color = Color(0xFF00BF63),
@@ -230,7 +230,7 @@ fun AddOfficerScreen(
                         trailingIcon = { Icon(painterResource(id = R.drawable.baseline_person_24), contentDescription = "Nama", modifier = Modifier.size(22.dp)) },
                         shape = RoundedCornerShape(10.dp),
                         placeholder = { Text("Masukan Nama Lengkap", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                        colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = Color(0xFF9DA1A6),
                             unfocusedIndicatorColor = Color(0xFF9DA1A6),
                             disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -258,10 +258,10 @@ fun AddOfficerScreen(
                             keyboardType = KeyboardType.Email,
                             imeAction = ImeAction.Next
                         ),
-                        trailingIcon = { Icon(painterResource(id = R.drawable.baseline_email_24), contentDescription = "Email", modifier = Modifier.size(22.dp)) },
+                        trailingIcon = { Icon(painterResource(id = R.drawable.baseline_email_24), contentDescription = "Surel", modifier = Modifier.size(22.dp)) },
                         shape = RoundedCornerShape(10.dp),
                         placeholder = { Text("Masukan Email", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                        colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = Color(0xFF9DA1A6),
                             unfocusedIndicatorColor = Color(0xFF9DA1A6),
                             disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -296,7 +296,7 @@ fun AddOfficerScreen(
                         },
                         shape = RoundedCornerShape(10.dp),
                         placeholder = { Text("••••••••", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                        colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = Color(0xFF9DA1A6),
                             unfocusedIndicatorColor = Color(0xFF9DA1A6),
                             disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -336,7 +336,7 @@ fun AddOfficerScreen(
                             }
                         },
                         shape = RoundedCornerShape(10.dp),placeholder = { Text("••••••••", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                        colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = Color(0xFF9DA1A6),
                             unfocusedIndicatorColor = Color(0xFF9DA1A6),
                             disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -374,7 +374,7 @@ fun AddOfficerScreen(
                             ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandGender)
                         },
                         shape = RoundedCornerShape(10.dp),
-                        colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = Color(0xFF9DA1A6),
                             unfocusedIndicatorColor = Color(0xFF9DA1A6),
                             disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -418,10 +418,10 @@ fun AddOfficerScreen(
                             imeAction = ImeAction.Next
                         ),
                         enabled = false,
-                        trailingIcon = { Icon(painterResource(id = R.drawable.baseline_date_range_24), contentDescription = "Date of Birth", modifier = Modifier.size(22.dp)) },
+                        trailingIcon = { Icon(painterResource(id = R.drawable.baseline_date_range_24), contentDescription = "Tanggal lahir", modifier = Modifier.size(22.dp)) },
                         shape = RoundedCornerShape(10.dp),
                         placeholder = { Text("Masukan Tanggal Lahir", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                        colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.colors(
                             disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             focusedIndicatorColor = Color(0xFF9DA1A6),
@@ -451,10 +451,10 @@ fun AddOfficerScreen(
                             keyboardType = KeyboardType.Phone,
                             imeAction = ImeAction.Next
                         ),
-                        trailingIcon = { Icon(painterResource(id = R.drawable.baseline_phone_24), contentDescription = "Phone Number", modifier = Modifier.size(22.dp)) },
+                        trailingIcon = { Icon(painterResource(id = R.drawable.baseline_phone_24), contentDescription = "Nomor telepon", modifier = Modifier.size(22.dp)) },
                         shape = RoundedCornerShape(10.dp),
                         placeholder = { Text("Masukan Nomor Telepon", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                        colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = Color(0xFF9DA1A6),
                             unfocusedIndicatorColor = Color(0xFF9DA1A6),
                             disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -481,10 +481,10 @@ fun AddOfficerScreen(
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Done
                         ),
-                        trailingIcon = { Icon(painterResource(id = R.drawable.baseline_location_pin_24), contentDescription = "Address", modifier = Modifier.size(22.dp)) },
+                        trailingIcon = { Icon(painterResource(id = R.drawable.baseline_location_pin_24), contentDescription = "Alamat", modifier = Modifier.size(22.dp)) },
                         shape = RoundedCornerShape(10.dp),
                         placeholder = { Text("Masukan Alamat", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                        colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = Color(0xFF9DA1A6),
                             unfocusedIndicatorColor = Color(0xFF9DA1A6),
                             disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -517,7 +517,7 @@ fun AddOfficerScreen(
                             ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandRegion)
                         },
                         shape = RoundedCornerShape(10.dp),
-                        colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = Color(0xFF9DA1A6),
                             unfocusedIndicatorColor = Color(0xFF9DA1A6),
                             disabledIndicatorColor = Color(0xFF9DA1A6),

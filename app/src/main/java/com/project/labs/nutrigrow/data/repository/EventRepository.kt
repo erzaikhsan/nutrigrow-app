@@ -9,19 +9,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.runBlocking
 
 class EventRepository(
     private val userPreference: UserPreference,
     private val apiService: ApiService,
 ) {
     fun getAllEvent(): Flow<TemplateResponse<List<EventModel>>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val children = apiService.getAllEvent(token = userPreference.token)
+            val auth = userPreference.getAuth().first()
+
+            val children = apiService.getAllEvent(token = auth.token)
             if (!children.isSuccessful) {
                 val message = children.processError()
                 if (message == "Unauthorized") {
@@ -53,12 +50,10 @@ class EventRepository(
     }
 
     fun getEventById(id: String): Flow<TemplateResponse<EventModel>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.getEventById(token = userPreference.token, id = id)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.getEventById(token = auth.token, id = id)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {
@@ -90,12 +85,10 @@ class EventRepository(
     }
 
     fun getEventByRegion(region: String): Flow<TemplateResponse<List<EventModel>>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.getEventByRegion(token = userPreference.token, region = region)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.getEventByRegion(token = auth.token, region = region)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {
@@ -127,12 +120,10 @@ class EventRepository(
     }
 
     fun getIncomingEvent(date: String, region: String): Flow<TemplateResponse<List<EventModel>>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.getIncomingEvent(token = userPreference.token, date = date, region = region)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.getIncomingEvent(token = auth.token, date = date, region = region)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {
@@ -164,12 +155,10 @@ class EventRepository(
     }
 
     fun getEventToday(date: String): Flow<TemplateResponse<List<EventModel>>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.getEventToday(token = userPreference.token, date = date, region = userPreference.region)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.getEventToday(token = auth.token, date = date, region = auth.region)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {
@@ -201,11 +190,8 @@ class EventRepository(
     }
 
     fun addEvent( title: String, date: String, start_time: String, end_time: String, place: String, description: String, region: String ) = flow {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
-        val register = apiService.addEvent( token = userPreference.token, title = title, date = date, start_time = start_time, end_time = end_time, place = place, description = description, region = region)
+        val auth = userPreference.getAuth().first()
+        val register = apiService.addEvent( token = auth.token, title = title, date = date, start_time = start_time, end_time = end_time, place = place, description = description, region = region)
         if (!register.isSuccessful) {
             val message = register.processError()
 
@@ -233,11 +219,8 @@ class EventRepository(
     }
 
     fun updateEvent(id: String, title: String, date: String, start_time: String, end_time: String, place: String, description: String, region: String,) = flow {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
-        val register = apiService.updateEvent( token = userPreference.token, id = id, title = title, date = date, start_time = start_time, end_time = end_time, place = place, description = description, region = region)
+        val auth = userPreference.getAuth().first()
+        val register = apiService.updateEvent( token = auth.token, id = id, title = title, date = date, start_time = start_time, end_time = end_time, place = place, description = description, region = region)
         if (!register.isSuccessful) {
             val message = register.processError()
 
@@ -265,12 +248,10 @@ class EventRepository(
     }
 
     fun deleteEvent(id: String): Flow<TemplateResponse<EventModel>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.deleteEvent(token = userPreference.token, id = id)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.deleteEvent(token = auth.token, id = id)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {

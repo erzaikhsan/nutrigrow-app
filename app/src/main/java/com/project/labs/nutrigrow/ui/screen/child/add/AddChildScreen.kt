@@ -60,6 +60,15 @@ import com.project.labs.nutrigrow.ui.component.respond.LoadingIndicator
 import com.project.labs.nutrigrow.ui.component.snackbar.CustomSnackBar
 import com.project.labs.nutrigrow.ui.screen.ViewModelFactory
 import com.project.labs.nutrigrow.ui.state.UiState
+import com.project.labs.nutrigrow.utils.FIELD_BIRTH_HEAD
+import com.project.labs.nutrigrow.utils.FIELD_BIRTH_HEIGHT
+import com.project.labs.nutrigrow.utils.FIELD_BIRTH_WEIGHT
+import com.project.labs.nutrigrow.utils.FIELD_DOB
+import com.project.labs.nutrigrow.utils.FIELD_FATHER
+import com.project.labs.nutrigrow.utils.FIELD_MOTHER
+import com.project.labs.nutrigrow.utils.FIELD_NAME
+import com.project.labs.nutrigrow.utils.FIELD_ORDER
+import com.project.labs.nutrigrow.utils.FIELD_PLACE
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -74,8 +83,9 @@ fun AddChildScreen(
     modifier: Modifier = Modifier,
 ) {
     val checkAuth by viewModel.isAuthenticated
+    val fieldErrors by viewModel.fieldErrors
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.checkAuthentication()
     }
 
@@ -116,6 +126,7 @@ fun AddChildScreen(
         context,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
             date_of_birth = "$mDayOfMonth/${mMonth+1}/$mYear"
+            viewModel.clearFieldError(FIELD_DOB)
         }, mYear, mMonth, mDay
     )
 
@@ -167,7 +178,9 @@ fun AddChildScreen(
                         LoadingIndicator()
                         when (checkAuth) {
                             is UiState.Success -> {
-                                viewModel.getUserProfile((checkAuth as UiState.Success<AuthModel>).data.role)
+                                LaunchedEffect(Unit) {
+                                    viewModel.getUserProfile((checkAuth as UiState.Success<AuthModel>).data.role)
+                                }
                             }
                             else -> {}
                         }
@@ -200,14 +213,16 @@ fun AddChildScreen(
                             Box {
                                 OutlinedTextField(
                                     value = full_name,
-                                    onValueChange = { full_name = it },
+                                    onValueChange = { full_name = it; viewModel.clearFieldError(FIELD_NAME) },
+                                    isError = fieldErrors.containsKey(FIELD_NAME),
+                                    supportingText = fieldErrors[FIELD_NAME]?.let { { Text(it) } },
                                     keyboardOptions = KeyboardOptions.Default.copy(
                                         keyboardType = KeyboardType.Text,
                                         imeAction = ImeAction.Next
                                     ),
                                     shape = RoundedCornerShape(10.dp),
                                     placeholder = { Text("Masukan Nama Anak", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -229,14 +244,16 @@ fun AddChildScreen(
                             Box {
                                 OutlinedTextField(
                                     value = father,
-                                    onValueChange = { father = it },
+                                    onValueChange = { father = it; viewModel.clearFieldError(FIELD_FATHER) },
+                                    isError = fieldErrors.containsKey(FIELD_FATHER),
+                                    supportingText = fieldErrors[FIELD_FATHER]?.let { { Text(it) } },
                                     keyboardOptions = KeyboardOptions.Default.copy(
                                         keyboardType = KeyboardType.Text,
                                         imeAction = ImeAction.Next
                                     ),
                                     shape = RoundedCornerShape(10.dp),
                                     placeholder = { Text("Masukan Nama Ayah", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -258,14 +275,16 @@ fun AddChildScreen(
                             Box {
                                 OutlinedTextField(
                                     value = mother,
-                                    onValueChange = { mother = it },
+                                    onValueChange = { mother = it; viewModel.clearFieldError(FIELD_MOTHER) },
+                                    isError = fieldErrors.containsKey(FIELD_MOTHER),
+                                    supportingText = fieldErrors[FIELD_MOTHER]?.let { { Text(it) } },
                                     keyboardOptions = KeyboardOptions.Default.copy(
                                         keyboardType = KeyboardType.Text,
                                         imeAction = ImeAction.Next
                                     ),
                                     shape = RoundedCornerShape(10.dp),
                                     placeholder = { Text("Masukan Nama Ibu", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -287,14 +306,16 @@ fun AddChildScreen(
                             Box {
                                 OutlinedTextField(
                                     value = order_of_child,
-                                    onValueChange = { order_of_child = it },
+                                    onValueChange = { order_of_child = it; viewModel.clearFieldError(FIELD_ORDER) },
+                                    isError = fieldErrors.containsKey(FIELD_ORDER),
+                                    supportingText = fieldErrors[FIELD_ORDER]?.let { { Text(it) } },
                                     keyboardOptions = KeyboardOptions.Default.copy(
                                         keyboardType = KeyboardType.Number,
                                         imeAction = ImeAction.Next
                                     ),
                                     shape = RoundedCornerShape(10.dp),
                                     placeholder = { Text("Masukan Anak Ke", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -326,7 +347,7 @@ fun AddChildScreen(
                                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandGender)
                                     },
                                     shape = RoundedCornerShape(10.dp),
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -364,14 +385,16 @@ fun AddChildScreen(
                             Box {
                                 OutlinedTextField(
                                     value = place_of_birth,
-                                    onValueChange = { place_of_birth = it },
+                                    onValueChange = { place_of_birth = it; viewModel.clearFieldError(FIELD_PLACE) },
+                                    isError = fieldErrors.containsKey(FIELD_PLACE),
+                                    supportingText = fieldErrors[FIELD_PLACE]?.let { { Text(it) } },
                                     keyboardOptions = KeyboardOptions.Default.copy(
                                         keyboardType = KeyboardType.Text,
                                         imeAction = ImeAction.Next
                                     ),
                                     shape = RoundedCornerShape(10.dp),
                                     placeholder = { Text("Masukan Tempat Lahir", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -393,16 +416,18 @@ fun AddChildScreen(
                             Box {
                                 OutlinedTextField(
                                     value = date_of_birth,
-                                    onValueChange = { date_of_birth = it },
+                                    onValueChange = { },
+                                    isError = fieldErrors.containsKey(FIELD_DOB),
+                                    supportingText = fieldErrors[FIELD_DOB]?.let { { Text(it) } },
                                     keyboardOptions = KeyboardOptions.Default.copy(
                                         keyboardType = KeyboardType.Text,
                                         imeAction = ImeAction.Next
                                     ),
                                     enabled = false,
-                                    trailingIcon = { Icon(painterResource(id = R.drawable.baseline_date_range_24), contentDescription = "Date of Birth", modifier = Modifier.size(22.dp)) },
+                                    trailingIcon = { Icon(painterResource(id = R.drawable.baseline_date_range_24), contentDescription = "Tanggal lahir", modifier = Modifier.size(22.dp)) },
                                     shape = RoundedCornerShape(10.dp),
                                     placeholder = { Text("Masukan Tanggal Lahir", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                         disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
@@ -427,14 +452,16 @@ fun AddChildScreen(
                             Box {
                                 OutlinedTextField(
                                     value = birth_weight,
-                                    onValueChange = { birth_weight = it },
+                                    onValueChange = { birth_weight = it; viewModel.clearFieldError(FIELD_BIRTH_WEIGHT) },
+                                    isError = fieldErrors.containsKey(FIELD_BIRTH_WEIGHT),
+                                    supportingText = fieldErrors[FIELD_BIRTH_WEIGHT]?.let { { Text(it) } },
                                     keyboardOptions = KeyboardOptions.Default.copy(
-                                        keyboardType = KeyboardType.Number,
+                                        keyboardType = KeyboardType.Decimal,
                                         imeAction = ImeAction.Next
                                     ),
                                     shape = RoundedCornerShape(10.dp),
                                     placeholder = { Text("Masukan Berat Badan Saat Lahir", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -456,14 +483,16 @@ fun AddChildScreen(
                             Box {
                                 OutlinedTextField(
                                     value = birth_height,
-                                    onValueChange = { birth_height = it },
+                                    onValueChange = { birth_height = it; viewModel.clearFieldError(FIELD_BIRTH_HEIGHT) },
+                                    isError = fieldErrors.containsKey(FIELD_BIRTH_HEIGHT),
+                                    supportingText = fieldErrors[FIELD_BIRTH_HEIGHT]?.let { { Text(it) } },
                                     keyboardOptions = KeyboardOptions.Default.copy(
-                                        keyboardType = KeyboardType.Number,
+                                        keyboardType = KeyboardType.Decimal,
                                         imeAction = ImeAction.Next
                                     ),
                                     shape = RoundedCornerShape(10.dp),
                                     placeholder = { Text("Masukan Tinggi Badan Saat Lahir", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -485,14 +514,16 @@ fun AddChildScreen(
                             Box {
                                 OutlinedTextField(
                                     value = birth_head_circum,
-                                    onValueChange = { birth_head_circum = it },
+                                    onValueChange = { birth_head_circum = it; viewModel.clearFieldError(FIELD_BIRTH_HEAD) },
+                                    isError = fieldErrors.containsKey(FIELD_BIRTH_HEAD),
+                                    supportingText = fieldErrors[FIELD_BIRTH_HEAD]?.let { { Text(it) } },
                                     keyboardOptions = KeyboardOptions.Default.copy(
-                                        keyboardType = KeyboardType.Number,
+                                        keyboardType = KeyboardType.Decimal,
                                         imeAction = ImeAction.Done
                                     ),
                                     shape = RoundedCornerShape(10.dp),
                                     placeholder = { Text("Masukan Lingkar Kepala Saat Lahir", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),

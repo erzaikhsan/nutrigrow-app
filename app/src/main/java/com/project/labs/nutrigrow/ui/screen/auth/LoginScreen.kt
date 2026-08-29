@@ -3,6 +3,8 @@ package com.project.labs.nutrigrow.ui.screen.auth
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +39,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -83,6 +86,23 @@ fun LoginScreen(
     var logIn by remember { mutableStateOf("Masuk") }
 
     var isPasswordVisible by remember { mutableStateOf(false) }
+    var rememberMe by remember { mutableStateOf(false) }
+
+    val remembered by viewModel.remembered
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.loadRememberedCredential()
+    }
+
+    LaunchedEffect(key1 = remembered) {
+        remembered?.let {
+            if (it.remember && it.email.isNotBlank()) {
+                email = it.email
+                password = it.password
+                rememberMe = true
+            }
+        }
+    }
 
     val snackState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -105,6 +125,11 @@ fun LoginScreen(
                 }
             }
             is UiState.Success -> {
+                if (rememberMe) {
+                    viewModel.rememberCredential(email, password)
+                } else {
+                    viewModel.forgetCredential()
+                }
                 coroutineScope.launch {
                     snackState.showSnackbar("Berhasil Masuk\nWelcome to NutriGrow!")
                     redirectToHome()
@@ -137,7 +162,7 @@ fun LoginScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Kembali"
                         )
                     }
                 },
@@ -197,10 +222,10 @@ fun LoginScreen(
                                 keyboardType = KeyboardType.Email,
                                 imeAction = ImeAction.Next
                             ),
-                            trailingIcon = { Icon(painterResource(id = R.drawable.baseline_person_24), contentDescription = "Email", modifier = Modifier.size(22.dp)) },
+                            trailingIcon = { Icon(painterResource(id = R.drawable.baseline_person_24), contentDescription = "Surel", modifier = Modifier.size(22.dp)) },
                             shape = RoundedCornerShape(10.dp),
                             placeholder = { Text("Nutrigrow@gmail.com", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.7f)) },
-                            colors = TextFieldDefaults.textFieldColors(
+                            colors = TextFieldDefaults.colors(
                                 focusedIndicatorColor = Color(0xFF9DA1A6),
                                 unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                 disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -235,7 +260,7 @@ fun LoginScreen(
                             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             shape = RoundedCornerShape(10.dp),
                             placeholder = { Text("••••••••", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.7f)) },
-                            colors = TextFieldDefaults.textFieldColors(
+                            colors = TextFieldDefaults.colors(
                                 focusedIndicatorColor = Color(0xFF9DA1A6),
                                 unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                 disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -250,7 +275,27 @@ fun LoginScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 5.dp)
+                            .clickable { rememberMe = !rememberMe }
+                    ) {
+                        Checkbox(
+                            checked = rememberMe,
+                            onCheckedChange = { rememberMe = it },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = MaterialTheme.colorScheme.primary,
+                            ),
+                        )
+                        Text(
+                            text = "Ingat email dan kata sandi saya",
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
                     Button(
                         onClick = {
                             if (logIn != "Loading...") viewModel.login(email, password)
@@ -268,7 +313,19 @@ fun LoginScreen(
                             fontWeight = FontWeight.Bold,
                         )
                     }
-                    Spacer(modifier = Modifier.height(30.dp))
+                    Spacer(modifier = Modifier.height(15.dp))
+                    Text(
+                        text = "Lupa kata sandi?",
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        style = MaterialTheme
+                            .typography.titleMedium
+                            .copy(textDecoration = TextDecoration.Underline),
+                        modifier = Modifier.clickable {
+                            navController.navigate(Screen.ForgotPassword.route)
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(15.dp))
 
                     Row(
                         horizontalArrangement = Arrangement.Center,

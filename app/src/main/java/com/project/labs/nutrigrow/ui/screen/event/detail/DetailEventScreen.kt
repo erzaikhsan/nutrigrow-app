@@ -82,7 +82,7 @@ fun DetailEventScreen(
     val checkAuth by viewModel.isAuthenticated
     val delete: UiState<EventModel> by viewModel.delete
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.checkAuthentication()
     }
 
@@ -134,7 +134,9 @@ fun DetailEventScreen(
             when (events) {
                 is UiState.Loading -> {
                     LoadingIndicator()
-                    viewModel.getEventById(id)
+                    LaunchedEffect(Unit) {
+                        viewModel.getEventById(id)
+                    }
                 }
                 is UiState.Success -> {
                     LazyColumn(
@@ -144,7 +146,7 @@ fun DetailEventScreen(
                         item {
                             AsyncImage(
                                 model = R.drawable.posyandu,
-                                contentDescription = "$id Image",
+                                contentDescription = "Gambar",
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .aspectRatio(1f),

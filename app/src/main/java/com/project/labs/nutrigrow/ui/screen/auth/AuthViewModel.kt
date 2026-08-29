@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.labs.nutrigrow.data.model.AuthModel
+import com.project.labs.nutrigrow.data.model.RememberedCredential
 import com.project.labs.nutrigrow.data.model.UserModel
 import com.project.labs.nutrigrow.data.model.VerifyModel
 import com.project.labs.nutrigrow.data.repository.UserRepository
@@ -34,6 +35,36 @@ class AuthViewModel (
     private val _auth: MutableState<UiState<AuthModel>> = mutableStateOf(UiState.Unauthorized)
     val auth: MutableState<UiState<AuthModel>>
         get() = _auth
+
+    private val _forgot: MutableState<UiState<String>> = mutableStateOf(UiState.Unauthorized)
+    val forgot: MutableState<UiState<String>>
+        get() = _forgot
+
+    private val _reset: MutableState<UiState<String>> = mutableStateOf(UiState.Unauthorized)
+    val reset: MutableState<UiState<String>>
+        get() = _reset
+
+    private val _remembered: MutableState<RememberedCredential?> = mutableStateOf(null)
+    val remembered: MutableState<RememberedCredential?>
+        get() = _remembered
+
+    fun loadRememberedCredential() {
+        viewModelScope.launch {
+            _remembered.value = userRepository.getRememberedCredential()
+        }
+    }
+
+    fun rememberCredential(email: String, password: String) {
+        viewModelScope.launch {
+            userRepository.saveRememberedCredential(email, password)
+        }
+    }
+
+    fun forgetCredential() {
+        viewModelScope.launch {
+            userRepository.clearRememberedCredential()
+        }
+    }
 
     fun login(email: String, password: String) {
         if(email.isEmpty() || password.isEmpty()){
@@ -209,6 +240,56 @@ class AuthViewModel (
 
     fun resetUserState() {
         _user.value = UiState.Loading
+    }
+
+    fun forgotPassword(email: String) {
+        if (email.isEmpty()) {
+            _forgot.value = UiState.Error("Email Tidak Boleh Kosong")
+            return
+        }
+        _forgot.value = UiState.Loading
+        viewModelScope.launch {
+            userRepository.forgotPassword(email = email)
+                .catch { _forgot.value = UiState.Error(it.message.toString()) }
+                .collect { data ->
+                    if (!data.success) {
+                        _forgot.value = UiState.Error(data.message)
+                        return@collect
+                    }
+                    _forgot.value = UiState.Success(data.message)
+                }
+        }
+    }
+
+    fun resetPassword(email: String, otp: String, password: String, confirmation: String) {
+        if (otp.isEmpty() || password.isEmpty()) {
+            _reset.value = UiState.Error("Kode Pemulihan dan Kata Sandi\nTidak Boleh Kosong")
+            return
+        }
+        if (password != confirmation) {
+            _reset.value = UiState.Error("Konfirmasi Kata Sandi\nTidak Sama")
+            return
+        }
+        _reset.value = UiState.Loading
+        viewModelScope.launch {
+            userRepository.resetPassword(email = email, otp = otp, password = password)
+                .catch { _reset.value = UiState.Error(it.message.toString()) }
+                .collect { data ->
+                    if (!data.success) {
+                        _reset.value = UiState.Error(data.message)
+                        return@collect
+                    }
+                    _reset.value = UiState.Success(data.message)
+                }
+        }
+    }
+
+    fun resetForgotState() {
+        _forgot.value = UiState.Loading
+    }
+
+    fun resetResetState() {
+        _reset.value = UiState.Loading
     }
 
     fun reformatDate(inputDate: String): String {

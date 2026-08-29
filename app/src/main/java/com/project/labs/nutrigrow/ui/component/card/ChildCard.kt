@@ -71,7 +71,7 @@ fun ChildCard (
         ) {
             AsyncImage(
                 model = if (gender == "M") R.drawable.boy else R.drawable.girl,
-                contentDescription = "Child Image",
+                contentDescription = "Foto balita",
                 modifier = Modifier
                     .padding(4.dp)
                     .size(45.dp)
