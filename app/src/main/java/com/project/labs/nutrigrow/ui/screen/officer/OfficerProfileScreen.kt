@@ -3,6 +3,7 @@ package com.project.labs.nutrigrow.ui.screen.officer
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +28,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -95,6 +96,18 @@ fun OfficerProfileScreen(
 
     var showLogoutDialog by remember { mutableStateOf(false) }
 
+    var showDeleteOfferDialog by remember { mutableStateOf(false) }
+    var showDeleteConfirmDialog by remember { mutableStateOf(false) }
+
+    val deletedState by viewModel.deleted
+
+    LaunchedEffect(deletedState) {
+        if (deletedState is UiState.Success) {
+            (context as? Activity)?.finish()
+        }
+    }
+
+
     val monthNames = listOf(
         "Januari", "Februari", "Maret", "April", "Mei", "Juni",
         "Juli", "Agustus", "September", "Oktober", "November", "Desember"
@@ -113,7 +126,7 @@ fun OfficerProfileScreen(
     val snackState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.checkAuthentication()
     }
 
@@ -197,7 +210,9 @@ fun OfficerProfileScreen(
             when (officers) {
                 is UiState.Loading -> {
                     LoadingIndicator()
-                    viewModel.getOfficerAccount(id)
+                    LaunchedEffect(Unit) {
+                        viewModel.getOfficerAccount(id)
+                    }
                 }
                 is UiState.Success -> {
                     Column(
@@ -234,7 +249,7 @@ fun OfficerProfileScreen(
                             ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.nutrigrow_negative_nobg),
-                                    contentDescription = "NutriGrow Logo",
+                                    contentDescription = "Logo NutriGrow",
                                     modifier = Modifier
                                         .size(55.dp)
                                 )
@@ -259,7 +274,7 @@ fun OfficerProfileScreen(
                                 }
                                 AsyncImage(
                                     model = if (officers.data.gender == "M") R.drawable.man else R.drawable.woman,
-                                    contentDescription = "Profile Image",
+                                    contentDescription = "Foto profil",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
                                         .padding(4.dp)
@@ -312,7 +327,7 @@ fun OfficerProfileScreen(
                                                 if (officers.data.is_active) {
                                                     Icon(
                                                         imageVector = ImageVector.vectorResource(id = R.drawable.baseline_group_remove_24),
-                                                        contentDescription = "Deactivate",
+                                                        contentDescription = "Nonaktifkan",
                                                         tint = Color.Red,
                                                         modifier = Modifier
                                                             .size(23.dp)
@@ -321,13 +336,21 @@ fun OfficerProfileScreen(
                                                 } else {
                                                     Icon(
                                                         imageVector = ImageVector.vectorResource(id = R.drawable.baseline_how_to_reg_24),
-                                                        contentDescription = "Active",
+                                                        contentDescription = "Aktif",
                                                         tint = Color.Green,
                                                         modifier = Modifier
                                                             .size(23.dp)
                                                             .clickable { showLogoutDialog = true },
                                                     )
                                                 }
+                                                Icon(
+                                                    imageVector = ImageVector.vectorResource(id = R.drawable.baseline_delete_forever_24),
+                                                    contentDescription = "Hapus Akun",
+                                                    tint = Color.Red,
+                                                    modifier = Modifier
+                                                        .size(23.dp)
+                                                        .clickable { showDeleteOfferDialog = true },
+                                                )
 
                                             }
                                         }
@@ -339,7 +362,7 @@ fun OfficerProfileScreen(
                                         .fillMaxWidth()
                                         .padding(top = 10.dp, bottom = 10.dp)
                                 ) {
-                                    Divider(
+                                    HorizontalDivider(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .background(Color.White),
@@ -487,7 +510,7 @@ fun OfficerProfileScreen(
                                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMonth)
                                     },
                                     shape = RoundedCornerShape(10.dp),
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -526,7 +549,7 @@ fun OfficerProfileScreen(
                                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMonth)
                                     },
                                     shape = RoundedCornerShape(10.dp),
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -552,7 +575,7 @@ fun OfficerProfileScreen(
                             }
                         }
                         Spacer(modifier = Modifier.height(7.dp))
-                        Divider(
+                        HorizontalDivider(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 10.dp),
@@ -583,7 +606,7 @@ fun OfficerProfileScreen(
                                 ){
                                     Icon(
                                         imageVector = Icons.Default.CheckCircle,
-                                        contentDescription = "Toddler",
+                                        contentDescription = "Balita",
                                     )
                                     Spacer(modifier = Modifier.width(20.dp))
                                     Column {
@@ -602,7 +625,7 @@ fun OfficerProfileScreen(
                                         contentDescription = "",
                                     )
                                 }
-                                Divider(
+                                HorizontalDivider(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .background(Color.White)
@@ -627,7 +650,7 @@ fun OfficerProfileScreen(
                                 ){
                                     Icon(
                                         imageVector = Icons.Default.Face,
-                                        contentDescription = "Toddler",
+                                        contentDescription = "Balita",
                                     )
                                     Spacer(modifier = Modifier.width(20.dp))
                                     Column {
@@ -646,7 +669,7 @@ fun OfficerProfileScreen(
                                         contentDescription = "",
                                     )
                                 }
-                                Divider(
+                                HorizontalDivider(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .background(Color.White)
@@ -692,6 +715,57 @@ fun OfficerProfileScreen(
                             }
                         }
                         Spacer(modifier = Modifier.height(10.dp))
+                    }
+                    if (showDeleteOfferDialog) {
+                        AlertDialog(
+                            containerColor = Color.White,
+                            onDismissRequest = { showDeleteOfferDialog = false },
+                            title = { Text(text = "Hapus Akun Kader") },
+                            text = { Text("Menghapus akun bersifat permanen dan tidak dapat dibatalkan. Bila hanya ingin menghentikan aksesnya untuk sementara, nonaktifkan saja akunnya.") },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        showDeleteOfferDialog = false
+                                        viewModel.deactivateAccount(id)
+                                    }
+                                ) {
+                                    Text("Nonaktifkan Saja")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        showDeleteOfferDialog = false
+                                        showDeleteConfirmDialog = true
+                                    }
+                                ) {
+                                    Text("Hapus Permanen", color = Color.Red)
+                                }
+                            }
+                        )
+                    }
+                    if (showDeleteConfirmDialog) {
+                        AlertDialog(
+                            containerColor = Color.White,
+                            onDismissRequest = { showDeleteConfirmDialog = false },
+                            title = { Text(text = "Konfirmasi Hapus Permanen") },
+                            text = { Text("Akun akan dinonaktifkan sekaligus dihapus dari sistem. Tindakan ini tidak dapat dibatalkan.") },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        showDeleteConfirmDialog = false
+                                        viewModel.deleteOfficer(id)
+                                    }
+                                ) {
+                                    Text("Ya, Hapus", color = Color.Red)
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showDeleteConfirmDialog = false }) {
+                                    Text("Batal")
+                                }
+                            }
+                        )
                     }
                     if (showLogoutDialog) {
                         if (officers.data.is_active) {

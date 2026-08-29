@@ -11,6 +11,7 @@ import com.project.labs.nutrigrow.data.repository.ChildRepository
 import com.project.labs.nutrigrow.data.repository.UserRepository
 import com.project.labs.nutrigrow.data.repository.VaccineRepository
 import com.project.labs.nutrigrow.ui.state.UiState
+import com.project.labs.nutrigrow.ui.state.toUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -47,24 +48,8 @@ class AddVaccineViewModel (
         _child.value = UiState.Loading
         viewModelScope.launch {
             childRepository.getChildProfile(id)
-                .catch {
-                    _child.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _child.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _child.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _child.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _child.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _child.value = it }
         }
     }
 

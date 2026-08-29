@@ -21,4 +21,8 @@ data class UserModel(
     val is_active: Boolean,
     @field:SerializedName("active_period")
     val active_period: String,
+    @field:SerializedName("email")
+    val email: String = "",
+    @field:SerializedName("role")
+    val role: String = "",
 )

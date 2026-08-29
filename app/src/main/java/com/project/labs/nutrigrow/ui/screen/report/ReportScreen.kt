@@ -24,7 +24,7 @@ import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -93,7 +93,7 @@ fun ReportScreen(
     val snackState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.checkAuthentication()
     }
 
@@ -148,7 +148,9 @@ fun ReportScreen(
             when (user) {
                 is UiState.Loading -> {
                     LoadingIndicator(modifier = Modifier)
-                    viewModel.getUserProfile()
+                    LaunchedEffect(Unit) {
+                        viewModel.getUserProfile()
+                    }
                 }
 
                 is UiState.Success -> {
@@ -180,7 +182,7 @@ fun ReportScreen(
                                                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMonth)
                                                 },
                                                 shape = RoundedCornerShape(10.dp),
-                                                colors = TextFieldDefaults.textFieldColors(
+                                                colors = TextFieldDefaults.colors(
                                                     focusedIndicatorColor = Color(0xFF9DA1A6),
                                                     unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                                     disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -219,7 +221,7 @@ fun ReportScreen(
                                                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMonth)
                                                 },
                                                 shape = RoundedCornerShape(10.dp),
-                                                colors = TextFieldDefaults.textFieldColors(
+                                                colors = TextFieldDefaults.colors(
                                                     focusedIndicatorColor = Color(0xFF9DA1A6),
                                                     unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                                     disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -245,7 +247,7 @@ fun ReportScreen(
                                         }
                                     }
                                     Spacer(modifier = Modifier.height(15.dp))
-                                    Divider(
+                                    HorizontalDivider(
                                         modifier = Modifier
                                             .fillMaxWidth(),
                                         color = Color(0xFF00BF63),
@@ -279,7 +281,7 @@ fun ReportScreen(
                                                 ){
                                                     Icon(
                                                         imageVector = Icons.Default.CheckCircle,
-                                                        contentDescription = "Toddler",
+                                                        contentDescription = "Balita",
                                                     )
                                                     Spacer(modifier = Modifier.width(20.dp))
                                                     Column {
@@ -298,7 +300,7 @@ fun ReportScreen(
                                                         contentDescription = "",
                                                     )
                                                 }
-                                                Divider(
+                                                HorizontalDivider(
                                                     modifier = Modifier
                                                         .fillMaxWidth()
                                                         .background(Color.White)
@@ -333,7 +335,7 @@ fun ReportScreen(
                                             ){
                                                 Icon(
                                                     imageVector = Icons.Default.Face,
-                                                    contentDescription = "Toddler",
+                                                    contentDescription = "Balita",
                                                 )
                                                 Spacer(modifier = Modifier.width(20.dp))
                                                 Column {
@@ -352,7 +354,7 @@ fun ReportScreen(
                                                     contentDescription = "",
                                                 )
                                             }
-                                            Divider(
+                                            HorizontalDivider(
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .background(Color.White)

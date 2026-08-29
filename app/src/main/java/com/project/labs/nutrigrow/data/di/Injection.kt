@@ -13,38 +13,38 @@ import com.project.labs.nutrigrow.data.repository.VaccineRepository
 
 object Injection {
     fun provideUserRepository(context: Context): UserRepository {
-        val apiService = ApiConfig.getApiService()
         val userPreference = UserPreference.getInstance(context.dataStore)
+        val apiService = ApiConfig.getApiService(userPreference)
         return UserRepository.getInstance(userPreference = userPreference, apiService = apiService)
     }
 
     fun provideChildRepository(context: Context): ChildRepository {
-        val apiService = ApiConfig.getApiService()
         val userPreference = UserPreference.getInstance(context.dataStore)
+        val apiService = ApiConfig.getApiService(userPreference)
         return ChildRepository.getInstance(userPreference = userPreference, apiService = apiService)
     }
 
     fun provideGrowthRepository(context: Context): GrowthRepository {
-        val apiService = ApiConfig.getApiService()
         val userPreference = UserPreference.getInstance(context.dataStore)
+        val apiService = ApiConfig.getApiService(userPreference)
         return GrowthRepository.getInstance(userPreference = userPreference, apiService = apiService)
     }
 
     fun provideEventRepository(context: Context): EventRepository {
-        val apiService = ApiConfig.getApiService()
         val userPreference = UserPreference.getInstance(context.dataStore)
+        val apiService = ApiConfig.getApiService(userPreference)
         return EventRepository.getInstance(userPreference = userPreference, apiService = apiService)
     }
 
     fun provideVaccineRepository(context: Context): VaccineRepository {
-        val apiService = ApiConfig.getApiService()
         val userPreference = UserPreference.getInstance(context.dataStore)
+        val apiService = ApiConfig.getApiService(userPreference)
         return VaccineRepository.getInstance(userPreference = userPreference, apiService = apiService)
     }
 
     fun provideReportRepository(context: Context): ReportRepository {
-        val apiService = ApiConfig.getApiService()
         val userPreference = UserPreference.getInstance(context.dataStore)
+        val apiService = ApiConfig.getApiService(userPreference)
         return ReportRepository.getInstance(userPreference = userPreference, apiService = apiService)
     }
 }

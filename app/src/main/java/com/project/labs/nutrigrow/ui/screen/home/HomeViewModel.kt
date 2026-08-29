@@ -12,9 +12,9 @@ import com.project.labs.nutrigrow.data.repository.ChildRepository
 import com.project.labs.nutrigrow.data.repository.EventRepository
 import com.project.labs.nutrigrow.data.repository.UserRepository
 import com.project.labs.nutrigrow.ui.state.UiState
+import com.project.labs.nutrigrow.ui.state.toUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -62,42 +62,12 @@ class HomeViewModel(
         viewModelScope.launch {
             if (role == "Parent"){
                 userRepository.getParentProfile()
-                    .catch {
-                        _user.value = UiState.Error(it.message.toString())
-                    }.collect { data ->
-                        try {
-                            if (!data.success) {
-                                if (data.message == "Unauthorized") {
-                                    _user.value = UiState.Unauthorized
-                                    return@collect
-                                }
-                                _user.value = UiState.Error(data.message)
-                                return@collect
-                            }
-                            _user.value = UiState.Success(data.data)
-                        } catch (e: Exception) {
-                            _user.value = UiState.Error(e.message.toString())
-                        }
-                    }
+                    .toUiState()
+                    .collect { _user.value = it }
             } else {
                 userRepository.getOfficerProfile()
-                    .catch {
-                        _user.value = UiState.Error(it.message.toString())
-                    }.collect { data ->
-                        try {
-                            if (!data.success) {
-                                if (data.message == "Unauthorized") {
-                                    _user.value = UiState.Unauthorized
-                                    return@collect
-                                }
-                                _user.value = UiState.Error(data.message)
-                                return@collect
-                            }
-                            _user.value = UiState.Success(data.data)
-                        } catch (e: Exception) {
-                            _user.value = UiState.Error(e.message.toString())
-                        }
-                    }
+                    .toUiState()
+                    .collect { _user.value = it }
             }
         }
     }
@@ -106,24 +76,8 @@ class HomeViewModel(
         _children.value = UiState.Loading
         viewModelScope.launch {
             childRepository.getChildrenByParent(id)
-                .catch {
-                    _children.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _children.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _children.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _children.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _children.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _children.value = it }
         }
     }
 
@@ -131,24 +85,8 @@ class HomeViewModel(
         _event.value = UiState.Loading
         viewModelScope.launch {
             eventRepository.getIncomingEvent(date, region)
-                .catch {
-                    _event.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _event.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _event.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _event.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _event.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _event.value = it }
         }
     }
 
@@ -156,24 +94,8 @@ class HomeViewModel(
         _parents.value = UiState.Loading
         viewModelScope.launch {
             userRepository.getParentByRegion(region)
-                .catch {
-                    _parents.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _parents.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _parents.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _parents.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _parents.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _parents.value = it }
         }
     }
 
@@ -181,24 +103,17 @@ class HomeViewModel(
         _officer.value = UiState.Loading
         viewModelScope.launch {
             userRepository.getAllOfficer()
-                .catch {
-                    _officer.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _officer.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _officer.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _officer.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _officer.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _officer.value = it }
+        }
+    }
+
+    fun getOfficerByName(name: String) {
+        _search.value = UiState.Loading
+        viewModelScope.launch {
+            userRepository.getOfficerByName(name)
+                .toUiState()
+                .collect { _search.value = it }
         }
     }
 
@@ -206,24 +121,8 @@ class HomeViewModel(
         _search.value = UiState.Loading
         viewModelScope.launch {
             userRepository.getParentByNameAndRegion(name, region)
-                .catch {
-                    _search.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _search.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _search.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _search.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _search.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _search.value = it }
         }
     }
 }

@@ -9,9 +9,9 @@ import com.project.labs.nutrigrow.data.model.EventModel
 import com.project.labs.nutrigrow.data.repository.EventRepository
 import com.project.labs.nutrigrow.data.repository.UserRepository
 import com.project.labs.nutrigrow.ui.state.UiState
+import com.project.labs.nutrigrow.ui.state.toUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class DetailEventViewModel(
@@ -41,24 +41,8 @@ class DetailEventViewModel(
         _event.value = UiState.Loading
         viewModelScope.launch {
             eventRepository.getEventById(id)
-                .catch {
-                    _event.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _event.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _event.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _event.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _event.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _event.value = it }
         }
     }
 
@@ -66,24 +50,8 @@ class DetailEventViewModel(
         _delete.value = UiState.Loading
         viewModelScope.launch {
             eventRepository.deleteEvent(id)
-                .catch {
-                    _delete.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _delete.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _delete.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _delete.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _delete.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _delete.value = it }
         }
     }
 

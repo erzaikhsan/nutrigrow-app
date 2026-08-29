@@ -3,11 +3,14 @@ package com.project.labs.nutrigrow.data.remote.retrofit
 import com.project.labs.nutrigrow.data.model.AuthModel
 import com.project.labs.nutrigrow.data.model.ChildrenModel
 import com.project.labs.nutrigrow.data.model.EventModel
+import com.project.labs.nutrigrow.data.model.GraduateModel
 import com.project.labs.nutrigrow.data.model.GrowthModel
 import com.project.labs.nutrigrow.data.model.SendOtpModel
 import com.project.labs.nutrigrow.data.model.UserModel
 import com.project.labs.nutrigrow.data.model.VaccineModel
 import com.project.labs.nutrigrow.data.model.VerifyModel
+import com.project.labs.nutrigrow.data.model.ZScoreBatchRequest
+import com.project.labs.nutrigrow.data.model.ZScoreCheckModel
 import com.project.labs.nutrigrow.data.remote.response.TemplateResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -21,6 +24,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Body
 import retrofit2.http.Streaming
 
 interface ApiService {
@@ -91,6 +95,36 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") id: String
     ): Response<TemplateResponse<UserModel>>
+
+    @FormUrlEncoded
+    @POST("auth/password/forgot")
+    @Headers("Accept: application/json")
+    suspend fun forgotPassword(
+        @Field("email") email: String
+    ): Response<TemplateResponse<String>>
+
+    @FormUrlEncoded
+    @POST("auth/password/reset")
+    @Headers("Accept: application/json")
+    suspend fun resetPassword(
+        @Field("email") email: String,
+        @Field("otp") otp: String,
+        @Field("password") password: String
+    ): Response<TemplateResponse<String>>
+
+    @DELETE("parent/{id}")
+    @Headers("Accept: application/json")
+    suspend fun deleteParent(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): Response<TemplateResponse<String>>
+
+    @DELETE("officer/{id}")
+    @Headers("Accept: application/json")
+    suspend fun deleteOfficer(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): Response<TemplateResponse<String>>
 
     //Parent
     @GET("parent/account/{id}")
@@ -175,6 +209,27 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("region") region: String
     ): Response<TemplateResponse<List<UserModel>>>
+
+    @GET("officer/name")
+    @Headers("Accept: application/json")
+    suspend fun getOfficerByName(
+        @Header("Authorization") token: String,
+        @Query("name") name: String
+    ): Response<TemplateResponse<List<UserModel>>>
+
+    @GET("officer/name/{region}")
+    @Headers("Accept: application/json")
+    suspend fun getOfficerByNameAndRegion(
+        @Header("Authorization") token: String,
+        @Path("region") region: String,
+        @Query("name") name: String
+    ): Response<TemplateResponse<List<UserModel>>>
+
+    @POST("children/graduate")
+    @Headers("Accept: application/json")
+    suspend fun graduateChildren(
+        @Header("Authorization") token: String
+    ): Response<TemplateResponse<GraduateModel>>
 
     @FormUrlEncoded
     @PUT("officer")
@@ -307,21 +362,19 @@ interface ApiService {
         @Query("year") year: Number,
     ): Response<TemplateResponse<List<GrowthModel>>>
 
-    @FormUrlEncoded
     @GET("growth/date/month/children/{id}")
     @Headers("Accept: application/json")
     suspend fun getGrowthByDateAndChildId(
         @Header("Authorization") token: String,
         @Path("id") id: String,
-        @Field("date") date: String,
+        @Query("date") date: String,
     ): Response<TemplateResponse<List<GrowthModel>>>
 
-    @FormUrlEncoded
     @GET("growth/date/month")
     @Headers("Accept: application/json")
     suspend fun getGrowthByDate(
         @Header("Authorization") token: String,
-        @Field("date") date: String,
+        @Query("date") date: String,
     ): Response<TemplateResponse<List<GrowthModel>>>
 
     @FormUrlEncoded
@@ -517,4 +570,12 @@ interface ApiService {
         @Query("month") month: Number,
         @Query("year") year: Number,
     ): Response<ResponseBody>
+
+    //Validasi Z-Score
+    @POST("validation/zscore/batch")
+    @Headers("Accept: application/json")
+    suspend fun checkZScoreBatch(
+        @Header("Authorization") token: String,
+        @Body request: ZScoreBatchRequest,
+    ): Response<TemplateResponse<List<ZScoreCheckModel>>>
 }

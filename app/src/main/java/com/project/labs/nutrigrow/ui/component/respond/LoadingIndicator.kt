@@ -40,7 +40,7 @@ fun LoadingIndicator(
         AsyncImage(
             imageLoader = gifEnabledLoader,
             model = R.drawable.loading_baby,
-            contentDescription = "Loading",
+            contentDescription = "Memuat",
             modifier = modifier
                 .size(100.dp)
                 .padding(16.dp)

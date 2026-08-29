@@ -8,6 +8,7 @@ import com.project.labs.nutrigrow.data.model.AuthModel
 import com.project.labs.nutrigrow.data.model.UserModel
 import com.project.labs.nutrigrow.data.repository.UserRepository
 import com.project.labs.nutrigrow.ui.state.UiState
+import com.project.labs.nutrigrow.ui.state.toUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -43,42 +44,12 @@ class ProfileUpdateViewModel (
         viewModelScope.launch {
             if (role == "Parent"){
                 userRepository.getParentProfile()
-                    .catch {
-                        _user.value = UiState.Error(it.message.toString())
-                    }.collect { data ->
-                        try {
-                            if (!data.success) {
-                                if (data.message == "Unauthorized") {
-                                    _user.value = UiState.Unauthorized
-                                    return@collect
-                                }
-                                _user.value = UiState.Error(data.message)
-                                return@collect
-                            }
-                            _user.value = UiState.Success(data.data)
-                        } catch (e: Exception) {
-                            _user.value = UiState.Error(e.message.toString())
-                        }
-                    }
+                    .toUiState()
+                    .collect { _user.value = it }
             } else {
                 userRepository.getOfficerProfile()
-                    .catch {
-                        _user.value = UiState.Error(it.message.toString())
-                    }.collect { data ->
-                        try {
-                            if (!data.success) {
-                                if (data.message == "Unauthorized") {
-                                    _user.value = UiState.Unauthorized
-                                    return@collect
-                                }
-                                _user.value = UiState.Error(data.message)
-                                return@collect
-                            }
-                            _user.value = UiState.Success(data.data)
-                        } catch (e: Exception) {
-                            _user.value = UiState.Error(e.message.toString())
-                        }
-                    }
+                    .toUiState()
+                    .collect { _user.value = it }
             }
         }
     }

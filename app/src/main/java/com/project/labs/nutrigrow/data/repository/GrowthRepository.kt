@@ -2,6 +2,9 @@ package com.project.labs.nutrigrow.data.repository
 
 import com.project.labs.nutrigrow.data.local.preference.UserPreference
 import com.project.labs.nutrigrow.data.model.GrowthModel
+import com.project.labs.nutrigrow.data.model.ZScoreBatchRequest
+import com.project.labs.nutrigrow.data.model.ZScoreCheckModel
+import com.project.labs.nutrigrow.data.model.ZScoreSample
 import com.project.labs.nutrigrow.data.remote.response.TemplateResponse
 import com.project.labs.nutrigrow.data.remote.retrofit.ApiService
 import com.project.labs.nutrigrow.utils.processError
@@ -9,19 +12,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.runBlocking
 
 class GrowthRepository(
     private val userPreference: UserPreference,
     private val apiService: ApiService,
 ) {
     fun getlastGrowth(id: String): Flow<TemplateResponse<GrowthModel>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.getLastGrowth(token = userPreference.token, id = id)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.getLastGrowth(token = auth.token, id = id)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {
@@ -53,12 +53,10 @@ class GrowthRepository(
     }
 
     fun getAllGrowth(): Flow<TemplateResponse<List<GrowthModel>>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val children = apiService.getAllGrowth(token = userPreference.token)
+            val auth = userPreference.getAuth().first()
+
+            val children = apiService.getAllGrowth(token = auth.token)
             if (!children.isSuccessful) {
                 val message = children.processError()
                 if (message == "Unauthorized") {
@@ -90,12 +88,10 @@ class GrowthRepository(
     }
 
     fun getGrowthById(id: String): Flow<TemplateResponse<GrowthModel>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.getGrowthById(token = userPreference.token, id = id)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.getGrowthById(token = auth.token, id = id)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {
@@ -127,12 +123,10 @@ class GrowthRepository(
     }
 
     fun getGrowthByChildId(id: String): Flow<TemplateResponse<List<GrowthModel>>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.getGrowthByChildId(token = userPreference.token, id = id)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.getGrowthByChildId(token = auth.token, id = id)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {
@@ -164,12 +158,10 @@ class GrowthRepository(
     }
 
     fun getGrowthByChildIdInYear(id: String, year: Number): Flow<TemplateResponse<List<GrowthModel>>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.getGrowthByChildIdInYear(token = userPreference.token, id = id, year = year)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.getGrowthByChildIdInYear(token = auth.token, id = id, year = year)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {
@@ -201,12 +193,10 @@ class GrowthRepository(
     }
 
     fun getGrowthByDateAndChildId(id: String, date: String): Flow<TemplateResponse<List<GrowthModel>>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.getGrowthByDateAndChildId(token = userPreference.token, id = id, date = date)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.getGrowthByDateAndChildId(token = auth.token, id = id, date = date)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {
@@ -238,12 +228,10 @@ class GrowthRepository(
     }
 
     fun getGrowthByDate(date: String): Flow<TemplateResponse<List<GrowthModel>>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.getGrowthByDate(token = userPreference.token, date = date)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.getGrowthByDate(token = auth.token, date = date)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {
@@ -275,11 +263,8 @@ class GrowthRepository(
     }
 
     fun addGrowth( children_id: String, date: String, weight: Double, height: Double, head_circum: Double, arm_circum: Double, note: String) = flow {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
-        val register = apiService.addGrowth( token = userPreference.token, children_id, date, weight, height, head_circum, arm_circum, note)
+        val auth = userPreference.getAuth().first()
+        val register = apiService.addGrowth( token = auth.token, children_id, date, weight, height, head_circum, arm_circum, note)
         if (!register.isSuccessful) {
             val message = register.processError()
 
@@ -307,11 +292,8 @@ class GrowthRepository(
     }
 
     fun updateGrowth(id: String, children_id: String, date: String, weight: Double, height: Double, head_circum: Double, arm_circum: Double, note: String) = flow {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
-        val register = apiService.updateGrowth( token = userPreference.token, id = id, children_id, date, weight, height, head_circum, arm_circum, note)
+        val auth = userPreference.getAuth().first()
+        val register = apiService.updateGrowth( token = auth.token, id = id, children_id, date, weight, height, head_circum, arm_circum, note)
         if (!register.isSuccessful) {
             val message = register.processError()
 
@@ -339,12 +321,10 @@ class GrowthRepository(
     }
 
     fun deleteGrowth(id: String): Flow<TemplateResponse<GrowthModel>> {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-
         return flow {
-            val user = apiService.deleteGrowth(token = userPreference.token, id = id)
+            val auth = userPreference.getAuth().first()
+
+            val user = apiService.deleteGrowth(token = auth.token, id = id)
             if (!user.isSuccessful) {
                 val message = user.processError()
                 if (message == "Unauthorized") {
@@ -370,6 +350,44 @@ class GrowthRepository(
                     success = false,
                     message = e.message.toString(),
                     data = GrowthModel("", "", "", 0, 0.0, "", 0.0, "", "", 0.0,0.0, "")
+                )
+            )
+        }
+    }
+
+    fun checkZScoreBatch(samples: List<ZScoreSample>): Flow<TemplateResponse<List<ZScoreCheckModel>>> {
+        return flow {
+            val auth = userPreference.getAuth().first()
+
+            val response = apiService.checkZScoreBatch(
+                token = auth.token,
+                request = ZScoreBatchRequest(samples = samples),
+            )
+            if (!response.isSuccessful) {
+                val message = response.processError()
+                if (message == "Unauthorized") {
+                    logOut()
+                }
+
+                emit(
+                    TemplateResponse(
+                        success = false,
+                        message = message,
+                        data = emptyList()
+                    )
+                )
+                return@flow
+            }
+
+            response.body()?.apply {
+                emit(this)
+            }
+        }.catch { e ->
+            emit(
+                TemplateResponse(
+                    success = false,
+                    message = e.message.toString(),
+                    data = emptyList()
                 )
             )
         }

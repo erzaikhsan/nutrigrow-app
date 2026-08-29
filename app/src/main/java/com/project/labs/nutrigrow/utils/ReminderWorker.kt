@@ -24,8 +24,17 @@ class ReminderWorker(
         try {
             val userPreference = UserPreference.getInstance(appContext.dataStore)
 
-            val apiService = ApiConfig.getApiService()
+            val apiService = ApiConfig.getApiService(userPreference)
             val repository = EventRepository.getInstance(userPreference, apiService)
+
+            if (!userPreference.getReminderEnabled().first()) {
+                return Result.success()
+            }
+
+            val auth = userPreference.getAuth().first()
+            if (auth.token.isBlank()) {
+                return Result.success()
+            }
 
             val date = getTodayDate()
 
@@ -37,7 +46,7 @@ class ReminderWorker(
                 showNotification(
                     context = appContext,
                     title = "Pengingat Kegiatan Posyandu",
-                    message = "Hai Bunda! Hari ini ada kegiatan $eventNames di $eventPlace",
+                    message = reminderMessage(auth.role, eventNames, eventPlace),
                     eventId = result.data.first().id
                 )
             }
@@ -47,6 +56,12 @@ class ReminderWorker(
             e.printStackTrace()
             return Result.failure()
         }
+    }
+
+    private fun reminderMessage(role: String, events: String, place: String): String = when (role) {
+        "Parent" -> "Hai Bunda! Hari ini ada kegiatan $events di $place. Jangan lupa membawa buku KIA."
+        "Officer" -> "Hari ini Anda bertugas pada kegiatan $events di $place."
+        else -> "Hari ini ada kegiatan $events di $place."
     }
 
     private fun getTodayDate(): String {

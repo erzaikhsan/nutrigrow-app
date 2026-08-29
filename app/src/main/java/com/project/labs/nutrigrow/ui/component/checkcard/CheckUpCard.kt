@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.project.labs.nutrigrow.ui.state.hfaLabel
+import com.project.labs.nutrigrow.ui.state.hfaColor
 import androidx.compose.ui.unit.sp
 
 @Composable
@@ -132,13 +134,7 @@ fun CheckUpCard (
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 10.dp
                     ),
-                    colors = if (hfa_status == "Normal" ) {
-                        CardDefaults.cardColors(Color(0xFF00BF63))
-                    } else if (hfa_status == "Stunted" ) {
-                        CardDefaults.cardColors(Color(0xFFFF9800))
-                    } else if (hfa_status == "Severely Stunted") {
-                        CardDefaults.cardColors(Color(0xFFF44336))
-                    } else { CardDefaults.cardColors(Color(0xFF929492)) },
+                    colors = CardDefaults.cardColors(hfaColor(hfa_status)),
                     modifier = Modifier
                         .clip(shape = CardDefaults.shape)
                         .shadow(
@@ -148,7 +144,7 @@ fun CheckUpCard (
                         )
                 ){
                     Text(
-                        text = hfa_status,
+                        text = hfaLabel(hfa_status),
                         fontSize = 15.sp,
                         color = Color.White,
                         modifier = Modifier.padding( vertical = 2.dp, horizontal = 8.dp)
@@ -157,7 +153,7 @@ fun CheckUpCard (
             }
             Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = "Tinggi Badan anak berada pada status ${hfa_status} berdasarkan umur anak. Periksa segera ke dokter spesialis anak atau puskesmas terdekat untuk pemeriksaan dan penanganan lebih lanjut.",
+                text = "Tinggi Badan anak berada pada status ${hfaLabel(hfa_status)} berdasarkan umur anak. Periksa segera ke dokter spesialis anak atau puskesmas terdekat untuk pemeriksaan dan penanganan lebih lanjut.",
                 textAlign = TextAlign.Justify,
                 fontSize = 15.sp,
             )

@@ -37,6 +37,7 @@ import com.project.labs.nutrigrow.ui.screen.profile.ProfileViewModel
 import com.project.labs.nutrigrow.ui.screen.profile.update.ProfileUpdateViewModel
 import com.project.labs.nutrigrow.ui.screen.report.ReportViewModel
 import com.project.labs.nutrigrow.ui.screen.vaccine.add.AddVaccineViewModel
+import com.project.labs.nutrigrow.ui.screen.validation.ValidationViewModel
 import com.project.labs.nutrigrow.ui.screen.vaccine.update.UpdateVaccineViewModel
 
 class ViewModelFactory(
@@ -56,6 +57,7 @@ class ViewModelFactory(
         ProfileViewModel::class.java to { ProfileViewModel(userRepository) },
         ChildProfileViewModel::class.java to { ChildProfileViewModel(userRepository, childRepository, growthRepository, vaccineRepository) },
         ChildrenViewModel::class.java to { ChildrenViewModel(userRepository, childRepository) },
+        ValidationViewModel::class.java to { ValidationViewModel(userRepository, growthRepository) },
         AddChildViewModel::class.java to { AddChildViewModel(userRepository, childRepository) },
         UpdateChildViewModel::class.java to { UpdateChildViewModel(userRepository, childRepository) },
         EventViewModel::class.java to { EventViewModel(userRepository, eventRepository) },

@@ -13,9 +13,9 @@ import com.project.labs.nutrigrow.data.repository.GrowthRepository
 import com.project.labs.nutrigrow.data.repository.UserRepository
 import com.project.labs.nutrigrow.data.repository.VaccineRepository
 import com.project.labs.nutrigrow.ui.state.UiState
+import com.project.labs.nutrigrow.ui.state.toUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class ChildProfileViewModel (
@@ -50,24 +50,8 @@ class ChildProfileViewModel (
         _child.value = UiState.Loading
         viewModelScope.launch {
             childRepository.getChildProfile(id)
-                .catch {
-                    _child.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _child.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _child.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _child.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _child.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _child.value = it }
         }
     }
 
@@ -75,24 +59,8 @@ class ChildProfileViewModel (
         _growth.value = UiState.Loading
         viewModelScope.launch {
             growthRepository.getlastGrowth(id)
-                .catch {
-                    _growth.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _growth.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _growth.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _growth.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _growth.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _growth.value = it }
         }
     }
 
@@ -100,24 +68,8 @@ class ChildProfileViewModel (
         _vaccine.value = UiState.Loading
         viewModelScope.launch {
             vaccineRepository.getVaccineByChildId(id)
-                .catch {
-                    _vaccine.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _vaccine.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _vaccine.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _vaccine.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _vaccine.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _vaccine.value = it }
         }
     }
 }

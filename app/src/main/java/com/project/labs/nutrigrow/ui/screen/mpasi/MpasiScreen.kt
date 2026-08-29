@@ -15,10 +15,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import com.project.labs.nutrigrow.ui.component.pagination.PaginationBar
+import com.project.labs.nutrigrow.ui.component.pagination.rememberPagination
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -58,7 +61,7 @@ fun MpasiScreen(
 
     var selectedTab by remember { mutableStateOf("68Bulan") }
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.checkAuthentication()
     }
 
@@ -199,7 +202,7 @@ fun MpasiScreen(
                 }
                 item { Spacer(modifier = Modifier.width(5.dp)) }
             }
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
@@ -215,10 +218,15 @@ fun MpasiScreen(
                         when (mpasiRespond) {
                             is UiState.Loading -> {
                                 LoadingIndicator()
-                                viewModel.get68Bulan()
+                                LaunchedEffect(Unit) {
+                                    viewModel.get68Bulan()
+                                }
                             }
                             is UiState.Success -> {
+                                val listState = rememberLazyListState()
+                                val pagination = rememberPagination(items = mpasiRespond.data, listState = listState)
                                 LazyColumn(
+                                    state = listState,
                                     verticalArrangement = Arrangement.spacedBy(10.dp),
                                     modifier = Modifier
                                         .fillMaxSize()
@@ -228,21 +236,22 @@ fun MpasiScreen(
                                     item {
                                         Spacer(modifier = Modifier.height(1.dp))
                                     }
-                                    items(mpasiRespond.data.size) { mpasiItem ->
+                                    items(pagination.visibleItems.size) { mpasiItem ->
                                         MpasiCard(
-                                            image = mpasiRespond.data[mpasiItem].image,
-                                            title = mpasiRespond.data[mpasiItem].title,
-                                            description = mpasiRespond.data[mpasiItem].description,
+                                            image = pagination.visibleItems[mpasiItem].image,
+                                            title = pagination.visibleItems[mpasiItem].title,
+                                            description = pagination.visibleItems[mpasiItem].description,
                                             onClick = {
                                                 activity.startActivity(
                                                     Intent(context, DetailMpasiActivity::class.java).apply {
-                                                        putExtra("id", mpasiItem)
+                                                        putExtra("id", pagination.absoluteIndex(mpasiItem))
                                                         putExtra("group", "68Bulan")
                                                     }
                                                 )
                                             }
                                         )
                                     }
+                                    item { PaginationBar(pagination = pagination, itemLabel = "resep") }
                                     item { Spacer(modifier = Modifier.height(10.dp)) }
                                 }
                             }
@@ -264,10 +273,15 @@ fun MpasiScreen(
                         when (mpasiRespond) {
                             is UiState.Loading -> {
                                 LoadingIndicator()
-                                viewModel.get911Bulan()
+                                LaunchedEffect(Unit) {
+                                    viewModel.get911Bulan()
+                                }
                             }
                             is UiState.Success -> {
+                                val listState = rememberLazyListState()
+                                val pagination = rememberPagination(items = mpasiRespond.data, listState = listState)
                                 LazyColumn(
+                                    state = listState,
                                     verticalArrangement = Arrangement.spacedBy(10.dp),
                                     modifier = Modifier
                                         .fillMaxSize()
@@ -277,21 +291,22 @@ fun MpasiScreen(
                                     item {
                                         Spacer(modifier = Modifier.height(1.dp))
                                     }
-                                    items(mpasiRespond.data.size) { mpasiItem ->
+                                    items(pagination.visibleItems.size) { mpasiItem ->
                                         MpasiCard(
-                                            image = mpasiRespond.data[mpasiItem].image,
-                                            title = mpasiRespond.data[mpasiItem].title,
-                                            description = mpasiRespond.data[mpasiItem].description,
+                                            image = pagination.visibleItems[mpasiItem].image,
+                                            title = pagination.visibleItems[mpasiItem].title,
+                                            description = pagination.visibleItems[mpasiItem].description,
                                             onClick = {
                                                 activity.startActivity(
                                                     Intent(context, DetailMpasiActivity::class.java).apply {
-                                                        putExtra("id", mpasiItem)
+                                                        putExtra("id", pagination.absoluteIndex(mpasiItem))
                                                         putExtra("group", "911Bulan")
                                                     }
                                                 )
                                             }
                                         )
                                     }
+                                    item { PaginationBar(pagination = pagination, itemLabel = "resep") }
                                     item { Spacer(modifier = Modifier.height(10.dp)) }
                                 }
                             }
@@ -313,10 +328,15 @@ fun MpasiScreen(
                         when (mpasiRespond) {
                             is UiState.Loading -> {
                                 LoadingIndicator()
-                                viewModel.get1223Bulan()
+                                LaunchedEffect(Unit) {
+                                    viewModel.get1223Bulan()
+                                }
                             }
                             is UiState.Success -> {
+                                val listState = rememberLazyListState()
+                                val pagination = rememberPagination(items = mpasiRespond.data, listState = listState)
                                 LazyColumn(
+                                    state = listState,
                                     verticalArrangement = Arrangement.spacedBy(10.dp),
                                     modifier = Modifier
                                         .fillMaxSize()
@@ -326,21 +346,22 @@ fun MpasiScreen(
                                     item {
                                         Spacer(modifier = Modifier.height(1.dp))
                                     }
-                                    items(mpasiRespond.data.size) { mpasiItem ->
+                                    items(pagination.visibleItems.size) { mpasiItem ->
                                         MpasiCard(
-                                            image = mpasiRespond.data[mpasiItem].image,
-                                            title = mpasiRespond.data[mpasiItem].title,
-                                            description = mpasiRespond.data[mpasiItem].description,
+                                            image = pagination.visibleItems[mpasiItem].image,
+                                            title = pagination.visibleItems[mpasiItem].title,
+                                            description = pagination.visibleItems[mpasiItem].description,
                                             onClick = {
                                                 activity.startActivity(
                                                     Intent(context, DetailMpasiActivity::class.java).apply {
-                                                        putExtra("id", mpasiItem)
+                                                        putExtra("id", pagination.absoluteIndex(mpasiItem))
                                                         putExtra("group", "1223Bulan")
                                                     }
                                                 )
                                             }
                                         )
                                     }
+                                    item { PaginationBar(pagination = pagination, itemLabel = "resep") }
                                     item { Spacer(modifier = Modifier.height(10.dp)) }
                                 }
                             }
@@ -362,10 +383,15 @@ fun MpasiScreen(
                         when (mpasiRespond) {
                             is UiState.Loading -> {
                                 LoadingIndicator()
-                                viewModel.get25Tahun()
+                                LaunchedEffect(Unit) {
+                                    viewModel.get25Tahun()
+                                }
                             }
                             is UiState.Success -> {
+                                val listState = rememberLazyListState()
+                                val pagination = rememberPagination(items = mpasiRespond.data, listState = listState)
                                 LazyColumn(
+                                    state = listState,
                                     verticalArrangement = Arrangement.spacedBy(10.dp),
                                     modifier = Modifier
                                         .fillMaxSize()
@@ -375,21 +401,22 @@ fun MpasiScreen(
                                     item {
                                         Spacer(modifier = Modifier.height(1.dp))
                                     }
-                                    items(mpasiRespond.data.size) { mpasiItem ->
+                                    items(pagination.visibleItems.size) { mpasiItem ->
                                         MpasiCard(
-                                            image = mpasiRespond.data[mpasiItem].image,
-                                            title = mpasiRespond.data[mpasiItem].title,
-                                            description = mpasiRespond.data[mpasiItem].description,
+                                            image = pagination.visibleItems[mpasiItem].image,
+                                            title = pagination.visibleItems[mpasiItem].title,
+                                            description = pagination.visibleItems[mpasiItem].description,
                                             onClick = {
                                                 activity.startActivity(
                                                     Intent(context, DetailMpasiActivity::class.java).apply {
-                                                        putExtra("id", mpasiItem)
+                                                        putExtra("id", pagination.absoluteIndex(mpasiItem))
                                                         putExtra("group", "25Tahun")
                                                     }
                                                 )
                                             }
                                         )
                                     }
+                                    item { PaginationBar(pagination = pagination, itemLabel = "resep") }
                                     item { Spacer(modifier = Modifier.height(10.dp)) }
                                 }
                             }

@@ -67,7 +67,7 @@ fun OfficerCard (
             ) {
                 AsyncImage(
                     model = if (gender == "M") R.drawable.man else R.drawable.woman,
-                    contentDescription = "Profile Image",
+                    contentDescription = "Foto profil",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .padding(4.dp)

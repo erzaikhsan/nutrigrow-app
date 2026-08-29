@@ -21,7 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -201,7 +201,7 @@ fun RegisterScreen(
                                 )
                         )
                     }
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier
                             .fillMaxWidth(),
                         color = Color(0xFF00BF63),
@@ -228,7 +228,7 @@ fun RegisterScreen(
                             trailingIcon = { Icon(painterResource(id = R.drawable.baseline_person_24), contentDescription = "Nama", modifier = Modifier.size(22.dp)) },
                             shape = RoundedCornerShape(10.dp),
                             placeholder = { Text("Masukan Nama Lengkap", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                            colors = TextFieldDefaults.textFieldColors(
+                            colors = TextFieldDefaults.colors(
                                 focusedIndicatorColor = Color(0xFF9DA1A6),
                                 unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                 disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -261,7 +261,7 @@ fun RegisterScreen(
                                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandGender)
                             },
                             shape = RoundedCornerShape(10.dp),
-                            colors = TextFieldDefaults.textFieldColors(
+                            colors = TextFieldDefaults.colors(
                                 focusedIndicatorColor = Color(0xFF9DA1A6),
                                 unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                 disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -305,10 +305,10 @@ fun RegisterScreen(
                                 imeAction = ImeAction.Next
                             ),
                             enabled = false,
-                            trailingIcon = { Icon(painterResource(id = R.drawable.baseline_date_range_24), contentDescription = "Date of Birth", modifier = Modifier.size(22.dp)) },
+                            trailingIcon = { Icon(painterResource(id = R.drawable.baseline_date_range_24), contentDescription = "Tanggal lahir", modifier = Modifier.size(22.dp)) },
                             shape = RoundedCornerShape(10.dp),
                             placeholder = { Text("Masukan Tanggal Lahir", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                            colors = TextFieldDefaults.textFieldColors(
+                            colors = TextFieldDefaults.colors(
                                 disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                 disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                 focusedIndicatorColor = Color(0xFF9DA1A6),
@@ -338,10 +338,10 @@ fun RegisterScreen(
                                 keyboardType = KeyboardType.Phone,
                                 imeAction = ImeAction.Next
                             ),
-                            trailingIcon = { Icon(painterResource(id = R.drawable.baseline_phone_24), contentDescription = "Phone Number", modifier = Modifier.size(22.dp)) },
+                            trailingIcon = { Icon(painterResource(id = R.drawable.baseline_phone_24), contentDescription = "Nomor telepon", modifier = Modifier.size(22.dp)) },
                             shape = RoundedCornerShape(10.dp),
                             placeholder = { Text("Masukan Nomor Telepon", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                            colors = TextFieldDefaults.textFieldColors(
+                            colors = TextFieldDefaults.colors(
                                 focusedIndicatorColor = Color(0xFF9DA1A6),
                                 unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                 disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -368,10 +368,10 @@ fun RegisterScreen(
                                 keyboardType = KeyboardType.Text,
                                 imeAction = ImeAction.Done
                             ),
-                            trailingIcon = { Icon(painterResource(id = R.drawable.baseline_location_pin_24), contentDescription = "Address", modifier = Modifier.size(22.dp)) },
+                            trailingIcon = { Icon(painterResource(id = R.drawable.baseline_location_pin_24), contentDescription = "Alamat", modifier = Modifier.size(22.dp)) },
                             shape = RoundedCornerShape(10.dp),
                             placeholder = { Text("Masukan Alamat", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                            colors = TextFieldDefaults.textFieldColors(
+                            colors = TextFieldDefaults.colors(
                                 focusedIndicatorColor = Color(0xFF9DA1A6),
                                 unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                 disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -404,7 +404,7 @@ fun RegisterScreen(
                                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandRegion)
                             },
                             shape = RoundedCornerShape(10.dp),
-                            colors = TextFieldDefaults.textFieldColors(
+                            colors = TextFieldDefaults.colors(
                                 focusedIndicatorColor = Color(0xFF9DA1A6),
                                 unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                 disabledIndicatorColor = Color(0xFF9DA1A6),

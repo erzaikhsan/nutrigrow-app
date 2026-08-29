@@ -80,7 +80,7 @@ fun AddVaccineScreen(
     val checkAuth by viewModel.isAuthenticated
     val vaccine: UiState<VaccineModel> by viewModel.vaccine
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = id) {
         viewModel.checkAuthentication()
         viewModel.getChildProfile(id)
     }
@@ -209,10 +209,10 @@ fun AddVaccineScreen(
                                     imeAction = ImeAction.Next
                                 ),
                                 enabled = false,
-                                trailingIcon = { Icon(painterResource(id = R.drawable.baseline_date_range_24), contentDescription = "Date of Birth", modifier = Modifier.size(22.dp)) },
+                                trailingIcon = { Icon(painterResource(id = R.drawable.baseline_date_range_24), contentDescription = "Tanggal lahir", modifier = Modifier.size(22.dp)) },
                                 shape = RoundedCornerShape(10.dp),
                                 placeholder = { Text("Masukan Tanggal Imunisasi", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                colors = TextFieldDefaults.textFieldColors(
+                                colors = TextFieldDefaults.colors(
                                     disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                     disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                     focusedIndicatorColor = Color(0xFF9DA1A6),
@@ -242,7 +242,7 @@ fun AddVaccineScreen(
                                 ),
                                 shape = RoundedCornerShape(10.dp),
                                 placeholder = { Text("Masukan Fasilitas Kesehatan", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                colors = TextFieldDefaults.textFieldColors(
+                                colors = TextFieldDefaults.colors(
                                     focusedIndicatorColor = Color(0xFF9DA1A6),
                                     unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                     disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -274,7 +274,7 @@ fun AddVaccineScreen(
                                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandVaccine)
                                     },
                                     shape = RoundedCornerShape(10.dp),
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),
@@ -310,7 +310,7 @@ fun AddVaccineScreen(
                                     ),
                                     shape = RoundedCornerShape(10.dp),
                                     placeholder = { Text("Masukan Nama Vaksin", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                                    colors = TextFieldDefaults.textFieldColors(
+                                    colors = TextFieldDefaults.colors(
                                         focusedIndicatorColor = Color(0xFF9DA1A6),
                                         unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                         disabledIndicatorColor = Color(0xFF9DA1A6),

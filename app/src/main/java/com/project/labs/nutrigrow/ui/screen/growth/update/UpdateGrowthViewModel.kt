@@ -11,6 +11,18 @@ import com.project.labs.nutrigrow.data.repository.ChildRepository
 import com.project.labs.nutrigrow.data.repository.GrowthRepository
 import com.project.labs.nutrigrow.data.repository.UserRepository
 import com.project.labs.nutrigrow.ui.state.UiState
+import com.project.labs.nutrigrow.ui.state.toUiState
+import com.project.labs.nutrigrow.utils.ARM_RANGE
+import com.project.labs.nutrigrow.utils.FIELD_ARM
+import com.project.labs.nutrigrow.utils.FIELD_DATE
+import com.project.labs.nutrigrow.utils.FIELD_HEAD
+import com.project.labs.nutrigrow.utils.FIELD_HEIGHT
+import com.project.labs.nutrigrow.utils.FIELD_WEIGHT
+import com.project.labs.nutrigrow.utils.HEAD_RANGE
+import com.project.labs.nutrigrow.utils.HEIGHT_RANGE
+import com.project.labs.nutrigrow.utils.WEIGHT_RANGE
+import com.project.labs.nutrigrow.utils.parseMeasurement
+import com.project.labs.nutrigrow.utils.validateMeasurement
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -55,24 +67,8 @@ class UpdateGrowthViewModel (
         _child.value = UiState.Loading
         viewModelScope.launch {
             childRepository.getChildProfile(id)
-                .catch {
-                    _child.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _child.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _child.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _child.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _child.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _child.value = it }
         }
     }
 
@@ -80,45 +76,62 @@ class UpdateGrowthViewModel (
         _growth.value = UiState.Loading
         viewModelScope.launch {
             growthRepository.getGrowthById(id)
-                .catch {
-                    _growth.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _growth.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _growth.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _growth.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _growth.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _growth.value = it }
+        }
+    }
+
+    private val _fieldErrors: MutableState<Map<String, String>> = mutableStateOf(emptyMap())
+    val fieldErrors: MutableState<Map<String, String>>
+        get() = _fieldErrors
+
+    fun clearFieldError(field: String) {
+        if (_fieldErrors.value.containsKey(field)) {
+            _fieldErrors.value = _fieldErrors.value - field
         }
     }
 
     fun updateGrowth( id: String, children_id: String, date: String, weight: String, height: String, head_circum: String, arm_circum: String, note: String) {
-        if ( children_id.isEmpty() || date.isEmpty() || weight.isEmpty() || height.isEmpty() || head_circum.isEmpty() || arm_circum.isEmpty()) {
-            _newGrowth.value = UiState.Error("Pastikan Semua Data\nDiisi Dengan Benar")
+        if (children_id.isEmpty()) {
+            _newGrowth.value = UiState.Error("Data balita tidak terbaca.\nBuka ulang halaman ini.")
             return
         }
 
-        val today = LocalDate.now()
-        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
-        val dob = LocalDate.parse(date, formatter)
+        val errors = mutableMapOf<String, String>()
 
-        if (dob.isAfter(today)) {
-            _newGrowth.value = UiState.Error("Tanggal Penimbangan tidak boleh melebihi tanggal hari ini")
+        val weighedOn = runCatching {
+            LocalDate.parse(date, DateTimeFormatter.ofPattern("d/M/yyyy"))
+        }.getOrNull()
+
+        when {
+            date.isBlank() -> errors[FIELD_DATE] = "Tanggal penimbangan belum dipilih."
+            weighedOn == null -> errors[FIELD_DATE] = "Tanggal penimbangan tidak terbaca."
+            weighedOn.isAfter(LocalDate.now()) -> errors[FIELD_DATE] = "Tanggal penimbangan tidak boleh melewati hari ini."
+        }
+
+        validateMeasurement(weight, WEIGHT_RANGE)?.let { errors[FIELD_WEIGHT] = it }
+        validateMeasurement(height, HEIGHT_RANGE)?.let { errors[FIELD_HEIGHT] = it }
+        validateMeasurement(head_circum, HEAD_RANGE)?.let { errors[FIELD_HEAD] = it }
+        validateMeasurement(arm_circum, ARM_RANGE)?.let { errors[FIELD_ARM] = it }
+
+        _fieldErrors.value = errors
+
+        if (errors.isNotEmpty()) {
+            _newGrowth.value = UiState.Error(
+                if (errors.size == 1) "Ada 1 isian yang perlu diperbaiki."
+                else "Ada ${errors.size} isian yang perlu diperbaiki."
+            )
             return
         }
+
+        val weightValue = parseMeasurement(weight) ?: return
+        val heightValue = parseMeasurement(height) ?: return
+        val headValue = parseMeasurement(head_circum) ?: return
+        val armValue = parseMeasurement(arm_circum) ?: return
 
         _newGrowth.value = UiState.Loading
         viewModelScope.launch {
-            growthRepository.updateGrowth( id,  children_id, reformatDate(date), weight.toDouble(), height.toDouble(), head_circum.toDouble(), arm_circum.toDouble(), note.ifEmpty { "Tidak ada catatan" }).catch {
+            growthRepository.updateGrowth( id,  children_id, reformatDate(date), weightValue, heightValue, headValue, armValue, note.ifEmpty { "Tidak ada catatan" }).catch {
                 _newGrowth.value = UiState.Error(it.message.toString())
             }.collect { data ->
                 try {
@@ -146,24 +159,8 @@ class UpdateGrowthViewModel (
         _delete.value = UiState.Loading
         viewModelScope.launch {
             growthRepository.deleteGrowth(id)
-                .catch {
-                    _delete.value = UiState.Error(it.message.toString())
-                }
-                .collect { data ->
-                    try {
-                        if (!data.success) {
-                            if (data.message == "Unauthorized") {
-                                _delete.value = UiState.Unauthorized
-                                return@collect
-                            }
-                            _delete.value = UiState.Error(data.message)
-                            return@collect
-                        }
-                        _delete.value = UiState.Success(data.data)
-                    } catch (e: Exception) {
-                        _delete.value = UiState.Error(e.message.toString())
-                    }
-                }
+                .toUiState()
+                .collect { _delete.value = it }
         }
     }
 

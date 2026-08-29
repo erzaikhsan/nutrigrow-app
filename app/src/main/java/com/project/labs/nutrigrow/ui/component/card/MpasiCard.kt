@@ -2,6 +2,7 @@ package com.project.labs.nutrigrow.ui.component.card
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,7 +28,7 @@ import java.util.Locale
 
 @Composable
 fun MpasiCard (
-    image: String,
+    @DrawableRes image: Int,
     title: String,
     description: String,
     onClick: () -> Unit,
@@ -80,7 +81,7 @@ fun MpasiCard (
                 }
                 AsyncImage(
                     model = image,
-                    contentDescription = "Mpasi Image",
+                    contentDescription = "Gambar resep MPASI",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .padding(7.dp)

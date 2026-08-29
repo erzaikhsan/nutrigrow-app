@@ -27,4 +27,28 @@ data class GrowthModel(
     val arm_circum: Number,
     @field:SerializedName("note")
     val note: String,
+    @field:SerializedName("wfa_zscore")
+    val wfa_zscore: Double? = null,
+    @field:SerializedName("hfa_zscore")
+    val hfa_zscore: Double? = null,
+    @field:SerializedName("wfh_zscore")
+    val wfh_zscore: Double? = null,
+    @field:SerializedName("head_circum_zscore")
+    val head_circum_zscore: Double? = null,
+    @field:SerializedName("muac_status")
+    val muac_status: String = "",
+    @field:SerializedName("head_circum_status")
+    val head_circum_status: String = "",
+    @field:SerializedName("weight_gain")
+    val weight_gain: Double? = null,
+    @field:SerializedName("gain_status")
+    val gain_status: String = "",
+    @field:SerializedName("consecutive_no_gain")
+    val consecutive_no_gain: Int = 0,
+    @field:SerializedName("needs_referral")
+    val needs_referral: Boolean = false,
+    @field:SerializedName("is_flagged")
+    val is_flagged: Boolean = false,
+    @field:SerializedName("flag_reason")
+    val flag_reason: String = "",
 )

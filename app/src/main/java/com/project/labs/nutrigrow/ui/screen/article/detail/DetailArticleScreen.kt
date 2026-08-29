@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -52,7 +52,7 @@ fun DetailArticleScreen(
 ) {
     val checkAuth by viewModel.isAuthenticated
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.checkAuthentication()
     }
 
@@ -72,7 +72,9 @@ fun DetailArticleScreen(
             when (articleRespond) {
                 is UiState.Loading -> {
                     LoadingIndicator()
-                    viewModel.getArticleDetail(id)
+                    LaunchedEffect(Unit) {
+                        viewModel.getArticleDetail(id)
+                    }
                 }
                 is UiState.Success -> {
                     LazyColumn(
@@ -83,7 +85,7 @@ fun DetailArticleScreen(
                         item {
                             AsyncImage(
                                 model = articleRespond.data.image,
-                                contentDescription = "Article Image",
+                                contentDescription = "Gambar artikel",
                                 contentScale = ContentScale.Crop,
                                 alignment = Alignment.Center,
                                 modifier = Modifier
@@ -157,7 +159,7 @@ fun DetailArticleScreen(
                                         )
                                     }
                                     Spacer(modifier = Modifier.height(5.dp))
-                                    Divider(
+                                    HorizontalDivider(
                                         modifier = Modifier
                                             .fillMaxWidth(),
                                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),

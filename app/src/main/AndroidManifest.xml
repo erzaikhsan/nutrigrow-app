@@ -10,7 +10,7 @@
 
     <application
         android:name=".App"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -25,6 +25,15 @@
             android:exported="false" />
         <activity
             android:name=".activity.child.ChildrenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.validation.ValidationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.about.AboutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.about.AboutDetailActivity"
             android:exported="false" />
         <activity
             android:name=".activity.report.ReportActivity"
@@ -49,6 +58,9 @@
             android:exported="false" />
         <activity
             android:name=".activity.mpasi.MpasiActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.vaccine.VaccineListActivity"
             android:exported="false" />
         <activity
             android:name=".activity.vaccine.UpdateVaccineActivity"

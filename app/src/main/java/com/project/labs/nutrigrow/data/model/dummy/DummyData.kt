@@ -1,5 +1,7 @@
 package com.project.labs.nutrigrow.data.model.dummy
 
+import com.project.labs.nutrigrow.R
+
 import com.project.labs.nutrigrow.data.model.ArticleModel
 import com.project.labs.nutrigrow.data.model.MpasiModel
 
@@ -10,7 +12,7 @@ object DummyData {
             "Bubur Singkong Isi Ikan dan Ayam dengan Saus Jeruk",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Bubur-Singkong-Isi-Ikan-dan-Ayam-dengan-Saus-Jeruk.png",
+            R.drawable.mpasi_68_1,
                     "Informasi Gizi:\n" +
                     "Energi: 91 kkal, Protein: 3.1 gr, Lemak: 3.5 gr\n" +
                     "*kontribusi energi sebesar 45% dari kebutuhan makanan tambahan sehari.\n" + "RESEP UNTUK 3 PORSI\n" +
@@ -45,7 +47,7 @@ object DummyData {
             "Bubur Soto Ayam Santan",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Bubur-Soto-Ayam-Santan.png",
+            R.drawable.mpasi_68_2,
                     "Informasi Gizi:\n" +
                     "Energi: 96 kkal, Protein: 4.6 gr, Lemak: 4.1 gr\n" +
                     "*kontribusi energi sebesar 48% dari kebutuhan makanan tambahan sehari.\n" + "RESEP UNTUK 3 PORSI\n" +
@@ -84,7 +86,7 @@ object DummyData {
             "Bubur Sup Daging Kacang Merah",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Bubur-Sup-Daging-Kacang-Merah.png",
+            R.drawable.mpasi_68_3,
                     "Informasi Gizi:\n" +
                     "Energi: 98 kkal, Protein: 45.1 gr, Lemak: 3.6 gr\n" +
                     "*kontribusi energi sebesar 48,7% dari kebutuhan makanan tambahan sehari.\n" +"RESEP UNTUK 3 PORSI\n" +
@@ -121,7 +123,7 @@ object DummyData {
             "Bubur Kanju Rumbi Ayam dan Udang",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Bubur-Kanju-Rumbi-Ayam-dan-Udang.png",
+            R.drawable.mpasi_68_4,
                     "Informasi Gizi:\n" +
                     "Energi: 87 kkal, Protein: 5.1 gr, Lemak: 2.9 gr\n" +
                     "*kontribusi energi sebesar 45% dari kebutuhan makanan tambahan sehari.\n" + "RESEP UNTUK 3 PORSI\n" +
@@ -161,7 +163,7 @@ object DummyData {
             "Puding Kentang Ayam dan Telur",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Puding-Kentang-Ayam-dan-Telur.png",
+            R.drawable.mpasi_68_5,
                     "Informasi Gizi:\n" +
                     "Energi: 95 kkal, Protein: 4.0 gr, Lemak: 3.6 gr\n" +
                     "*kontribusi energi sebesar 47,5% dari kebutuhan makanan tambahan sehari.\n" + "RESEP UNTUK 3 PORSI\n" +
@@ -200,7 +202,7 @@ object DummyData {
             "Nasi Tim Ikan Tuna Telur Puyuh",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Nasi-Tim-Ikan-Tuna-Telur-Puyuh.png",
+            R.drawable.mpasi_911_1,
             "Informasi Gizi:\n" +
                     "Energi: 120 kkal, Protein: 4.6 gr, Lemak: 4.3 gr\n" +
                     "*kontribusi energi sebesar 40% dari kebutuhan makanan tambahan sehari.\n" +
@@ -230,7 +232,7 @@ object DummyData {
             "Nasi Tim Ayam Lele Cincang",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Nasi-Tim-Ayam-Lele-Cincang.png",
+            R.drawable.mpasi_911_2,
             "Informasi Gizi:\n" +
                     "Energi: 125 kkal, Protein: 4.5 gr, Lemak: 4.9 gr\n" +
                     "*kontribusi energi sebesar 41% dari kebutuhan makanan tambahan sehari.\n" +
@@ -260,7 +262,7 @@ object DummyData {
             "Mie Kukus Telur Puyuh",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Mie-Kukus-Telur-Puyuh.png",
+            R.drawable.mpasi_911_3,
             "Informasi Gizi:\n" +
                     "Energi: 135 kkal, Protein: 5.1 gr, Lemak: 7.6 gr\n" +
                     "*kontribusi energi sebesar 45% dari kebutuhan makanan tambahan sehari.\n" +
@@ -291,7 +293,7 @@ object DummyData {
             "Nasi Tim Ikan Telur Sayuran",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Nasi-Tim-Ikan-Telur-Sayuran.png",
+            R.drawable.mpasi_911_4,
             "Informasi Gizi:\n" +
                     "Energi: 117 kkal, Protein: 4.8 gr, Lemak: 4.5 gr\n" +
                     "*kontribusi energi sebesar 39% dari kebutuhan makanan tambahan sehari.\n" +
@@ -321,7 +323,7 @@ object DummyData {
             "Tim Bubur Manado Daging dan Udang",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Tim-Bubur-Manado-Daging-dan-Udang.png",
+            R.drawable.mpasi_911_5,
             "Informasi Gizi:\n" +
                     "Energi: 119 kkal, Protein: 6.4 gr, Lemak: 4.4 gr\n" +
                     "*kontribusi energi sebesar 39,7% dari kebutuhan makanan tambahan sehari.\n" +
@@ -360,7 +362,7 @@ object DummyData {
             "Nasi Sup Telur Puyuh Bola Tahu Ayam",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Nasi-Sup-Telur-Puyuh-Bola-Tahu-Ayam.png",
+            R.drawable.mpasi_1223_1,
             "Informasi Gizi:\n" +
                     "Energi: 260 kkal, Protein: 10.4 gr, Lemak: 10.7 gr\n" +
                     "*kontribusi energi sebesar 47,2% dari kebutuhan makanan tambahan sehari.\n" +
@@ -395,7 +397,7 @@ object DummyData {
             "Nasi Soto Ayam Kuah Kuning",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Nasi-Soto-Ayam-Kuah-Kuning.png",
+            R.drawable.mpasi_1223_2,
             "Informasi Gizi:\n" +
                     "Energi: 263 kkal, Protein: 9.5 gr, Lemak: 10.9 gr\n" +
                     "*kontribusi energi sebesar 47,8% dari kebutuhan makanan tambahan sehari.\n" +
@@ -446,7 +448,7 @@ object DummyData {
             "Sup Telur Puyuh Ikan Air Tawar Labu Kuning",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Sup-Telur-Puyuh-Ikan-Air-Tawar-Labu-Kuning.png",
+            R.drawable.mpasi_1223_3,
             "Informasi Gizi:\n" +
                     "Energi: 261 kkal, Protein: 13.6 gr, Lemak: 9.1 gr\n" +
                     "*kontribusi energi sebesar 47,5% dari kebutuhan makanan tambahan sehari.\n" +
@@ -480,7 +482,7 @@ object DummyData {
             "Nasi Ikan Kuah Kuning",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Nasi-Ikan-Kuah-Kuning.png",
+            R.drawable.mpasi_1223_4,
             "Informasi Gizi:\n" +
                     "Energi: 267 kkal, Protein: 28.5 gr, Lemak: 10.7 gr\n" +
                     "*kontribusi energi sebesar 48,5% dari kebutuhan makanan tambahan sehari.\n" +
@@ -528,7 +530,7 @@ object DummyData {
             "Nugget Tempe Ayam Sayuran",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Nugget-Tempe-Ayam-Sayuran.png",
+            R.drawable.mpasi_1223_5,
             "Informasi Gizi:\n" +
                     "Energi: 191 kkal, Protein: 10.5 gr, Lemak: 9.0 gr\n" +
                     "*kontribusi energi sebesar 34,7% dari kebutuhan makanan tambahan sehari.\n" +
@@ -568,7 +570,7 @@ object DummyData {
             "Nasi Bakar Ayam Santan",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Nasi-Bakar-Ayam-Santan.png",
+            R.drawable.mpasi_25_1,
             "Informasi Gizi:\n" +
                     "Informasi Gizi:\n" +
                     "Energi: 421 kkal, Protein: 18.2 gr, Lemak: 18.2 gr\n" +
@@ -634,7 +636,7 @@ object DummyData {
             "Nasi Sup Tabas Udang Sayur",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Nasi-Sup-Tabas-Udang-Sayur.png",
+            R.drawable.mpasi_25_2,
             "Informasi Gizi:\n" +
                     "Energi: 537 kkal, Protein: 23.4 gr, Lemak: 18.9 gr\n" +
                     "*kontribusi energi sebesar 39,7% dari kebutuhan makanan tambahan sehari.\n" +
@@ -691,7 +693,7 @@ object DummyData {
             "Nasi Masak Ayam Kecap Sayur",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Nasi-Masak-Ayam-Kecap-Sayur.png",
+            R.drawable.mpasi_25_3,
             "Informasi Gizi:\n" +
                     "Energi: 424 kkal, Protein: 22.9 gr, Lemak: 18.1 gr\n" +
                     "*kontribusi energi sebesar 30,2% dari kebutuhan makanan tambahan sehari.\n" +
@@ -725,7 +727,7 @@ object DummyData {
             "Bola-bola Nasi Rabuk Ikan",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Bola-bola-Nasi-Rabuk-Ikan.png",
+            R.drawable.mpasi_25_4,
             "Informasi Gizi:\n" +
                     "Energi: 468 kkal, Protein: 14.4 gr, Lemak: 17.4 gr\n" +
                     "*kontribusi energi sebesar 33,4% dari kebutuhan makanan tambahan sehari.\n" +
@@ -767,7 +769,7 @@ object DummyData {
             "1. 1000 Hari Pertama Kehidupan",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/1000-Hari-Pertama-Kehidupan.png",
+            R.drawable.artikel_1,
             "Seribu hari pertama kehidupan (1000 HPK) adalah masa paling penting dalam pertumbuhan dan perkembangan anak. Masa ini terdiri dari 270 hari selama bayi berada dalam kandungan ibu, dan 730 hari atau dua tahun pertama kehidupan anak setelah dilahirkan.\n" +
                     "\n" +
                     "Masa 1000 HPK sangat penting, karena anak akan mengalami pertumbuhan dan perkembangan yang sangat pesat dan berdampak pada kualitas kesehatannya di masa akan datang. Saat bayi berada dalam kandungan adalah masa pembentukan dan perkembangan organ-organ tubuh penting, seperti otak, jantung, hati, ginjal, paru-paru, dan tulang. Perkembangan ini berlanjut setelah bayi dilahirkan hingga dua tahun setelah kelahiran.\n" +
@@ -779,7 +781,7 @@ object DummyData {
             "2. Kehamilan: Masa keemasan seorang ibu",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Kehamilan.png",
+            R.drawable.artikel_2,
             "Kehamilan adalah masa menyenangkan dalam kehidupan seorang ibu yang menantikan kehadiran buah hatinya.\n" +
                     "\n" +
                     "YANG AKAN DIALAMI\n" +
@@ -822,7 +824,7 @@ object DummyData {
             "3. Usia Kehamilan 1-3 Bulan (Trimester 1): Masa Penting Pembentukan Bagian Tubuh Janin",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Usia-Kehamilan-1-3-Bulan-Trimester-1.png",
+            R.drawable.artikel_3,
             "Selama kehamilan Ibu dapat mengalami berbagai gejolak emosi, seperti mudah sedih, mudah marah, stres, cemas, dan depresi. Hal ini akan mempengaruhi kesehatan fisik dan emosi ibu hamil, serta perkembangan bayi dalam kandungannya.\n" +
                     "Kenali gejala gangguan kesehatan jiwa agar Ibu mendapat perawatan yang tepat, antara lain\n" +
                     "\n" +
@@ -847,7 +849,7 @@ object DummyData {
             "4. Kesehatan Jiwa Ibu Hamil",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Kesehatan-Jiwa-Ibu-Hamil.png",
+            R.drawable.artikel_4,
             "Selama 3 bulan pertama kehamilan, Ibu dan bayi akan mengalami berbagai perubahan.\n" +
                     "\n" +
                     "YANG AKAN DIALAMI IBU\n" +
@@ -873,7 +875,7 @@ object DummyData {
             "5. Usia Kehamilan 4-6 Bulan (Trimester 2): Saatnya Mulai Merencanakan Kelahiran",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Usia-Kehamilan-4-6-Bulan-Trimester-2.png",
+            R.drawable.artikel_5,
             "YANG AKAN DIALAMI IBU\n" +
                     "• Gejala yang dirasakan pada awal kehamilan mulai berkurang.\n" +
                     "• Kenaikan berat badan sesuai dengan status gizi ibu sebelum hamil, yaitu sekitar 4 – 8 kg.\n" +
@@ -899,7 +901,7 @@ object DummyData {
             "6. Usia Kehamilan 7-9 Bulan (Trimester 3): Persiapan Menyambut Kehadiran Si Kecil",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Usia-Kehamilan-7-9-Bulan-Trimester-3.png",
+            R.drawable.artikel_6,
             "Selamat, Ibu sudah mencapai masa terakhir kehamilan! Sebentar lagi ibu, ayah, dan keluarga akan bertemu dengan anggota keluarga baru.\n" +
                     "\n" +
                     "YANG AKAN DIALAMI IBU\n" +
@@ -931,7 +933,7 @@ object DummyData {
             "7. Melahirkan: Saatnya Sambut Kehadiran Sang Buah Hati",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Melahirkan.png",
+            R.drawable.artikel_7,
             "Proses melahirkan harus dilakukan di Puskesmas, Rumah Sakit atau Klinik Bersalin, sehingga jika terjadi masalah dapat ditangani segera.\n" +
                     "Masa yang dinanti-nanti telah tiba! Setelah melalui masa kehamilan 9 bulan lebih, kini saatnya mempersiapkan kelahiran si kecil dengan baik.\n" +
                     "\n" +
@@ -956,7 +958,7 @@ object DummyData {
             "8. Inisiasi Menyusu Dini (IMD)",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Inisiasi-Menyusu-Dini-IMD.png",
+            R.drawable.artikel_8,
             "Bayi yang baru lahir harus segera mendapatkan Inisiasi Menyusu Dini (IMD) melalui kontak kulit ke kulit dengan ibunya dalam waktu 1 jam setelah kelahiran. Setelah menyusu pada jam pertama, bayi biasanya akan tidur panjang dan menyusu lagi jika lapar.\n" +
                     "Manfaat IMD pada ibu dan bayi adalah sebagai berikut:\n" +
                     "\n" +
@@ -972,7 +974,7 @@ object DummyData {
             "9. Setelah Melahirkan: Periksa ke Dokter/Bidan/Perawat Paling Sedikit 4 Kali",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Setelah-Melahirkan.png",
+            R.drawable.artikel_9,
             "Selamat, Ibu sudah melahirkan si kecil! Pada masa ini, ibu ayah dan keluarga perlu memperhatikan kesehatan ibu dan bayi,\n" +
                     "\n" +
                     "YANG AKAN DIALAMI\n" +
@@ -1002,7 +1004,7 @@ object DummyData {
             "10. Depresi Setelah Melahirkan",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Depresi-Setelah-Melahirkan.png",
+            R.drawable.artikel_10,
             "Setelah melahirkan, ibu dapat mengalami depresi atau yang biasa disebut postpartum depression, sebagai berikut:\n" +
                     "\n" +
                     "BABY BLUES\n" +
@@ -1032,7 +1034,7 @@ object DummyData {
             "11. Menyusui: Menjaga Kesehatan Fisik dan Mental Ibu Setelah Melahirkan",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/Menyusui.png",
+            R.drawable.artikel_11,
             "Menyusui bayi secara langsung dapat mempercepat proses pemulihan ibu setelah melahirkan.\n" +
                     "Air susu ibu (ASI) mengandung semua gizi yang dibutuhkan oleh bayi untuk tumbuh kembang sehat serta menjaga daya tahan tubuhnya. Oleh karena itu, penting bagi Ibu untuk memberikan hanya ASI saja kepada bayi hingga usia 6 bulan, kemudian dilanjutkan hingga usia 2 tahun.\n" +
                     "Namun ternyata, pemberian ASI lewat menyusui tidak hanya bermanfaat bagi kesehatan si kecil, tapi juga ibu. Apa saja manfaat menyusui bagi ibu?\n" +
@@ -1049,7 +1051,7 @@ object DummyData {
             "12. 0 - 6 Bulan: Berikan ASI Saja Sampai Usia 6 Bulan",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/0---6-Bulan.png",
+            R.drawable.artikel_12,
             "Si kecil siap menjalani kehidupan baru di luar rahim Ibu. Masa ini adalah masa sangat penting dalam pertumbuhannya.\n" +
                     "\n" +
                     "YANG AKAN DIALAMI\n" +
@@ -1134,7 +1136,7 @@ object DummyData {
             "13. 6 - 12 Bulan: Cegah Stunting dengan MPASI Kaya Protein Hewani",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/6---12-Bulan.png",
+            R.drawable.artikel_13,
             "Awas bahaya stunting, karena dapat menyebabkan gagal pertumbuhan dan anak menjadi kurang cerdas.\n" +
                     "Di usia 6-12 bulan bayi berkembang semakin pesat secara fisik dan mental, sehingga membutuhkan gizi lengkap terutama yang kaya protein hewani.\n" +
                     "\n" +
@@ -1167,7 +1169,7 @@ object DummyData {
             "14. 12 - 24 Bulan: Beri Makanan Bergizi dan Periksa Rutin ke Posyandu untuk Cegah Stunting",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/12---24-Bulan.png",
+            R.drawable.artikel_14,
             "Beri makanan yang kaya protein hewani, seperti telur, ikan dan daging. Memasuki usia 1 tahun ke atas, kemampuan fisik, mental, dan sosial anak semakin berkembang.\n" +
                     "\n" +
                     "YANG AKAN DIALAMI\n" +
@@ -1196,7 +1198,7 @@ object DummyData {
             "15. 2 - 6 Tahun: Pastikan Si Kecil Memiliki Tanda Anak Sehat",
             "2025-01-04 17:00:00.000 Z",
             "Kementrian Kesehatan RI",
-            "https://freeimghost.net/images/2025/03/05/2---6-Tahun.png",
+            R.drawable.artikel_15,
             "Di usia 2 tahun ke atas, perkembangan fisik, mental dan sosial anak berkembang pesat hingga usia 6 tahun.\n" +
                     "\n" +
                     "YANG AKAN DIALAMI\n" +

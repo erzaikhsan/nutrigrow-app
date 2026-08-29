@@ -17,12 +17,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.project.labs.nutrigrow.ui.component.bottombar.AdminBottomBar
-import com.project.labs.nutrigrow.ui.component.bottombar.OfficerBottomBar
-import com.project.labs.nutrigrow.ui.component.bottombar.ParentBottomBar
+import com.project.labs.nutrigrow.ui.component.bottombar.NutriBottomBar
 import com.project.labs.nutrigrow.ui.navigation.Screen
 import com.project.labs.nutrigrow.ui.screen.ViewModelFactory
 import com.project.labs.nutrigrow.ui.screen.auth.CreateAccountScreen
+import com.project.labs.nutrigrow.ui.screen.auth.ForgotPasswordScreen
 import com.project.labs.nutrigrow.ui.screen.auth.LoginScreen
 import com.project.labs.nutrigrow.ui.screen.auth.RegisterScreen
 import com.project.labs.nutrigrow.ui.screen.auth.VerifyScreen
@@ -55,9 +54,8 @@ fun NutriGrowApp(
     }
 
     val checkAuth by viewModel.isAuthenticated
-    val role by viewModel.role
 
-    LaunchedEffect(key1 = checkAuth) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.checkAuthentication()
     }
 
@@ -67,25 +65,10 @@ fun NutriGrowApp(
         }
 
         is UiState.Success -> {
-            viewModel.getRole()
             Scaffold(
-                bottomBar =
-                {
-                    if (currentRoute != Screen.Login.route && currentRoute != Screen.Welcome.route && currentRoute != Screen.Register.route && currentRoute != null) {
-                        when(role) {
-                            is UiState.Success -> {
-                                if ((role as UiState.Success<String>).data == "Parent") {
-                                    ParentBottomBar(navController = navController)
-                                }
-                                if((role as UiState.Success<String>).data == "Officer") {
-                                    OfficerBottomBar(navController = navController)
-                                }
-                                if((role as UiState.Success<String>).data == "Admin") {
-                                    AdminBottomBar(navController = navController)
-                                }
-                            }
-                            else -> {}
-                        }
+                bottomBar = {
+                    if (Screen.showsBottomBar(currentRoute)) {
+                        NutriBottomBar(navController = navController)
                     }
                 },
                 modifier = modifier
@@ -114,6 +97,16 @@ fun NutriGrowApp(
                                 popUpTo(navController.graph.id) {
                                     inclusive = true
                                 }
+                            }
+                        })
+                    }
+                    composable(Screen.ForgotPassword.route) {
+                        ForgotPasswordScreen(navController = navController, redirectToLogin = {
+                            navController.navigate(Screen.Login.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = false
+                                }
+                                launchSingleTop = true
                             }
                         })
                     }

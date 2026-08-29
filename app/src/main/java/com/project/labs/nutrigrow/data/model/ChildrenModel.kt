@@ -35,4 +35,8 @@ data class ChildrenModel(
     val wfh_status: String,
     @field:SerializedName("birth_head_circum")
     val birth_head_circum: Number,
+    @field:SerializedName("nik")
+    val nik: String = "",
+    @field:SerializedName("status")
+    val status: String = "",
 )

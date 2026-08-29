@@ -4,7 +4,6 @@ import android.content.Context
 import com.project.labs.nutrigrow.data.local.preference.UserPreference
 import com.project.labs.nutrigrow.data.remote.retrofit.ApiService
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.io.FileOutputStream
 
@@ -14,10 +13,8 @@ class ReportRepository(
 ) {
 
     suspend fun getChildrenReport( month: Number, year: Number, context: Context): File? {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-        val response = apiService.getChildrenReport(token = userPreference.token, month = month, year = year)
+        val auth = userPreference.getAuth().first()
+        val response = apiService.getChildrenReport(token = auth.token, month = month, year = year)
 
         if (!response.isSuccessful) {
             return null
@@ -36,10 +33,8 @@ class ReportRepository(
     }
 
     suspend fun getParentReport(context: Context): File? {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-        val response = apiService.getParentReport(token = userPreference.token)
+        val auth = userPreference.getAuth().first()
+        val response = apiService.getParentReport(token = auth.token)
 
         if (!response.isSuccessful) {
             return null
@@ -58,10 +53,8 @@ class ReportRepository(
     }
 
     suspend fun getRegionChildrenReport(region : String, month: Number, year: Number, context: Context): File? {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-        val response = apiService.getRegionChildrenReport(region = region, month = month, year = year, token = userPreference.token)
+        val auth = userPreference.getAuth().first()
+        val response = apiService.getRegionChildrenReport(region = region, month = month, year = year, token = auth.token)
 
         if (!response.isSuccessful) {
             return null
@@ -80,10 +73,8 @@ class ReportRepository(
     }
 
     suspend fun getRegionParentReport(region : String, context: Context): File? {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-        val response = apiService.getRegionParentReport(region = region, token = userPreference.token)
+        val auth = userPreference.getAuth().first()
+        val response = apiService.getRegionParentReport(region = region, token = auth.token)
 
         if (!response.isSuccessful) {
             return null
@@ -102,10 +93,8 @@ class ReportRepository(
     }
 
     suspend fun getMonthlyReport(region: String, month: Number, year: Number, context: Context): File? {
-        val userPreference = runBlocking {
-            userPreference.getAuth().first()
-        }
-        val response = apiService.getMonthlyReport(region = region, token = userPreference.token, month = month, year = year)
+        val auth = userPreference.getAuth().first()
+        val response = apiService.getMonthlyReport(region = region, token = auth.token, month = month, year = year)
 
         if (!response.isSuccessful) {
             return null

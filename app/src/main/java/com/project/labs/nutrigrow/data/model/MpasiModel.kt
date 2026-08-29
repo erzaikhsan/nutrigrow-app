@@ -1,5 +1,6 @@
 package com.project.labs.nutrigrow.data.model
 
+import androidx.annotation.DrawableRes
 import com.google.gson.annotations.SerializedName
 
 data class MpasiModel(
@@ -12,7 +13,8 @@ data class MpasiModel(
     @field:SerializedName("writer")
     val writer: String,
     @field:SerializedName("image")
-    val image: String,
+    @DrawableRes
+    val image: Int,
     @field:SerializedName("description")
     val description: String,
 )

@@ -21,7 +21,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -132,7 +132,7 @@ fun VerifyScreen(
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Kembali"
                         )
                     }
                 },
@@ -185,7 +185,7 @@ fun VerifyScreen(
                                 )
                         )
                     }
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier
                             .fillMaxWidth(),
                         color = Color(0xFF00BF63),
@@ -216,10 +216,10 @@ fun VerifyScreen(
                                 keyboardType = KeyboardType.Number,
                                 imeAction = ImeAction.Next
                             ),
-                            trailingIcon = { Icon(painterResource(id = R.drawable.baseline_verified_user_24), contentDescription = "Email", modifier = Modifier.size(22.dp)) },
+                            trailingIcon = { Icon(painterResource(id = R.drawable.baseline_verified_user_24), contentDescription = "Surel", modifier = Modifier.size(22.dp)) },
                             shape = RoundedCornerShape(10.dp),
                             placeholder = { Text("_ _ _ _", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-                            colors = TextFieldDefaults.textFieldColors(
+                            colors = TextFieldDefaults.colors(
                                 focusedIndicatorColor = Color(0xFF9DA1A6),
                                 unfocusedIndicatorColor = Color(0xFF9DA1A6),
                                 disabledIndicatorColor = Color(0xFF9DA1A6),
